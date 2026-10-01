@@ -1,11 +1,38 @@
 -- ============================================================
--- Oman EM Prep — Supabase schema (run once in SQL Editor)
--- Creates: access_codes, profiles, progress, sessions_log,
--- events, RPCs (check_code/redeem_code), admin views, RLS.
+-- Oman EM Prep — Supabase schema (v2 — correct creation order)
+-- Run ONCE in the SQL Editor.
+-- ⚠ Re-running after real usage DROPS ALL DATA (guards at top).
 -- The FIRST user to sign up becomes admin (bootstrap).
 -- ============================================================
 
--- ---------- 1) access codes ----------
+-- ---------- 0) clean-slate guards (safe on first run) ----------
+drop view if exists public.v_admin_sessions;
+drop view if exists public.v_admin_codes;
+drop view if exists public.v_admin_users;
+drop table if exists public.events cascade;
+drop table if exists public.sessions_log cascade;
+drop table if exists public.progress cascade;
+drop table if exists public.access_codes cascade;
+drop table if exists public.profiles cascade;
+drop trigger if exists on_auth_user_created on auth.users;
+drop function if exists public.redeem_code(text);
+drop function if exists public.check_code(text);
+drop function if exists public.protect_role();
+drop function if exists public.handle_new_user();
+drop function if exists public.is_admin();
+
+-- ---------- 1) tables first (no policies yet) ----------
+create table public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  email text,
+  name text,
+  role text not null default 'doctor' check (role in ('doctor','admin')),
+  code_id uuid,
+  created_at timestamptz not null default now(),
+  last_seen timestamptz not null default now()
+);
+alter table public.profiles enable row level security;
+
 create table public.access_codes (
   id uuid primary key default gen_random_uuid(),
   code text unique not null,
@@ -18,33 +45,23 @@ create table public.access_codes (
   created_at timestamptz not null default now()
 );
 alter table public.access_codes enable row level security;
--- doctors never read codes directly; admins manage via policies below
-create policy "admins manage codes" on public.access_codes
-  for all using (public.is_admin()) with check (public.is_admin());
 
--- ---------- 2) helper: is_admin ----------
+-- ---------- 2) is_admin() — needs profiles, precedes all policies ----------
 create or replace function public.is_admin() returns boolean
 language sql stable security definer set search_path = public as $$
   select coalesce((select role = 'admin' from public.profiles where id = auth.uid()), false);
 $$;
 
--- ---------- 3) profiles ----------
-create table public.profiles (
-  id uuid primary key references auth.users(id) on delete cascade,
-  email text,
-  name text,
-  role text not null default 'doctor' check (role in ('doctor','admin')),
-  code_id uuid references public.access_codes(id) on delete set null,
-  created_at timestamptz not null default now(),
-  last_seen timestamptz not null default now()
-);
-alter table public.profiles enable row level security;
+-- ---------- 3) policies (is_admin now exists) ----------
 create policy "read own or admin" on public.profiles
   for select using (id = auth.uid() or public.is_admin());
 create policy "insert own" on public.profiles
   for insert with check (id = auth.uid());
 create policy "update own or admin" on public.profiles
   for update using (id = auth.uid() or public.is_admin());
+
+create policy "admins manage codes" on public.access_codes
+  for all using (public.is_admin()) with check (public.is_admin());
 
 -- role tampering guard: only admins may change role
 create or replace function public.protect_role() returns trigger
@@ -76,7 +93,7 @@ end $$;
 create trigger on_auth_user_created after insert on auth.users
   for each row execute function public.handle_new_user();
 
--- ---------- 4) code RPCs ----------
+-- ---------- 4) code RPCs (need access_codes) ----------
 create or replace function public.check_code(p_code text) returns boolean
 language sql stable security definer set search_path = public as $$
   select exists (
@@ -185,8 +202,8 @@ select s.id, s.user_id, s.kind, s.ref_id, s.title, s.score, s.total, s.ts,
 from public.sessions_log s
 join public.profiles p on p.id = s.user_id;
 
--- ---------- 9) (optional) seed one admin fallback code ----------
--- Un-comment, run once, and give this code to yourself if you ever lose
--- access to the first (admin) account:
+-- ---------- 9) (optional) admin fallback code ----------
+-- Un-comment, run once, and keep this code to reach the admin panel
+-- if you ever lose access to the first (admin) account:
 -- insert into public.access_codes (code, label, max_uses)
 -- values ('ADMIN-2026', 'bootstrap admin', 1);
