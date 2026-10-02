@@ -27,6 +27,60 @@ const shuffle = (arr) => {
   }
   return a;
 };
+/* ---------------- icons + small UI pieces ---------------- */
+const ICONS = {
+  home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-6h4v6"/>',
+  book: '<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/>',
+  exam: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="m9 13 2 2 4-4"/>',
+  close: '<path d="M6 6l12 12M18 6 6 18"/>',
+  back: '<path d="M15 5l-7 7 7 7"/>',
+  chev: '<path d="M9 5l7 7-7 7"/>',
+  bookmark: '<path d="M6 4h12v17l-6-4-6 4z"/>',
+  grid: '<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  refresh: '<path d="M4 11a8 8 0 0 1 14-4.5L20 9"/><path d="M20 4v5h-5"/><path d="M20 13a8 8 0 0 1-14 4.5L4 15"/><path d="M4 20v-5h5"/>',
+  bolt: '<path d="M13 3 5 13h6l-1 8 8-10h-6z"/>',
+  play: '<path d="M8 5v14l11-7z"/>',
+  target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+  lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  check: '<path d="m5 12 5 5 9-10"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/>',
+  moon: '<path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/>',
+  logout: '<path d="M10 4H5v16h5"/><path d="m14 8 4 4-4 4"/><path d="M18 12H9"/>',
+  download: '<path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/>',
+  share: '<path d="M12 15V3"/><path d="m8 7 4-4 4 4"/><path d="M8 11H5v10h14V11h-3"/>',
+  plus: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/>',
+  dots: '<path d="M12 5v.01M12 12v.01M12 19v.01" stroke-width="3"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+};
+const icon = (name, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
+// the ECG mark — same drawing as icons/icon.svg and tools/make-icons.js
+const LOGO = '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M14 56H35L44 28L56 78L64 56H86"/><circle cx="86" cy="56" r="6.5"/></svg>';
+const TRACE = (cls = '') => `<svg class="monitor-trace ${cls}" viewBox="0 0 240 64" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40H34l5-7 5 7h12l7-30 9 46 6-16h16q7-13 14 0h26l5-7 5 7h12l7-30 9 46 6-16H240"/></svg>`;
+const ring = (pct, cls = '') => `<span class="ring ${cls}" style="--pct:${pct}"><b>${pct}${cls ? '<i>%</i>' : ''}</b></span>`;
+const bar = (pct) => `<span class="mastery" style="display:block"><span class="mastery-fill" style="display:block;width:${Math.max(0, Math.min(100, Math.round(pct)))}%"></span></span>`;
+
+function openSheet(html, cls = '') {
+  closeSheet();
+  const el = document.createElement('div');
+  el.className = 'sheet-backdrop';
+  el.id = 'sheetRoot';
+  el.innerHTML = `<div class="sheet ${cls}" role="dialog" aria-modal="true">${html}</div>`;
+  el.addEventListener('click', (e) => { if (e.target === el) closeSheet(); });
+  document.body.appendChild(el);
+}
+function closeSheet() { $('#sheetRoot')?.remove(); }
+
+function toast(msg) {
+  $('.toast')?.remove();
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.dir = 'auto';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3600);
+}
+
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 const EXAM_SEC_PER_Q = 75;
 const EXAM_MAX_Q = 30;
@@ -156,28 +210,21 @@ function cramPool() {
 
 /* ---------------- theme ---------------- */
 const THEME_KEY = 'oman-em-prep.theme';
+const THEME_BAR = { light: '#f3f6f7', dark: '#07181e' };   // = --bg, so the phone's status bar blends into the app
 
-function applyTheme() {
+// paintBar=false during launch: the status bar keeps the splash colour until the first screen is up
+function applyTheme(paintBar = true) {
   const t = localStorage.getItem(THEME_KEY) ||
     (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   document.documentElement.dataset.theme = t;
-}
-
-function themeButtonHtml() {
-  const dark = document.documentElement.dataset.theme === 'dark';
-  return `<button class="btn theme-btn" onclick="toggleTheme()" title="${dark ? 'Light mode' : 'Dark mode'}">${dark ? '☀️' : '🌙'}</button>`;
+  if (paintBar) $('meta[name="theme-color"]')?.setAttribute('content', THEME_BAR[t]);
 }
 
 function toggleTheme() {
   const dark = document.documentElement.dataset.theme === 'dark';
   localStorage.setItem(THEME_KEY, dark ? 'light' : 'dark');
   applyTheme();
-  refreshView();
-}
-
-function refreshView() {
-  if (session && !session.finished) renderQuiz();
-  else route();
+  openAccount();   // redraw the sheet: its theme row names the other mode now
 }
 
 /* ---------------- data ---------------- */
@@ -481,17 +528,12 @@ function renderBriefing() {
     ? `${spec.size} سؤالاً · 75% من مادة غطّيتها + 25% جديد · ${spec.minutes} دقيقة`
     : `${spec.size} questions · ${spec.minutes} min — نفس الورقة لكل المستخدمين، مبنية للمقارنة الصادقة`;
   app.innerHTML = `
-    <div class="topbar"><div class="topbar-inner">
-      <div class="brand" onclick="location.hash='#/'">
-        <div class="brand-logo">EM</div><div><div class="brand-name">Oman EM Prep</div></div>
-      </div>
-      ${themeButtonHtml()}
-    </div></div>
-    <div class="wrap" style="max-width:620px">
-      <div class="q-card briefing">
-        <div class="oeem-logo big">${kind === 'milestone' ? 'M' + spec.id : esc(BLUEPRINT.exam.code)}</div>
+    ${appBar({ back: '#/exams', title: 'Before you begin', right: '' })}
+    <main class="wrap">
+      <div class="briefing">
+        <div class="briefing-mark">${kind === 'milestone' ? 'M' + spec.id : esc(BLUEPRINT.exam.code)}</div>
         <h1>${esc(title)}</h1>
-        <p class="briefing-ar">${esc(sub)}</p>
+        <p class="briefing-ar" dir="auto">${esc(sub)}</p>
         <div class="facts">
           <div class="fact"><b>${spec.size}</b><span>questions</span></div>
           <div class="fact"><b>${Math.floor(spec.minutes / 60) ? Math.floor(spec.minutes / 60) + 'h ' : ''}${spec.minutes % 60}m</b><span>time limit</span></div>
@@ -500,17 +542,16 @@ function renderBriefing() {
         </div>
         <ul class="rules">
           <li>No feedback during the exam — full review with explanations after you submit.</li>
-          <li>Answers stay editable; jump between questions from the ⊞ Navigator.</li>
+          <li>Answers stay editable; jump between questions from the navigator at the top.</li>
           <li>Submits automatically when the timer reaches 0:00.</li>
           ${kind === 'milestone'
-            ? '<li>المزيج: 75% من أسئلة غطّيتها فعلاً + 25% جديد — تشويق لما ينتظرك.</li>'
+            ? '<li dir="rtl">المزيج: 75% من أسئلة غطّيتها فعلاً + 25% جديد — تشويق لما ينتظرك.</li>'
             : `<li>Fixed official blueprint paper — identical for every candidate, built for honest comparison.</li>`}
         </ul>
-        ${canResume ? `<button class="btn btn-block" onclick="resumeSession()">▶ Resume your in-progress attempt</button>` : ''}
-        <button class="btn btn-primary btn-block" onclick="${kind === 'milestone' ? `startMilestone(${spec.id})` : `startSimulation(${spec.id})`}">Begin</button>
-        <a class="btn btn-ghost btn-block" href="#/exams">← Back to Exams</a>
+        <button class="btn btn-primary btn-lg btn-block" onclick="${kind === 'milestone' ? `startMilestone(${spec.id})` : `startSimulation(${spec.id})`}">Begin the exam</button>
+        ${canResume ? `<button class="btn btn-lg btn-block" onclick="resumeSession()">${icon('play', 'fill')} Resume your attempt in progress</button>` : ''}
       </div>
-    </div>`;
+    </main>`;
 }
 
 function nextGoal() {
@@ -553,7 +594,7 @@ function openGrid() {
   if (!g) return;
   g.hidden = false;
   const b = $('#gridSubmit');
-  if (b) { b.textContent = 'Submit Exam'; b.classList.remove('btn-danger-soft'); b.dataset.armed = ''; }
+  if (b) { b.textContent = 'Submit exam'; b.classList.remove('btn-danger-soft'); b.classList.add('btn-primary'); b.dataset.armed = ''; }
 }
 function closeGrid() { $('#gridOverlay')?.setAttribute('hidden', ''); }
 
@@ -563,6 +604,7 @@ function submitFromGrid() {
   if (unanswered > 0 && b && !b.dataset.armed) {
     b.dataset.armed = '1';
     b.textContent = `${unanswered} unanswered — tap again to submit`;
+    b.classList.remove('btn-primary');
     b.classList.add('btn-danger-soft');
     return;
   }
@@ -645,6 +687,11 @@ function buildSession(sectionId, mode) {
   } else if (sectionId === 'starred') {
     qs = store.starred.map((qid) => DB.byId[qid]).filter(Boolean);
     title = 'Bookmarked Questions';
+  } else if (sectionId.startsWith('starred-')) {
+    const sid = sectionId.slice(8);
+    const sec = DB.sections.find((s) => s.id === sid);
+    qs = store.starred.map((qid) => DB.byId[qid]).filter((q) => q && q.sectionId === sid);
+    title = `${sec ? sec.name : sid} — Bookmarks`;
   } else {
     qs = shuffle(sectionQuestions(sectionId));
     const sec = DB.sections.find((s) => s.id === sectionId);
@@ -734,53 +781,198 @@ function currentTab() {
   return 'home';
 }
 
-function chrome(content) {
+// a link to the screen already in the address bar fires no hashchange (a session
+// resumed from Home keeps "#/"), so route it by hand
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[href^="#/"]');
+  if (a && a.getAttribute('href') === (location.hash || '#/')) { e.preventDefault(); route(); }
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeSheet(); closeGrid(); } });
+
+const profileOrNull = () => (window.SB && SB.configured && SB.profile) || null;
+const initialOf = (p) => (p.name || p.email || '').replace(/^(د|dr)\.?\s*/i, '').trim().charAt(0).toUpperCase();
+
+// back: sub-screen with a back arrow + title; otherwise the brand. right: override the account button
+function appBar(o = {}) {
+  const p = profileOrNull();
+  const lead = o.lead || (o.back
+    ? `<div class="bar-lead"><a class="icon-btn" href="${o.back}" aria-label="Back">${icon('back')}</a><div class="bar-title">${esc(o.title || '')}</div></div>`
+    : `<a class="brand" href="#/"><div class="brand-logo">${LOGO}</div><div class="brand-name">Oman EM Prep</div></a>`);
+  const right = o.right ?? `<button class="avatar-btn" onclick="openAccount()" aria-label="Account and settings">${p && initialOf(p) ? esc(initialOf(p)) : icon('user')}</button>`;
+  return `<header class="topbar"><div class="topbar-inner">${lead}<div class="bar-actions">${right}</div></div>${o.below || ''}</header>`;
+}
+
+function openAccount() {
+  const p = profileOrNull();
+  const dark = document.documentElement.dataset.theme === 'dark';
+  const row = (attrs, ic, title, sub = '', cls = '') => `
+    <button class="row ${cls}" ${attrs}>
+      <span class="row-icon">${icon(ic)}</span>
+      <span class="row-body"><span class="row-title">${title}</span>${sub ? `<span class="row-sub">${sub}</span>` : ''}</span>
+    </button>`;
+  openSheet(`
+    <div dir="rtl">
+      ${p ? `<div class="acct-head">
+        <div class="avatar-btn lg">${esc(initialOf(p)) || icon('user')}</div>
+        <div class="row-body"><span class="row-title">${esc(p.name || 'طبيب')}</span><span class="row-sub" dir="ltr" style="text-align:right">${esc(p.email || '')}</span></div>
+      </div>` : ''}
+      <div class="list">
+        ${!hasFullAccess() ? row(`onclick="closeSheet();location.hash='#/upgrade'"`, 'lock', 'فعّل حسابك الكامل', `بقي لك ${trialLeft()} من ${TRIAL_LIMIT} سؤالاً مجانياً`) : ''}
+        ${Install.available() ? row('onclick="Install.open()"', 'download', `ثبّت التطبيق على ${Install.device}`, 'يفتح من شاشتك الرئيسية بلمسة واحدة') : ''}
+        ${row('onclick="toggleTheme()"', dark ? 'sun' : 'moon', dark ? 'المظهر الفاتح' : 'المظهر الداكن')}
+        ${p ? row('onclick="logout()"', 'logout', 'تسجيل الخروج', '', 'danger') : ''}
+      </div>
+    </div>`);
+}
+
+function chrome(content, bar = {}) {
   const tab = currentTab();
   const tabs = [
-    ['#/', '🏠', 'Home', 'الرئيسية'],
-    ['#/practice', '📚', 'Practice', 'التدريب'],
-    ['#/exams', '🎓', 'Exams', 'الاختبارات'],
+    ['#/', 'home', 'home', 'Home'],
+    ['#/practice', 'practice', 'book', 'Practice'],
+    ['#/exams', 'exams', 'exam', 'Exams'],
   ];
-  const userChip = (window.SB && SB.configured && SB.profile)
-    ? `<button class="btn user-chip" onclick="logout()" title="تسجيل الخروج">${esc(SB.profile.name || SB.profile.email || 'طبيب')} · خروج</button>`
-    : '';
   let trialBar = '';
   if (!hasFullAccess()) {
     const left = trialLeft();
     const st = SB.profile.access_status;
-    const msg = st === 'pending' ? `⏳ إيصالك قيد المراجعة — بقي لك <b>${left}</b> سؤالاً مجانياً`
-      : st === 'rejected' ? '⚠️ لم نتمكن من قبول الإيصال — أعد رفعه'
-      : `🎁 تجربة مجانية — بقي لك <b>${left}</b> من ${TRIAL_LIMIT} سؤالاً`;
+    const msg = st === 'pending' ? `إيصالك قيد المراجعة، بقي لك <b>${left}</b> سؤالاً`
+      : st === 'rejected' ? 'لم نتمكن من قبول الإيصال، أعد رفعه'
+      : `بقي لك <b>${left}</b> من ${TRIAL_LIMIT} سؤالاً مجانياً`;
     trialBar = `<a class="trial-bar ${st === 'rejected' ? 'warn' : ''}" href="#/upgrade">
-      <span>${msg}</span><span class="trial-bar-cta">${st === 'pending' ? 'التفاصيل' : 'فعّل حسابك'} ›</span></a>`;
+      <span>${msg}</span><span class="trial-bar-cta">${st === 'pending' ? 'التفاصيل' : 'فعّل حسابك'}${icon('chev', 'chev')}</span></a>`;
   }
   return `
-    <div class="topbar"><div class="topbar-inner">
-      <div class="brand" onclick="location.hash='#/'">
-        <div class="brand-logo">EM</div>
-        <div><div class="brand-name">Oman EM Prep</div>
-        <div class="brand-sub">استعد لاختبار الطوارئ</div></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        ${userChip}
-        ${themeButtonHtml()}
-      </div>
-    </div></div>
-    <nav class="tabbar">
-      ${tabs.map(([href, icon, en, ar]) => {
-        const t = href === '#/' ? 'home' : href === '#/practice' ? 'practice' : 'exams';
-        return `<a class="tab ${tab === t ? 'active' : ''}" href="${href}">
-          <span class="tab-icon">${icon}</span>
-          <span class="tab-text"><span class="tab-label">${en}</span><span class="tab-ar">${ar}</span></span>
-        </a>`;
-      }).join('')}
-    </nav>
-    <div class="wrap">${trialBar}${content}</div>`;
+    ${appBar(bar)}
+    <main class="wrap">${trialBar}${content}</main>
+    <nav class="navbar" aria-label="Main">
+      ${tabs.map(([href, id, ic, label]) => `
+        <a class="nav-item ${tab === id ? 'active' : ''}" href="${href}" ${tab === id ? 'aria-current="page"' : ''}>
+          <span class="nav-pill">${icon(ic)}</span>${label}
+        </a>`).join('')}
+    </nav>`;
+}
+
+/* ---------------- install as an app ---------------- */
+/* Chrome / Edge / Samsung Internet hand us a prompt we can fire from our own
+   button. Safari on iPhone has none, so there the sheet shows the three taps. */
+const INSTALL_KEY = 'oman-em-prep.install';
+const INSTALL_SNOOZE = 14 * 864e5;
+const Install = {
+  prompt: null,
+  state: (() => { try { return JSON.parse(localStorage.getItem(INSTALL_KEY)) || {}; } catch (e) { return {}; } })(),
+  save() { try { localStorage.setItem(INSTALL_KEY, JSON.stringify(this.state)); } catch (e) { /* private mode */ } },
+  get standalone() { return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; },
+  get ios() { return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); },
+  get android() { return /Android/i.test(navigator.userAgent); },
+  get device() { return this.ios || this.android ? 'جوالك' : 'جهازك'; },
+
+  // not already the installed app, and this device has a way to install it
+  available() { return !this.standalone && !this.state.installed && (!!this.prompt || this.ios || this.android); },
+  cardVisible() { return this.available() && !(this.state.dismissedAt && Date.now() - this.state.dismissedAt < INSTALL_SNOOZE); },
+
+  cardHtml() {
+    if (!this.cardVisible()) return '';
+    return `
+      <div class="install-card" id="installCard" dir="rtl">
+        <img src="icons/icon-192.png" alt="">
+        <div class="row-body">
+          <span class="row-title">ثبّت التطبيق على ${this.device}</span>
+          <span class="row-sub">يفتح من شاشتك الرئيسية بلمسة واحدة</span>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="Install.open()">تثبيت</button>
+        <button class="icon-btn" onclick="Install.dismiss()" aria-label="إخفاء">${icon('close')}</button>
+      </div>`;
+  },
+
+  open() {
+    const step = (n, text, ic) => `<li><span class="step-n">${n}</span><span>${text}</span>${ic ? icon(ic) : ''}</li>`;
+    const how = this.prompt
+      ? `<button class="btn btn-primary btn-lg btn-block" onclick="Install.run()">${icon('download')} تثبيت التطبيق</button>`
+      : this.ios
+        ? `<ol class="steps">
+            ${step(1, 'اضغط زر المشاركة في شريط المتصفح', 'share')}
+            ${step(2, 'اختر «إضافة إلى الشاشة الرئيسية»', 'plus')}
+            ${step(3, 'اضغط «إضافة» — وستجد التطبيق بين تطبيقاتك')}
+          </ol>
+          <p class="sheet-sub">لا تجد الخيار؟ افتح هذه الصفحة في Safari ثم أعد المحاولة.</p>`
+        : `<ol class="steps">
+            ${step(1, 'افتح قائمة المتصفح', 'dots')}
+            ${step(2, 'اختر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية»', 'plus')}
+            ${step(3, 'أكّد التثبيت — وستجد التطبيق بين تطبيقاتك')}
+          </ol>
+          <p class="sheet-sub">لا تجد الخيار؟ افتح هذه الصفحة في Chrome ثم أعد المحاولة.</p>`;
+    openSheet(`
+      <div class="install-sheet" dir="rtl">
+        <img src="icons/icon-192.png" alt="">
+        <h2>ثبّت Oman EM Prep على ${this.device}</h2>
+        <p class="sheet-sub">تطبيق كامل على شاشتك الرئيسية — بلا متجر تطبيقات.</p>
+        <ul class="perks">
+          <li>${icon('check')}<span>يفتح بلمسة واحدة وبملء الشاشة</span></li>
+          <li>${icon('check')}<span>أسرع في كل مرة: الأسئلة محفوظة على جهازك</span></li>
+          <li>${icon('check')}<span>تقدّمك محفوظ ويكمل معك حتى مع اتصال ضعيف</span></li>
+        </ul>
+        ${how}
+        <button class="btn btn-ghost btn-block" onclick="Install.dismiss()">ليس الآن</button>
+      </div>`);
+  },
+
+  async run() {
+    const p = this.prompt;
+    if (!p) return;
+    this.prompt = null;                       // a prompt can be shown once
+    p.prompt();
+    const choice = await p.userChoice.catch(() => null);
+    if (choice && choice.outcome === 'accepted') closeSheet();
+    else this.dismiss();
+  },
+
+  dismiss() {
+    this.state.dismissedAt = Date.now();
+    this.save();
+    closeSheet();
+    $('#installCard')?.remove();
+  },
+
+  // the prompt arrives a moment after load: surface the offer on screens already drawn
+  refresh() {
+    if ($('.monitor') && !$('#installCard') && this.cardVisible()) $('.monitor').insertAdjacentHTML('afterend', this.cardHtml());
+    const link = $('#authInstall');
+    if (link) link.hidden = !this.available();
+  },
+
+  // once, after the doctor has answered a few questions and seen the value
+  nudge() {
+    if (this.state.nudged || !this.cardVisible() || uniqueCovered() < 5) return;
+    this.state.nudged = true;
+    this.save();
+    setTimeout(() => { if ($('.monitor') && !$('#sheetRoot')) this.open(); }, 700);
+  },
+};
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  Install.prompt = e;
+  if (Install.state.installed) { Install.state.installed = false; Install.save(); }   // it was removed since
+  Install.refresh();
+});
+window.addEventListener('appinstalled', () => {
+  Install.prompt = null;
+  Install.state.installed = true;
+  Install.save();
+  closeSheet();
+  $('#installCard')?.remove();
+  toast('تم تثبيت التطبيق — ستجده على شاشتك الرئيسية');
+});
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
 }
 
 function route() {
   stopTimer();
   clearInterval(payPoll);
+  closeSheet();
+  applyTheme();
   const hash = location.hash || '#/';
   if (!hasFullAccess() && (hash.startsWith('#/upgrade') || trialLeft() === 0)) {
     session = null;
@@ -811,14 +1003,14 @@ function todayQueue() {
   const wrong = wrongPool();
   if (wrong.length >= 3) {
     items.push({
-      icon: '🔁',
+      icon: 'refresh',
       title: `Review ${wrong.length} wrong answers`,
-      sub: 'Highest learning value — each leaves the pile after two correct in a row',
-      cta: 'Review',
+      sub: 'Each one leaves the pile after two correct in a row',
+      cta: 'Review them now',
       href: '#/quiz/wrong/study',
     });
   }
-  let sec = null, label = null;
+  let sec = null, label = null, sub = null;
   const touched = DB.sections
     .map((s) => {
       let seen = 0, last = 0;
@@ -832,111 +1024,121 @@ function todayQueue() {
     .sort((a, b) => b.last - a.last);
   if (touched.length) {
     sec = touched[0].s;
-    label = `Continue ${sec.name} — ${touched[0].seen}/${sec.count} covered`;
+    label = `Continue ${sec.name}`;
+    sub = `${touched[0].seen} of ${sec.count} questions covered. Each answer shows its explanation at once.`;
   } else {
     sec = DB.sections.find((s) => s.id === 'medicine') || DB.sections[0];
-    label = `Start ${sec.name} — the highest-yield section`;
+    label = `Start with ${sec.name}`;
+    sub = 'The highest-yield section. Each answer shows its explanation at once.';
   }
   if (sec) {
     items.push({
-      icon: sec.icon || '📖',
+      icon: 'book',
       title: label,
-      sub: 'Study mode — instant feedback with every answer',
-      cta: 'Continue',
+      sub,
+      cta: touched.length ? 'Continue studying' : 'Start studying',
       href: `#/quiz/${sec.id}/study`,
     });
   }
   const crams = cramPool();
   if (crams.length >= 3) {
     items.push({
-      icon: '⚡',
-      title: `Cram review — ${Math.min(crams.length, CRAM_MAX)} flashcards`,
-      sub: 'Your weakest questions as flashcards. Fast, no scoring',
-      cta: 'Cram',
+      icon: 'bolt',
+      title: `Cram ${Math.min(crams.length, CRAM_MAX)} flashcards`,
+      sub: 'Your weakest questions, fast and unscored',
+      cta: 'Start cramming',
       href: '#/quiz/cram/cram',
     });
   }
   return items.slice(0, 3);
 }
 
+const histRows = (list, kindOf) => list.map((h) => {
+  const pct = h.total ? Math.round((h.correct / h.total) * 100) : 0;
+  return `
+    <div class="hist-row">
+      <span class="hist-score ${pct >= 70 ? 'ok' : 'no'}">${pct}%</span>
+      <span class="hist-title">${esc(h.title)}</span>
+      <span class="hist-meta">${kindOf(h)} · ${h.correct}/${h.total} · ${new Date(h.ts).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
+    </div>`;
+}).join('');
+
+let traceDrawn = false;   // the monitor trace draws itself once per launch, not on every visit to Home
+
 function renderHome() {
   const st = readiness();
-  const ringColor = st.readiness >= 70 ? 'var(--correct)' : st.readiness >= 40 ? 'var(--flag)' : 'var(--wrong)';
 
-  const resume = store.active;
-  const resumeHtml = resume && resume.qIds?.length
-    ? `<div class="card resume-card">
-        <div class="card-top">
-          <div class="card-icon">⏸</div>
-          <div style="min-width:0;flex:1">
-            <div class="card-title">Resume where you left off</div>
-            <div class="card-meta">${esc(resume.title)} · ${resume.mode === 'exam' ? 'Timed Test' : resume.mode === 'mock' ? 'OEEM Simulation' : 'Study'} · Question ${(resume.idx || 0) + 1} of ${resume.qIds.length}${resume.mode === 'mock' ? ` · ${fmtTime(resume.timeLeft || 0)} left` : ''}</div>
-          </div>
-          <button class="btn btn-primary" onclick="resumeSession()">▶ Resume</button>
-        </div>
-      </div>`
-    : '';
-
-  const queue = todayQueue();
-  const queueHtml = queue.length
-    ? queue.map((it, i) => `
-        <div class="card queue-card">
-          <div class="queue-rank">${i + 1}</div>
-          <div class="queue-body">
-            <div class="queue-title">${it.icon} ${esc(it.title)}</div>
-            <div class="queue-sub">${esc(it.sub)}</div>
-          </div>
-          <a class="btn btn-primary" href="${it.href}">${esc(it.cta)}</a>
-        </div>`).join('')
-    : `<div class="card"><div class="card-meta">Open the Practice tab and pick a section to begin.</div></div>`;
+  const resume = store.active && store.active.qIds?.length ? store.active : null;
+  // the session being resumed is not offered a second time further down
+  const queue = todayQueue().filter((it) => !resume || it.href !== `#/quiz/${resume.sectionId}/${resume.mode}`);
+  const lead = resume ? null : queue.shift();
+  let nextCard = '';
+  if (resume) {
+    const kind = resume.mode === 'exam' ? 'Timed test' : resume.mode === 'mock' ? 'Exam' : 'Study';
+    nextCard = `
+      <div class="next-card">
+        <div class="next-title">Resume where you left off</div>
+        <div class="next-sub">${esc(resume.title)}. ${kind}, question ${(resume.idx || 0) + 1} of ${resume.qIds.length}${resume.mode === 'mock' ? `, ${fmtTime(resume.timeLeft || 0)} left` : ''}.</div>
+        ${bar(((resume.idx || 0) / resume.qIds.length) * 100)}
+        <button class="btn btn-primary btn-lg btn-block" onclick="resumeSession()">${icon('play', 'fill')} Resume</button>
+      </div>`;
+  } else if (lead) {
+    nextCard = `
+      <div class="next-card">
+        <div class="next-title">${esc(lead.title)}</div>
+        <div class="next-sub">${esc(lead.sub)}</div>
+        <a class="btn btn-primary btn-lg btn-block" href="${lead.href}">${esc(lead.cta)}</a>
+      </div>`;
+  }
+  const queueRows = queue.map((it) => `
+    <a class="row" href="${it.href}">
+      <span class="row-icon">${icon(it.icon)}</span>
+      <span class="row-body"><span class="row-title">${esc(it.title)}</span><span class="row-sub">${esc(it.sub)}</span></span>
+      ${icon('chev', 'chev')}
+    </a>`).join('');
 
   const goal = nextGoal();
-  const oeemStrip = goal
-    ? `<a class="card oeem-strip" href="${goal.href}">
-        <div class="oeem-logo">🎯</div>
-        <div style="min-width:0;flex:1">
-          <div class="oeem-strip-title">${esc(goal.title)}</div>
-          ${goal.pct < 100 ? `<div class="mastery oeem-progress" style="margin-top:4px"><div class="mastery-fill" style="width:${Math.round(goal.pct * 100)}%"></div></div>` : ''}
-          <div class="oeem-progress-label">${esc(goal.sub)}</div>
-        </div>
-        <span class="oeem-chevron">›</span>
-      </a>`
+  const goalHtml = goal
+    ? `<div class="section-heading"><h2>Next exam goal</h2><span>هدفك التالي في سلّم الاختبارات</span></div>
+      <div class="list">
+        <a class="row" href="${goal.href}">
+          <span class="row-icon">${icon('target')}</span>
+          <span class="row-body">
+            <span class="row-title" dir="auto">${esc(goal.title)}</span>
+            ${goal.pct < 100 ? bar(goal.pct * 100) : ''}
+            <span class="row-sub" dir="auto">${esc(goal.sub)}</span>
+          </span>
+          ${icon('chev', 'chev')}
+        </a>
+      </div>`
     : '';
 
   const hist = store.history.slice(0, 3);
   const histHtml = hist.length
-    ? `<div class="hist-list">` + hist.map((h) => {
-        const pct = h.total ? Math.round((h.correct / h.total) * 100) : 0;
-        const kind = h.mode === 'mock' ? 'OEEM' : h.mode === 'exam' ? 'Test' : 'Study';
-        return `
-          <div class="hist-row">
-            <span class="hist-score ${pct >= 70 ? 'ok' : 'no'}">${pct}%</span>
-            <span class="hist-title">${esc(h.title)}</span>
-            <span class="hist-meta">${kind} · ${h.correct}/${h.total} · ${new Date(h.ts).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
-          </div>`;
-      }).join('') + `</div>`
+    ? `<div class="hist-list">${histRows(hist, (h) => h.mode === 'mock' ? 'OEEM' : h.mode === 'exam' ? 'Test' : 'Study')}</div>`
     : `<div class="card"><div class="card-meta">Finish a session and your scores will collect here.</div></div>`;
 
   const content = `
-    <div class="card readiness-compact">
-      <div class="score-ring sm" style="--pct:${st.readiness};--score-color:${ringColor}">
-        <div class="score-ring-inner"><b style="color:${ringColor}">${st.readiness}%</b></div>
+    <section class="monitor" aria-label="Exam readiness">
+      ${TRACE(traceDrawn ? '' : 'draw')}
+      <div class="monitor-label">Exam readiness</div>
+      <div class="monitor-value">${st.readiness}<span>%</span></div>
+      <div class="monitor-channels">
+        <div class="ch ch-cov"><span>Coverage</span><b>${st.seen}<i>/${st.total}</i></b></div>
+        <div class="ch ch-acc"><span>Accuracy</span><b>${st.accuracy}<i>%</i></b></div>
+        <div class="ch ch-mas"><span>Mastered</span><b>${st.mastered}</b></div>
       </div>
-      <div class="rc-stats">
-        <div><b>${st.readiness}%</b><span>Exam readiness</span></div>
-        <div><b>${st.seen}<i>/${st.total}</i></b><span>Coverage</span></div>
-        <div><b>${st.accuracy}%</b><span>Accuracy</span></div>
-        <div><b>${st.mastered}</b><span>Mastered</span></div>
-      </div>
-    </div>
-    ${resumeHtml}
-    <div class="section-heading"><h2>Today</h2><span>قائمة اليوم — بالترتيب</span></div>
-    ${queueHtml}
-    <div class="section-heading"><h2>Exam Ladder</h2><span>سلّم الاختبارات — هدفك التالي</span></div>
-    ${oeemStrip}
-    <div class="section-heading"><h2>Recent</h2><span>آخر الجلسات</span></div>
+    </section>
+    ${Install.cardHtml()}
+    <div class="section-heading"><h2>Up next</h2><span>قائمة اليوم بالترتيب</span></div>
+    ${nextCard}
+    ${queueRows ? `<div class="list">${queueRows}</div>` : ''}
+    ${goalHtml}
+    <div class="section-heading"><h2>Recent sessions</h2><span>آخر الجلسات</span></div>
     ${histHtml}`;
   app.innerHTML = chrome(content);
+  traceDrawn = true;
+  Install.nudge();
 }
 
 /* ---------------- practice tab ---------------- */
@@ -951,40 +1153,28 @@ function recommendedPath() {
 
 function renderPractice() {
   session = null;
-  const cards = DB.sections.map((sec) => {
+  // one list, already in the order worth studying: heaviest blueprint weight first
+  const rows = (BLUEPRINT ? recommendedPath() : DB.sections).map((sec) => {
     const s = sectionStats(sec.id);
     return `
-      <a class="card sec-card" href="#/section/${sec.id}">
-        <div class="card-top">
-          <div class="card-icon">${sec.icon || '📋'}</div>
-          <div style="min-width:0">
-            <div class="card-title">${esc(sec.name)}</div>
-            <div class="card-title-ar">${esc(sec.nameAr || '')}</div>
-          </div>
-        </div>
-        <div>
-          <div class="mastery"><div class="mastery-fill" style="width:${s.mastery}%"></div></div>
-          <div class="card-meta" style="margin-top:5px">Mastery ${s.mastery}% · ${s.seen}/${s.total} seen</div>
-        </div>
+      <a class="row" href="#/section/${sec.id}">
+        ${ring(s.mastery)}
+        <span class="row-body">
+          <span class="row-title">${esc(sec.name)}</span>
+          <span class="row-sub">${s.seen} of ${s.total} seen</span>
+        </span>
+        <span class="sec-ar">${esc(sec.nameAr || '')}</span>
+        ${icon('chev', 'chev')}
       </a>`;
   }).join('');
 
-  const covBySec = {};
-  DB.sections.forEach((s) => { covBySec[s.id] = sectionCoverage(s.id).seen; });
-  const path = BLUEPRINT ? recommendedPath() : [];
-  const trail = path.length
-    ? `<div class="path-strip">${path.map((s, i) =>
-        `<a class="path-chip ${covBySec[s.id] ? 'touched' : ''}" href="#/section/${s.id}"><b>${i + 1}</b>${s.icon || ''} ${esc(s.name)}</a>`).join('')}</div>
-      <div class="card-meta" style="margin:6px 2px 0">المسار المقترح — مرتب بأوزان المخطط الرسمي. اتبعه أو اختر حرّاً؛ اختبارات المحطات تتكيف مع تغطيتك أياً كان مسارك.</div>`
-    : '';
-
   const content = `
-    <div class="hero" style="padding-top:8px">
-      <h1 style="font-size:20px">Practice by section</h1>
-      <p>Study with instant feedback — coverage checkpoints test what you have covered.</p>
+    <div class="page-head">
+      <h1>Practice by section</h1>
+      <p>Sorted by weight in the official blueprint, so the top of the list earns the most marks. The ring shows your mastery.</p>
     </div>
-    ${trail}
-    <div class="grid">${cards}</div>`;
+    <div class="section-heading"><h2>${DB.sections.length} sections</h2><span>مرتبة بأوزان المخطط الرسمي</span></div>
+    <div class="list">${rows}</div>`;
   app.innerHTML = chrome(content);
 }
 
@@ -1006,60 +1196,48 @@ function renderSectionPage(secId) {
     const gatePct = Math.round(cp.gate * 100);
     if (cs.unlocked) {
       return `
-        <div class="cp-row open">
-          <span class="cp-state">✓</span>
-          <div class="cp-body">
-            <div class="cp-name">Checkpoint ${cp.tier} — ${Math.min(20, cov.seen)} questions · 25 min</div>
-            <div class="cp-meta">${cs.attempts ? `${cs.attempts} attempt${cs.attempts > 1 ? 's' : ''}${cs.best != null ? ` · best ${cs.best}%` : ''}` : 'Not attempted yet'}</div>
-          </div>
-          <button class="btn btn-primary" onclick="startCheckpoint('${secId}', ${cp.tier})">Take</button>
+        <div class="row">
+          <span class="row-icon ${cs.attempts ? 'ok' : ''}">${cs.attempts ? icon('check') : cp.tier}</span>
+          <span class="row-body">
+            <span class="row-title">Checkpoint ${cp.tier}</span>
+            <span class="row-sub">${cs.attempts ? `${cs.attempts} attempt${cs.attempts > 1 ? 's' : ''}${cs.best != null ? `, best <b>${cs.best}%</b>` : ''}` : `${Math.min(20, cov.seen)} questions, timed`}</span>
+          </span>
+          <button class="btn btn-primary btn-sm" onclick="startCheckpoint('${secId}', ${cp.tier})">${cs.attempts ? 'Retake' : 'Take'}</button>
         </div>`;
     }
     return `
-      <div class="cp-row locked">
-        <span class="cp-state">🔒</span>
-        <div class="cp-body">
-          <div class="cp-name">Checkpoint ${cp.tier}</div>
-          <div class="cp-meta">Unlocks at ${gatePct}% coverage — you are at ${Math.round(cov.pct * 100)}%</div>
-        </div>
-        <button class="btn" disabled>Locked</button>
+      <div class="row disabled">
+        <span class="row-icon muted">${icon('lock')}</span>
+        <span class="row-body">
+          <span class="row-title">Checkpoint ${cp.tier}</span>
+          <span class="row-sub">Unlocks at ${gatePct}% coverage. You are at ${Math.round(cov.pct * 100)}%.</span>
+        </span>
       </div>`;
   }).join('');
 
+  const drill = (on, href, ic, title, sub) => on
+    ? `<a class="row" href="${href}"><span class="row-icon">${icon(ic)}</span><span class="row-body"><span class="row-title">${title}</span><span class="row-sub">${sub}</span></span>${icon('chev', 'chev')}</a>`
+    : `<div class="row disabled"><span class="row-icon muted">${icon(ic)}</span><span class="row-body"><span class="row-title">${title}</span><span class="row-sub">${sub}</span></span></div>`;
+
   const content = `
-    <button class="back-link" onclick="location.hash='#/practice'">← All sections</button>
     <div class="sec-hero">
-      <div class="card-icon big">${sec.icon || '📋'}</div>
-      <div>
+      ${ring(st.mastery, 'lg')}
+      <div style="min-width:0">
         <h1>${esc(sec.name)}</h1>
         <div class="sec-hero-ar">${esc(sec.nameAr || '')}</div>
-        <div class="card-meta">${sec.count} questions · Mastery ${st.mastery}% · ${cov.seen}/${cov.total} covered (${Math.round(cov.pct * 100)}%)</div>
-        <div class="mastery" style="margin-top:8px"><div class="mastery-fill" style="width:${st.mastery}%"></div></div>
+        <div class="card-meta">${cov.seen} of ${cov.total} questions covered (${Math.round(cov.pct * 100)}%)</div>
       </div>
     </div>
-    <a class="btn btn-primary btn-block sec-cta" href="#/quiz/${sec.id}/study">
-      ▶ ${cov.seen > 0 ? 'Continue studying' : 'Start studying'} — instant feedback per answer
-    </a>
-    <div class="section-heading"><h2>Coverage checkpoints</h2><span>اختبر ما غطّيته — 20 سؤالاً · 25 دقيقة</span></div>
-    <div class="cp-list">${checkpoints}</div>
+    <a class="btn btn-primary btn-lg btn-block" href="#/quiz/${sec.id}/study">${cov.seen > 0 ? 'Continue studying' : 'Start studying'}</a>
+    <p class="cta-note">Each answer shows its explanation at once</p>
+    <div class="section-heading"><h2>Coverage checkpoints</h2><span>اختبر ما غطّيته</span></div>
+    <div class="list">${checkpoints}</div>
     <div class="section-heading"><h2>Drills</h2><span>تدريب موجّه</span></div>
-    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
-      <div class="card">
-        <div class="card-top"><div class="card-icon">🔁</div>
-          <div><div class="card-title">Wrong answers</div><div class="card-title-ar">أخطاء هذا القسم</div></div>
-        </div>
-        <div class="card-meta">${wrongN ? `${wrongN} waiting — two correct in a row clears each` : 'Nothing waiting. Nice.'}</div>
-        ${wrongN ? `<a class="btn btn-primary btn-block" href="#/quiz/wrong-${sec.id}/study">Drill ${wrongN} wrong</a>` : `<button class="btn btn-block" disabled>Empty</button>`}
-      </div>
-      <div class="card">
-        <div class="card-top"><div class="card-icon">⭐</div>
-          <div><div class="card-title">Bookmarks</div><div class="card-title-ar">محفوظات القسم</div></div>
-        </div>
-        <div class="card-meta">${stars ? `${stars} bookmarked here` : 'Press F while studying to bookmark.'}</div>
-        ${stars ? `<a class="btn btn-primary btn-block" href="#/quiz/starred-${sec.id}/study">Study ${stars} bookmarks</a>` : `<button class="btn btn-block" disabled>None yet</button>`}
-      </div>
+    <div class="list">
+      ${drill(wrongN, `#/quiz/wrong-${sec.id}/study`, 'refresh', 'Wrong answers', wrongN ? `${wrongN} waiting. Two correct in a row clears each.` : 'Nothing waiting in this section.')}
+      ${drill(stars, `#/quiz/starred-${sec.id}/study`, 'bookmark', 'Bookmarks', stars ? `${stars} saved from this section` : 'Tap the bookmark while studying to save a question.')}
     </div>`;
-  app.innerHTML = chrome(content);
+  app.innerHTML = chrome(content, { back: '#/practice', title: 'Practice' });
 }
 
 /* ---------------- exams tab: the 13-step ladder ---------------- */
@@ -1067,24 +1245,18 @@ function renderExams() {
   session = null;
   const cov = uniqueCovered();
   const ratio = coverageRatio();
+  const tries = (st) => st.attempts ? `${st.attempts} attempt${st.attempts > 1 ? 's' : ''}, best <b>${st.best}%</b>` : 'Not attempted yet';
 
   const msCards = (BLUEPRINT?.milestoneTests || []).map((m) => {
     const st = milestoneState(m);
     const body = st.unlocked
-      ? `<div class="card-meta">${st.attempts ? `${st.attempts} attempt${st.attempts > 1 ? 's' : ''} · best <b>${st.best}%</b>` : 'Not attempted yet'} · ${m.size}q · ${m.minutes}min · 75/25 mix</div>`
-      : `<div class="mastery" style="margin-top:4px"><div class="mastery-fill" style="width:${Math.min(100, Math.round((cov / m.unlockAt) * 100))}%"></div></div>
-         <div class="card-meta" style="margin-top:5px">${cov}/${m.unlockAt} covered — <b>${st.remaining}</b> remaining</div>`;
-    const action = st.unlocked
-      ? `<a class="btn btn-primary" href="#/quiz/milestone-${m.id}/mock">${st.best != null ? 'Retake' : 'Start'}</a>`
-      : `<button class="btn" disabled>🔒</button>`;
+      ? `<span class="row-sub">${tries(st)}. ${m.size} questions, ${m.minutes} min.</span>`
+      : `${bar((cov / m.unlockAt) * 100)}<span class="row-sub">${cov} of ${m.unlockAt} covered, <b>${st.remaining}</b> to go</span>`;
     return `
-      <div class="card ms-row ${st.unlocked ? '' : 'locked'}">
-        <div class="ms-num">${m.id}</div>
-        <div style="flex:1;min-width:0">
-          <div class="card-title">Milestone Test ${m.id}</div>
-          ${body}
-        </div>
-        ${action}
+      <div class="row ${st.unlocked ? '' : 'disabled'}">
+        <span class="row-icon ${st.unlocked ? '' : 'muted'}">${st.unlocked ? m.id : icon('lock')}</span>
+        <span class="row-body"><span class="row-title">Milestone Test ${m.id}</span>${body}</span>
+        ${st.unlocked ? `<a class="btn btn-primary btn-sm" href="#/quiz/milestone-${m.id}/mock">${st.best != null ? 'Retake' : 'Start'}</a>` : ''}
       </div>`;
   }).join('');
 
@@ -1092,46 +1264,30 @@ function renderExams() {
     const st = simState(s);
     const need = Math.round(s.unlockAtCoverage * 100);
     const body = st.unlocked
-      ? `<div class="card-meta">${st.attempts ? `${st.attempts} attempt${st.attempts > 1 ? 's' : ''} · best <b>${st.best}%</b>` : 'Not attempted yet'} · ${s.size}q · ${s.minutes}min · fixed paper</div>`
-      : `<div class="mastery" style="margin-top:4px"><div class="mastery-fill" style="width:${Math.min(100, Math.round((ratio / s.unlockAtCoverage) * 100))}%"></div></div>
-         <div class="card-meta" style="margin-top:5px">unlocks at ${need}% coverage — you are at ${Math.round(ratio * 100)}% · <b>${st.remaining}</b> remaining</div>`;
-    const action = st.unlocked
-      ? `<a class="btn oeem-cta" href="#/quiz/sim-${s.id}/mock">${st.best != null ? 'Retake' : 'Start'}</a>`
-      : `<button class="btn" disabled>🔒</button>`;
+      ? `<span class="row-sub">${tries(st)}. ${s.size} questions, ${s.minutes} min.</span>`
+      : `${bar((ratio / s.unlockAtCoverage) * 100)}<span class="row-sub">Unlocks at ${need}% coverage. You are at ${Math.round(ratio * 100)}%, <b>${st.remaining}</b> questions to go.</span>`;
     return `
-      <div class="card ms-row sim ${st.unlocked ? '' : 'locked'}">
-        <div class="ms-num">${s.id}</div>
-        <div style="flex:1;min-width:0">
-          <div class="card-title">${esc(BLUEPRINT.exam.code)} Simulation ${s.id} ${need}%</div>
-          ${body}
-        </div>
-        ${action}
+      <div class="row ${st.unlocked ? '' : 'disabled'}">
+        <span class="row-icon ${st.unlocked ? 'solid' : 'muted'}">${st.unlocked ? s.id : icon('lock')}</span>
+        <span class="row-body"><span class="row-title">${esc(BLUEPRINT.exam.code)} Simulation ${s.id}</span>${body}</span>
+        ${st.unlocked ? `<a class="btn btn-primary btn-sm" href="#/quiz/sim-${s.id}/mock">${st.best != null ? 'Retake' : 'Start'}</a>` : ''}
       </div>`;
   }).join('');
 
   const hist = store.history.filter((h) => h.mode === 'mock' || h.mode === 'exam').slice(0, 20);
   const histHtml = hist.length
-    ? `<div class="hist-list">` + hist.map((h) => {
-        const pct = h.total ? Math.round((h.correct / h.total) * 100) : 0;
-        const kind = h.kind === 'simulation' ? '🎓 OEEM' : h.kind === 'milestone' ? '🧩 Milestone' : h.kind === 'checkpoint' ? '🏁 Checkpoint' : '⏱ Test';
-        return `
-          <div class="hist-row">
-            <span class="hist-score ${pct >= 70 ? 'ok' : 'no'}">${pct}%</span>
-            <span class="hist-title">${esc(h.title)}</span>
-            <span class="hist-meta">${kind} · ${h.correct}/${h.total} · ${new Date(h.ts).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
-          </div>`;
-      }).join('') + `</div>`
-    : `<div class="card"><div class="card-meta">Your ladder attempts will collect here.</div></div>`;
+    ? `<div class="hist-list">${histRows(hist, (h) => h.kind === 'simulation' ? 'OEEM' : h.kind === 'milestone' ? 'Milestone' : h.kind === 'checkpoint' ? 'Checkpoint' : 'Test')}</div>`
+    : `<div class="card"><div class="card-meta">Your exam attempts will collect here.</div></div>`;
 
   const content = `
-    <div class="hero" style="padding-top:8px">
-      <h1 style="font-size:20px">Exam Ladder</h1>
-      <p>10 milestone tests as you grow (every 300 covered questions) — then 3 fixed OEEM simulations, the same paper for everyone.</p>
+    <div class="page-head">
+      <h1>Exam ladder</h1>
+      <p>Milestone tests open as your coverage grows. The OEEM simulations are one fixed paper, the same for every doctor.</p>
     </div>
-    <div class="section-heading"><h2>Milestone Tests</h2><span>اختبارات المحطات — 75% مما درسته + 25% جديد</span></div>
-    <div class="ms-list">${msCards}</div>
-    <div class="section-heading"><h2>OEEM Simulations</h2><span>المحاكاة الحقيقية — ورقة ثابتة للجميع، تفتح بالتغطية</span></div>
-    <div class="ms-list">${simCards}</div>
+    <div class="section-heading"><h2>Milestone tests</h2><span>75% مما درسته + 25% جديد</span></div>
+    <div class="list">${msCards}</div>
+    <div class="section-heading"><h2>OEEM simulations</h2><span>ورقة ثابتة للجميع، تفتح بالتغطية</span></div>
+    <div class="list">${simCards}</div>
     <div class="section-heading"><h2>Attempt history</h2><span>سجل المحاولات</span></div>
     ${histHtml}`;
   app.innerHTML = chrome(content);
@@ -1155,6 +1311,14 @@ function stopTimer() {
 }
 const fmtTime = (s) => `${Math.floor(s / 60)}:${String(Math.max(s, 0) % 60).padStart(2, '0')}`;
 
+// leave a session for Home. It stays resumable from there.
+function exitQuiz() {
+  stopTimer();
+  session = null;
+  if ((location.hash || '#/') === '#/') route();
+  else location.hash = '#/';
+}
+
 function renderQuiz() {
   const isExam = session.mode === 'exam';
   const isCram = session.mode === 'cram';
@@ -1164,10 +1328,7 @@ function renderQuiz() {
   const revealed = session.submitted[session.idx];
   const isLast = session.idx === session.questions.length - 1;
   const starred = store.starred.includes(q.id);
-
-  const progress = session.questions.length > 1
-    ? `<div class="progress-track"><div class="progress-fill" style="width:${(session.idx / session.questions.length) * 100}%"></div></div>`
-    : '';
+  const total = session.questions.length;
 
   const options = q.options.map((opt, i) => {
     let cls = 'option';
@@ -1187,24 +1348,25 @@ function renderQuiz() {
       </button>`;
   }).join('');
 
+  const ref = q.reference ? `<div class="feedback-ref">${esc(q.reference)}</div>` : '';
   let feedback = '';
   if (revealed && isCram) {
     feedback = `
       <div class="feedback correct">
         <div class="feedback-head">Answer: ${LETTERS[q.answer]}</div>
         <div class="feedback-body">${esc(q.explanation || '')}</div>
-        ${q.reference ? `<div class="feedback-ref">📚 ${esc(q.reference)}</div>` : ''}
+        ${ref}
       </div>`;
   } else if (revealed && q.selfScored && session.selfGrades[session.idx] == null) {
     feedback = `
       <div class="feedback">
         <div class="feedback-body">${esc(q.explanation || '')}</div>
-        ${q.reference ? `<div class="feedback-ref">📚 ${esc(q.reference)}</div>` : ''}
+        ${ref}
         <div class="self-grade">
-          <span class="self-grade-q">بعد قراءة الشرح — كيف كانت إجابتك؟ · How did you do?</span>
+          <span class="self-grade-q">After reading the explanation, how did you do? <span dir="rtl">كيف كانت إجابتك؟</span></span>
           <div class="self-grade-btns">
-            <button class="btn" onclick="gradeSelf(true)">✓ I answered correctly</button>
-            <button class="btn btn-danger-soft" onclick="gradeSelf(false)">✗ I missed it</button>
+            <button class="btn" onclick="gradeSelf(true)">${icon('check')} I got it</button>
+            <button class="btn btn-danger-soft" onclick="gradeSelf(false)">${icon('close')} I missed it</button>
           </div>
         </div>
       </div>`;
@@ -1212,26 +1374,24 @@ function renderQuiz() {
     const ok = session.selfGrades[session.idx];
     feedback = `
       <div class="feedback ${ok ? 'correct' : 'wrong'}">
-        <div class="feedback-head">${ok ? '✓ Self-graded: correct' : '✗ Self-graded: missed'}</div>
+        <div class="feedback-head">${icon(ok ? 'check' : 'close')}${ok ? 'Self-graded: correct' : 'Self-graded: missed'}</div>
         <div class="feedback-body">${esc(q.explanation || '')}</div>
-        ${q.reference ? `<div class="feedback-ref">📚 ${esc(q.reference)}</div>` : ''}
+        ${ref}
       </div>`;
   } else if (revealed) {
     const ok = picked === q.answer;
     feedback = `
       <div class="feedback ${ok ? 'correct' : 'wrong'}">
-        <div class="feedback-head">${ok ? '✓ Correct' : `✗ Incorrect — correct answer: ${LETTERS[q.answer]}`}</div>
+        <div class="feedback-head">${icon(ok ? 'check' : 'close')}${ok ? 'Correct' : `Incorrect. The answer is ${LETTERS[q.answer]}`}</div>
         <div class="feedback-body">${esc(q.explanation || '')}</div>
-        ${q.reference ? `<div class="feedback-ref">📚 ${esc(q.reference)}</div>` : ''}
+        ${ref}
       </div>`;
   }
 
   const timer = (isExam || isMock)
     ? `<span class="quiz-timer ${session.timeLeft <= (isMock ? 300 : 60) ? 'danger' : ''}" id="timer">${fmtTime(session.timeLeft)}</span>`
     : '';
-
-  const modeBadge = isMock ? session.title : isExam ? 'Timed Test' : isCram ? '⚡ Cram' : 'Study Mode';
-  const noun = isCram ? 'Card' : 'Question';
+  const modeLabel = isCram ? 'Cram flashcards' : session.title;
 
   let paceBar = '';
   if (isMock) {
@@ -1245,7 +1405,7 @@ function renderQuiz() {
         </div>
         <div class="pace-meta">
           <span class="pace-status ${s.cls}" id="paceStatus">${s.label}</span>
-          <span>${answeredN}/${session.questions.length} answered · ${fmtTime(session.timeLeft)} left</span>
+          <span>${answeredN} of ${total} answered</span>
         </div>
       </div>`;
   }
@@ -1254,11 +1414,11 @@ function renderQuiz() {
   if (isMock) {
     const answeredN = session.picked.filter((p) => p !== null).length;
     gridOverlay = `
-      <div class="grid-overlay" id="gridOverlay" hidden>
-        <div class="grid-panel">
+      <div class="sheet-backdrop" id="gridOverlay" hidden>
+        <div class="sheet grid-panel" role="dialog" aria-modal="true">
           <div class="grid-panel-head">
-            <b>Question Navigator</b>
-            <button class="btn btn-ghost" id="gridClose">✕</button>
+            <span>Question navigator</span>
+            <button class="icon-btn" id="gridClose" aria-label="Close">${icon('close')}</button>
           </div>
           <div class="qgrid">
             ${session.questions.map((qq, i) => {
@@ -1270,33 +1430,46 @@ function renderQuiz() {
             }).join('')}
           </div>
           <div class="grid-panel-foot">
-            <span class="card-meta">${answeredN} answered · ${session.flagged.size} flagged · ${session.questions.length - answeredN} unanswered</span>
-            <button class="btn btn-primary" id="gridSubmit">Submit Exam</button>
+            <span class="card-meta">${answeredN} answered, ${total - answeredN} unanswered</span>
+            <button class="btn btn-primary btn-lg btn-block" id="gridSubmit">Submit exam</button>
           </div>
         </div>
       </div>`;
   }
 
+  // one primary action, always under the thumb
+  const key = '<kbd>↵</kbd>';
+  const primary = isCram
+    ? (revealed
+        ? `<button class="btn btn-primary" id="nextBtn">${isLast ? 'Done' : 'Next card'} ${key}</button>`
+        : `<button class="btn btn-primary" id="cramBtn">Show answer ${key}</button>`)
+    : isMock
+      ? (isLast
+          ? `<button class="btn btn-primary" id="footerGridBtn">Review and submit</button>`
+          : `<button class="btn btn-primary" id="nextBtn" ${picked === null ? 'disabled' : ''}>Next question</button>`)
+      : isExam
+        ? (isLast
+            ? `<button class="btn btn-primary" id="nextBtn">Finish test</button>`
+            : `<button class="btn btn-primary" id="nextBtn" ${picked === null ? 'disabled' : ''}>Next question</button>`)
+        : (revealed
+            ? (q.selfScored && session.selfGrades[session.idx] == null
+                ? `<button class="btn btn-primary" disabled>Grade yourself to continue</button>`
+                : `<button class="btn btn-primary" id="nextBtn">${isLast ? 'See results' : 'Next question'} ${key}</button>`)
+            : `<button class="btn btn-primary" disabled>Choose an answer</button>`);
+
   app.innerHTML = `
-    <div class="topbar"><div class="topbar-inner">
-      <div class="brand" onclick="location.hash='#/'">
-        <div class="brand-logo">EM</div>
-        <div><div class="brand-name">Oman EM Prep</div></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span class="quiz-mode-badge ${isExam || isMock ? 'exam' : ''}">${esc(modeBadge)}</span>
-        ${timer}
-        ${isMock ? `<button class="btn" id="headerGridBtn">⊞</button>` : ''}
-        ${themeButtonHtml()}
-      </div>
-    </div></div>
-    <div class="wrap">
-      <div class="quiz-header">
-        <button class="back-link" onclick="location.hash='#/'">← Exit</button>
-        ${!hasFullAccess() ? `<span class="trial-pill">🎁 ${trialLeft() ? `بقي ${trialLeft()} مجاناً` : 'آخر سؤال مجاني'}</span>` : ''}
-        <span class="quiz-counter">${noun} ${session.idx + 1} of ${session.questions.length}</span>
-      </div>
-      ${progress}
+    ${appBar({
+      right: `${timer}
+        ${isMock ? `<button class="icon-btn" id="headerGridBtn" aria-label="Question navigator">${icon('grid')}</button>` : ''}
+        <button class="icon-btn ${starred ? 'on' : ''}" id="flagBtn" aria-label="${starred ? 'Remove bookmark' : 'Bookmark this question'}" aria-pressed="${starred}">${icon('bookmark', starred ? 'fill' : '')}</button>`,
+      below: `<div class="progress-track"><div class="progress-fill" style="width:${((session.idx + (revealed || picked !== null ? 1 : 0)) / total) * 100}%"></div></div>`,
+      lead: `<div class="bar-lead">
+        <button class="icon-btn" onclick="exitQuiz()" aria-label="Exit">${icon('close')}</button>
+        <div class="quiz-pos"><b>${session.idx + 1}</b> / ${total}<span class="quiz-mode">${esc(modeLabel)}</span></div>
+      </div>`,
+    })}
+    <main class="wrap quiz-wrap">
+      ${!hasFullAccess() ? `<span class="trial-pill">${trialLeft() ? `بقي ${trialLeft()} سؤالاً مجانياً` : 'آخر سؤال مجاني'}</span>` : ''}
       ${paceBar}
       <div class="q-card">
         ${q.vignette ? `<div class="q-vignette">${esc(q.vignette)}</div>` : ''}
@@ -1304,46 +1477,27 @@ function renderQuiz() {
         <div class="options">${options}</div>
         ${feedback}
       </div>
-      <div class="quiz-footer">
-        <button class="btn ${starred ? 'flagged' : 'ghost'}" id="flagBtn">
-          ${starred ? '⭐ Bookmarked' : '☆ Bookmark'} <kbd>F</kbd>
-        </button>
-        <div class="quiz-footer-right">
-          ${session.idx > 0 ? `<button class="btn" id="prevBtn">← Previous</button>` : ''}
-          ${isCram
-            ? (revealed
-                ? `<button class="btn btn-primary" id="nextBtn">${isLast ? 'Done' : 'Next →'} <kbd>↵</kbd></button>`
-                : `<button class="btn btn-primary" id="cramBtn">Show Answer <kbd>↵</kbd></button>`)
-            : isMock
-              ? (isLast
-                  ? `<button class="btn btn-primary" id="footerGridBtn">Review & Submit</button>`
-                  : `<button class="btn btn-primary" id="nextBtn" ${picked === null ? 'disabled' : ''}>Next →</button>`)
-              : isExam
-                ? (isLast
-                    ? `<button class="btn btn-primary" id="nextBtn">Finish Exam</button>`
-                    : `<button class="btn btn-primary" id="nextBtn" ${picked === null ? 'disabled' : ''}>Next →</button>`)
-                : (revealed
-                    ? `<button class="btn btn-primary" id="nextBtn">${isLast ? 'See Results' : 'Next →'} <kbd>↵</kbd></button>`
-                    : ``)}
-        </div>
-      </div>
-      ${!isExam && !isCram && !isMock ? `<div class="hint">Tap an answer — the result and explanation appear instantly. Keys <kbd>A</kbd>–<kbd>${LETTERS[q.options.length - 1]}</kbd> work too.</div>` : ''}
-      ${isCram ? `<div class="hint">Flashcards don't affect your score — think first, then reveal. ⭐ to keep for later.</div>` : ''}
-      ${isExam ? `<div class="hint">Exam pace: ${EXAM_SEC_PER_Q}s per question. Skipped questions count as wrong.</div>` : ''}
-      ${isMock ? `<div class="hint">Blueprint simulation — answers stay editable, ⊞ Navigator jumps anywhere and submits.</div>` : ''}
-    </div>
+      ${!isExam && !isCram && !isMock && !revealed ? `<div class="hint keys">Keys <kbd>A</kbd>–<kbd>${LETTERS[q.options.length - 1]}</kbd> answer, <kbd>F</kbd> bookmarks.</div>` : ''}
+      ${isCram && !revealed ? `<div class="hint">Flashcards do not change your score. Think first, then reveal.</div>` : ''}
+      ${isExam ? `<div class="hint">${EXAM_SEC_PER_Q} seconds per question. Skipped questions count as wrong.</div>` : ''}
+    </main>
+    <div class="actionbar"><div class="actionbar-inner">
+      ${session.idx > 0 ? `<button class="btn btn-prev" id="prevBtn" aria-label="Previous question">${icon('back')}</button>` : ''}
+      ${primary}
+    </div></div>
     ${gridOverlay}`;
 
   $$('.option:not(:disabled)').forEach((el) =>
     el.addEventListener('click', () => pick(+el.dataset.i)));
   $('#flagBtn')?.addEventListener('click', toggleFlag);
-  $('#prevBtn')?.addEventListener('click', () => { session.idx -= 1; persistSession(); renderQuiz(); });
+  $('#prevBtn')?.addEventListener('click', () => { session.idx -= 1; persistSession(); renderQuiz(); window.scrollTo(0, 0); });
   $('#cramBtn')?.addEventListener('click', revealCram);
   $('#nextBtn')?.addEventListener('click', next);
   if (isMock) {
     $('#headerGridBtn')?.addEventListener('click', openGrid);
     $('#footerGridBtn')?.addEventListener('click', openGrid);
     $('#gridClose')?.addEventListener('click', closeGrid);
+    $('#gridOverlay')?.addEventListener('click', (e) => { if (e.target.id === 'gridOverlay') closeGrid(); });
     $('#gridSubmit')?.addEventListener('click', submitFromGrid);
     $$('#gridOverlay .qcell').forEach((el) => el.addEventListener('click', () => {
       session.idx = +el.dataset.i;
@@ -1352,6 +1506,14 @@ function renderQuiz() {
       window.scrollTo(0, 0);
     }));
   }
+}
+
+// bring the explanation into view above the action bar once an answer is revealed
+function showFeedback() {
+  const f = $('.feedback');
+  if (!f) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  f.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' });
 }
 
 function pick(i) {
@@ -1365,6 +1527,7 @@ function pick(i) {
     if (!q.selfScored) recordAttempt(q.id, i === q.answer);
     persistSession();
     renderQuiz();
+    showFeedback();
     return;
   }
   session.picked[session.idx] = session.picked[session.idx] === i ? null : i;
@@ -1383,6 +1546,7 @@ function gradeSelf(ok) {
 function revealCram() {
   session.submitted[session.idx] = true;
   renderQuiz();
+  showFeedback();
 }
 
 function next() {
@@ -1426,9 +1590,12 @@ function finishExam(auto) {
     store.simAttempts[session.simId] = (store.simAttempts[session.simId] || 0) + 1;
   }
   saveStore();
-  session.questions.forEach((q, i) => {
-    if (session.picked[i] !== null) recordAttempt(q.id, session.picked[i] === q.answer);
-  });
+  // study answers were recorded one by one as they were given
+  if (session.mode !== 'study') {
+    session.questions.forEach((q, i) => {
+      if (session.picked[i] !== null) recordAttempt(q.id, session.picked[i] === q.answer);
+    });
+  }
   const correct = correct0(session);
   const entry = {
     ts: Date.now(),
@@ -1451,8 +1618,13 @@ function finishExam(auto) {
   if (window.Sync) Sync.logSession(entry);
   renderResults({ correct, total: session.questions.length, auto });
 }
+// answerless questions are right when the doctor graded themselves right
+function isCorrect(sess, i) {
+  const q = sess.questions[i];
+  return q.selfScored ? sess.selfGrades[i] === true : sess.picked[i] === q.answer;
+}
 function correct0(sess) {
-  return sess.questions.reduce((n, q, i) => n + (sess.picked[i] === q.answer ? 1 : 0), 0);
+  return sess.questions.reduce((n, q, i) => n + (isCorrect(sess, i) ? 1 : 0), 0);
 }
 
 /* ---------------- results ---------------- */
@@ -1518,61 +1690,69 @@ function renderResults({ correct, total, auto }) {
   }
 
   const rows = session.questions.map((q, i) => {
-    const ok = session.picked[i] === q.answer;
+    const ok = isCorrect(session, i);
     const skipped = session.picked[i] === null;
     const sec = DB.sections.find((s) => s.id === q.sectionId);
-    const m = MASTERY_LABEL(masteryOf(store.q[q.id]));
+    const m = !ok && masteryOf(store.q[q.id]) === 0 ? 'Needs review' : MASTERY_LABEL(masteryOf(store.q[q.id]));
     return `
-      <div class="review-row" data-i="${i}">
-        <div class="review-status ${ok ? 'ok' : 'no'}">${ok ? '✓' : '✗'}</div>
-        <div class="review-text">${esc(q.question)}</div>
-        <div class="review-num">${esc(sec?.name || '')} · ${m}</div>
+      <div class="review-row" data-i="${i}" role="button" tabindex="0" aria-expanded="false">
+        <div class="review-status ${ok ? 'ok' : 'no'}">${icon(ok ? 'check' : 'close')}</div>
+        <div class="review-main">
+          <div class="review-text">${esc(q.question)}</div>
+          <div class="review-num">${esc(sec?.name || '')}${skipped ? ', skipped' : ''} · ${m}</div>
+        </div>
+        ${icon('chev', 'chev')}
       </div>
       <div class="review-detail" id="detail-${i}" hidden>${reviewDetail(q, i)}</div>`;
   }).join('');
 
+  const backHref = !isMock && session.checkpoint ? `#/section/${session.checkpoint.sectionId}` : '#/';
+  const backName = !isMock && session.checkpoint ? (DB.sections.find((s) => s.id === session.checkpoint.sectionId)?.name || 'section') : 'Home';
   app.innerHTML = `
-    <div class="topbar"><div class="topbar-inner">
-      <div class="brand" onclick="location.hash='#/'">
-        <div class="brand-logo">EM</div>
-        <div><div class="brand-name">Oman EM Prep</div></div>
-      </div>
-      ${themeButtonHtml()}
-    </div></div>
-    <div class="wrap">
+    ${appBar({ back: backHref, title: 'Results', right: '' })}
+    <main class="wrap">
       <div class="result-hero">
         <div class="score-ring" style="--pct:${pct};--score-color:${color}">
           <div class="score-ring-inner">
             <div class="score-num" style="color:${color}">${pct}%</div>
-            <div class="score-label">${correct} / ${total} correct</div>
+            <div class="score-label">${correct} of ${total} correct</div>
           </div>
         </div>
-        <div class="result-msg">${auto ? '⏱ Time is up — the exam was submitted automatically. ' : ''}${esc(msg)}</div>
-        <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap">
-          <a class="btn" href="${isMock ? '#/' : session.checkpoint ? `#/section/${session.checkpoint.sectionId}` : '#/'}">← Back to ${isMock ? 'Home' : session.checkpoint ? (DB.sections.find((s) => s.id === session.checkpoint.sectionId)?.name || 'Section') : 'Home'}</a>
-          ${isMock ? '' : `<button class="btn btn-primary" onclick="retakeSame()">↻ Retake this set</button>`}
+        <div class="result-msg">${auto ? 'Time is up, so the exam was submitted automatically. ' : ''}${esc(msg)}</div>
+        <div class="result-actions">
+          ${isMock ? '' : `<button class="btn btn-primary btn-lg" onclick="retakeSame()">${icon('refresh')} Retake this set</button>`}
+          <a class="btn btn-lg" href="${backHref}">Back to ${esc(backName)}</a>
         </div>
       </div>
+      ${Install.cardHtml()}
       ${splitTable}
       ${domainTable}
-      <div class="section-heading"><h2>Review Answers</h2><span>tap a question to see the explanation</span></div>
+      <div class="section-heading"><h2>Review answers</h2><span>Tap a question for its explanation</span></div>
       <div class="review-list">${rows}</div>
-    </div>`;
+    </main>`;
 
-  $$('.review-row').forEach((el) =>
-    el.addEventListener('click', () => {
-      const d = $(`#detail-${el.dataset.i}`);
-      d.hidden = !d.hidden;
-      if (!d.hidden) d.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }));
+  const toggle = (el) => {
+    const d = $(`#detail-${el.dataset.i}`);
+    d.hidden = !d.hidden;
+    el.setAttribute('aria-expanded', String(!d.hidden));
+    if (!d.hidden) d.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  };
+  $$('.review-row').forEach((el) => {
+    el.addEventListener('click', () => toggle(el));
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(el); } });
+  });
 }
 
 function reviewDetail(q, i) {
   const picked = session.picked[i];
-  const ok = picked === q.answer;
+  const ok = isCorrect(session, i);
+  const verdict = q.selfScored
+    ? (ok ? 'You graded this one correct' : 'You graded this one missed')
+    : ok ? 'You answered correctly' : `${picked === null ? 'Skipped' : `You picked ${LETTERS[picked]}`}. The answer is ${LETTERS[q.answer]}`;
   const options = q.options.map((opt, j) => {
     let cls = 'option';
-    if (j === q.answer) cls += ' correct';
+    if (q.selfScored) { if (j === picked) cls += ok ? ' correct' : ' wrong'; }
+    else if (j === q.answer) cls += ' correct';
     else if (j === picked) cls += ' wrong';
     return `
       <div class="${cls}" style="cursor:default">
@@ -1580,14 +1760,14 @@ function reviewDetail(q, i) {
       </div>`;
   }).join('');
   return `
-    <div class="q-card" style="margin:10px 0 6px">
+    <div class="q-card">
       ${q.vignette ? `<div class="q-vignette">${esc(q.vignette)}</div>` : ''}
       <div class="q-text">${esc(q.question)}</div>
       <div class="options">${options}</div>
       <div class="feedback ${ok ? 'correct' : 'wrong'}" style="margin-top:14px">
-        <div class="feedback-head">${ok ? '✓ You answered correctly' : `✗ You picked ${picked === null ? 'nothing (skipped)' : LETTERS[picked]} — correct answer: ${LETTERS[q.answer]}`}</div>
+        <div class="feedback-head">${icon(ok ? 'check' : 'close')}${verdict}</div>
         <div class="feedback-body">${esc(q.explanation || '')}</div>
-        ${q.reference ? `<div class="feedback-ref">📚 ${esc(q.reference)}</div>` : ''}
+        ${q.reference ? `<div class="feedback-ref">${esc(q.reference)}</div>` : ''}
       </div>
     </div>`;
 }
@@ -1613,25 +1793,20 @@ function retakeSame() {
 
 function renderEmpty(sess) {
   const msg = sess.mode === 'cram'
-    ? 'Nothing to cram yet — answer some questions first and your weakest will collect here.'
+    ? 'Answer some questions first. Your weakest ones collect here as flashcards.'
     : sess.sectionId === 'wrong'
-      ? 'You have no questions waiting for review right now.'
+      ? 'No questions are waiting for review. Study a section to add more.'
       : sess.sectionId.startsWith('wrong-') || sess.sectionId.startsWith('starred-')
-        ? 'This drill is empty right now.'
-        : 'This set is empty.';
+        ? 'This drill has no questions yet.'
+        : 'This set has no questions.';
   app.innerHTML = `
-    <div class="topbar"><div class="topbar-inner">
-      <div class="brand" onclick="location.hash='#/'">
-        <div class="brand-logo">EM</div><div><div class="brand-name">Oman EM Prep</div></div>
-      </div>
-      ${themeButtonHtml()}
-    </div></div>
-    <div class="wrap"><div class="empty" style="margin-top:32px">
-      <div class="empty-icon">🌤</div>
-      <h2 style="margin-bottom:6px">Nothing to practice here</h2>
+    ${appBar({ back: '#/', title: sess.title || 'Practice', right: '' })}
+    <main class="wrap"><div class="empty">
+      <div class="row-icon ok">${icon('check')}</div>
+      <h2>Nothing to practice here</h2>
       <p>${esc(msg)}</p>
-      <a class="btn btn-primary" style="margin-top:16px" href="#/">Back to Home</a>
-    </div></div>`;
+      <a class="btn btn-primary btn-lg" href="#/practice">Choose a section</a>
+    </div></main>`;
 }
 
 /* ---------------- keyboard ---------------- */
@@ -1761,11 +1936,16 @@ const KNOWN_KEY = 'oman-em-prep.known';   // this browser already has an account
 function cardShell(inner) {
   app.innerHTML = `
     <div class="auth-wrap">
-      <div class="q-card auth-card" dir="rtl">
-        <div class="brand-logo auth-logo">EM</div>
-        ${inner}
+      <div class="auth-hero">
+        <div class="brand-logo">${LOGO}</div>
+        <div class="auth-app">Oman EM Prep</div>
+        <div class="auth-tag" dir="rtl">استعد لاختبار طب الطوارئ العُماني</div>
       </div>
+      <div class="auth-card" dir="rtl">${inner}</div>
     </div>`;
+  // these screens open on the brand panel: carry its colour into the status bar
+  $('meta[name="theme-color"]')?.setAttribute('content', document.documentElement.dataset.theme === 'dark' ? '#113039' : '#0c2a34');
+  window.scrollTo(0, 0);
 }
 
 // onboarding (default for a new visitor) + login
@@ -1773,14 +1953,15 @@ function renderAuth(mode = null, msg = null) {
   session = null;
   mode = mode || (localStorage.getItem(KNOWN_KEY) ? 'login' : 'signup');
   const login = mode === 'login';
+  const perk = (text) => `<li>${icon('check')}<span>${text}</span></li>`;
   cardShell(`
-    <h1>Oman EM Prep</h1>
-    <p class="auth-sub">${login ? 'مرحباً بعودتك — تقدّمك بانتظارك' : `جرّب ${TRIAL_LIMIT} سؤالاً مجاناً — بلا بطاقة ولا رمز`}</p>
+    <h1>${login ? 'تسجيل الدخول' : `جرّب ${TRIAL_LIMIT} سؤالاً مجاناً`}</h1>
+    <p class="auth-sub">${login ? 'مرحباً بعودتك، تقدّمك بانتظارك' : 'بلا بطاقة ولا رمز تفعيل'}</p>
     ${login ? '' : `
-      <ul class="pay-perks">
-        <li>أكثر من 5,000 سؤال لاختبار الطوارئ مع شرح كل إجابة</li>
-        <li>18 قسماً واختبارات محاكاة بالتوقيت الحقيقي</li>
-        <li>تقدّمك محفوظ ويتبعك على كل أجهزتك</li>
+      <ul class="perks">
+        ${perk('أكثر من 5,000 سؤال لاختبار الطوارئ مع شرح كل إجابة')}
+        ${perk('18 قسماً واختبارات محاكاة بالتوقيت الحقيقي')}
+        ${perk('تقدّمك محفوظ ويتبعك على كل أجهزتك')}
       </ul>`}
     ${msg ? `<div class="auth-ok">${esc(msg)}</div>` : ''}
     <div class="auth-err" id="au-err" hidden></div>
@@ -1798,8 +1979,9 @@ function renderAuth(mode = null, msg = null) {
     <label class="auth-label">كلمة المرور
       <input id="au-pass" type="password" dir="ltr" autocomplete="${login ? 'current' : 'new'}-password" placeholder="6+ أحرف">
     </label>
-    <button class="btn btn-primary btn-block" id="au-go">${login ? 'دخول' : 'ابدأ التجربة المجانية'}</button>
+    <button class="btn btn-primary btn-lg btn-block" id="au-go">${login ? 'دخول' : 'ابدأ التجربة المجانية'}</button>
     <button class="btn btn-ghost btn-block" id="au-switch">${login ? 'جديد هنا؟ ابدأ تجربتك المجانية' : 'لديك حساب؟ تسجيل الدخول'}</button>
+    <button class="btn btn-ghost btn-block" id="authInstall" onclick="Install.open()" ${Install.available() ? '' : 'hidden'}>${icon('download')} ثبّت التطبيق على ${Install.device}</button>
   `);
   const btn = $('#au-go');
   const fail = (text) => {   // inline, so the doctor never retypes the form
@@ -1869,10 +2051,10 @@ function payRow(label, value, copy) {
 function renderActivated() {
   clearInterval(payPoll);
   cardShell(`
-    <div class="pay-state">🎉</div>
+    <div class="pay-state">${icon('check')}</div>
     <h1>تم تفعيل حسابك</h1>
-    <p class="auth-sub">وصول كامل ودائم لكل الأسئلة والاختبارات — بالتوفيق.</p>
-    <button class="btn btn-primary btn-block" id="act-go">ابدأ الآن</button>`);
+    <p class="auth-sub">وصول كامل ودائم لكل الأسئلة والاختبارات. بالتوفيق.</p>
+    <button class="btn btn-primary btn-lg btn-block" id="act-go">ابدأ الآن</button>`);
   $('#act-go').addEventListener('click', () => { location.hash = '#/'; route(); });
 }
 
@@ -1888,10 +2070,10 @@ function renderPaywall(err = null) {
 
   if (p.access_status === 'pending') {
     cardShell(`
-      <div class="pay-state">✅</div>
+      <div class="pay-state">${icon('check')}</div>
       <h1>استلمنا إيصالك</h1>
-      <p class="auth-sub">نراجعه في أقرب وقت، وسيُفتح حسابك هنا تلقائياً — لا حاجة لأي خطوة أخرى.</p>
-      ${wa ? `<a class="btn btn-primary btn-block" target="_blank" rel="noopener" href="${waLink(`مرحباً، أرسلت إيصال الدفع لتفعيل حسابي في Oman EM Prep — ${p.email || ''}`)}">نبّهنا عبر واتساب لتفعيل أسرع</a>` : ''}
+      <p class="auth-sub">نراجعه في أقرب وقت، وسيُفتح حسابك هنا تلقائياً. لا حاجة لأي خطوة أخرى.</p>
+      ${wa ? `<a class="btn btn-primary btn-lg btn-block" target="_blank" rel="noopener" href="${waLink(`مرحباً، أرسلت إيصال الدفع لتفعيل حسابي في Oman EM Prep — ${p.email || ''}`)}">نبّهنا عبر واتساب لتفعيل أسرع</a>` : ''}
       ${foot}`);
     payPoll = setInterval(async () => {
       await SB.refreshProfile();
@@ -1904,15 +2086,16 @@ function renderPaywall(err = null) {
   const st = readiness();
   const link = /^https?:\/\//i.test(PAY.pay_link || '') ? PAY.pay_link : null;
   const hasDetails = PAY.account || PAY.beneficiary || PAY.bank || link;
+  const perk = (text) => `<li>${icon('check')}<span>${text}</span></li>`;
   cardShell(`
-    <h1>${left === 0 ? 'أنهيت أسئلتك المجانية 🎉' : 'فعّل حسابك الكامل'}</h1>
+    <h1>${left === 0 ? 'أنهيت أسئلتك المجانية' : 'فعّل حسابك الكامل'}</h1>
     <p class="auth-sub">${left > 0 ? 'دفعة واحدة — وصول دائم لكل المحتوى.'
       : st.accuracy >= 60 ? `بداية قوية — دقتك ${st.accuracy}%. أكمل الطريق إلى الاختبار.`
       : 'هذه البداية فقط — أكمل الطريق إلى الاختبار.'}</p>
-    <ul class="pay-perks">
-      <li>${ALL_QUESTIONS.length.toLocaleString('en')} سؤالاً مع الشرح في ${DB.sections.length} قسماً</li>
-      <li>اختبارات محاكاة بالتوقيت الحقيقي</li>
-      <li>دفعة واحدة — وصول دائم وتقدّمك محفوظ</li>
+    <ul class="perks">
+      ${perk(`${ALL_QUESTIONS.length.toLocaleString('en')} سؤالاً مع الشرح في ${DB.sections.length} قسماً`)}
+      ${perk('اختبارات محاكاة بالتوقيت الحقيقي')}
+      ${perk('دفعة واحدة — وصول دائم وتقدّمك محفوظ')}
     </ul>
     ${p.access_status === 'rejected' ? `<div class="auth-err">لم نتمكن من قبول الإيصال${p.reject_reason ? ': ' + esc(p.reject_reason) : ''}. ارفع إيصالاً آخر وسنراجعه فوراً.</div>` : ''}
     ${err ? `<div class="auth-err">${esc(err)}</div>` : ''}
@@ -1927,7 +2110,7 @@ function renderPaywall(err = null) {
     </div>
     <input type="file" id="rc-file" accept="image/*,application/pdf" hidden>
     <div id="rc-zone">
-      <button class="btn btn-primary btn-block" id="rc-pick">📎 حوّلت؟ ارفع صورة الإيصال</button>
+      <button class="btn btn-primary btn-lg btn-block" id="rc-pick">حوّلت؟ ارفع صورة الإيصال</button>
     </div>
     <details class="pay-code">
       <summary>لديك رمز تفعيل؟</summary>
@@ -2000,10 +2183,10 @@ function logout() {
 
 /* ---------------- boot ---------------- */
 (async function boot() {
-  applyTheme();
+  applyTheme(false);
   if (window.SB && SB.configured) {
     const authed = await SB.init().catch(() => false);
-    if (!authed) { renderAuth(); return; }
+    if (!authed) { renderAuth(); return; }   // the sign-in screen keeps the brand colour in the status bar
     adoptStoreFor(SB.session.user.id);
   }
   try {
@@ -2021,10 +2204,11 @@ function logout() {
     }
     route();
   } catch (err) {
+    applyTheme();
     const served = location.protocol !== 'file:';
     app.innerHTML = `
       <div class="error-overlay"><div class="error-box">
-        <h2>⚠️ Could not load the question bank</h2>
+        <h2>Could not load the question bank</h2>
         <p>${esc(err.message)}</p>
         ${!served ? `
           <p>This app reads its JSON files with <code>fetch</code>, which browsers block when opened directly from disk. Serve the folder with any static server:</p>

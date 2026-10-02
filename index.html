@@ -2,25 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="Oman Emergency Medicine Exam Prep — practice questions by section with explanations.">
   <title>Oman EM Prep — Emergency Medicine Exam Practice</title>
+
+  <!-- installable app -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0c2a34">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="EM Prep">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Naskh+Arabic:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=14">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=15">
 </head>
 <body>
   <div id="app">
     <div class="boot">
-      <div class="boot-logo">ER</div>
+      <svg class="boot-logo" viewBox="0 0 100 100" aria-hidden="true"><path d="M14 56H35L44 28L56 78L64 56H86"/><circle cx="86" cy="56" r="6.5"/></svg>
       <p>Loading question bank…</p>
-      <p id="bootStatus" style="font-size:13px;color:var(--text-3)"></p>
+      <p id="bootStatus" style="font-size:13px;opacity:.7"></p>
     </div>
   </div>
 
-  <script src="js/config.js?v=14"></script>
-  <script src="js/backend.js?v=14"></script>
-  <script src="js/app.js?v=14"></script>
+  <script src="js/config.js?v=15"></script>
+  <script src="js/backend.js?v=15"></script>
+  <script src="js/app.js?v=15"></script>
 </body>
 </html>

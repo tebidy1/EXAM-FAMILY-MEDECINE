@@ -38,11 +38,17 @@ window.SB = (function () {
     return ct.includes('json') ? res.json() : res.text();
   }
 
+  const PKEY = KEY + '.profile';   // last profile the server gave us, so the installed app still opens offline
   function load() {
     try { session = JSON.parse(localStorage.getItem(KEY)); } catch (e) { session = null; }
+    try { profile = JSON.parse(localStorage.getItem(PKEY)); } catch (e) { profile = null; }
+    if (!session || !profile || profile.id !== session.user?.id) profile = null;
   }
   function save() {
-    try { session ? localStorage.setItem(KEY, JSON.stringify(session)) : localStorage.removeItem(KEY); } catch (e) { /* private mode */ }
+    try {
+      session ? localStorage.setItem(KEY, JSON.stringify(session)) : localStorage.removeItem(KEY);
+      session && profile ? localStorage.setItem(PKEY, JSON.stringify(profile)) : localStorage.removeItem(PKEY);
+    } catch (e) { /* private mode */ }
   }
 
   /* ---------- session lifecycle ---------- */
@@ -59,8 +65,12 @@ window.SB = (function () {
         session = { access_token: r.access_token, refresh_token: r.refresh_token, expires_at: Date.now() + r.expires_in * 1000, user: r.user };
         save();
       } catch (e) {
-        session = null; save();
-        return false;
+        // fetch() throws TypeError when there is no network: stay signed in and
+        // run on the cached profile. Any answer from the server means the session is dead.
+        if (!(e instanceof TypeError)) {
+          session = null; save();
+          return false;
+        }
       }
     }
     return !!(await refreshProfile());
@@ -69,6 +79,7 @@ window.SB = (function () {
   async function refreshProfile() {
     try {
       profile = (await req('/rest/v1/profiles?id=eq.' + session.user.id + '&select=*'))[0] || null;
+      save();
     } catch (e) { /* offline blip: keep what we have */ }
     return profile;
   }
@@ -80,6 +91,7 @@ window.SB = (function () {
     });
     if (!r.access_token) return { needsConfirm: true }; // email confirmation on
     session = { access_token: r.access_token, refresh_token: r.refresh_token, expires_at: Date.now() + r.expires_in * 1000, user: r.user };
+    profile = null;
     save();
     await refreshProfile();
     return { needsConfirm: false };
@@ -91,6 +103,7 @@ window.SB = (function () {
       body: { email, password },
     });
     session = { access_token: r.access_token, refresh_token: r.refresh_token, expires_at: Date.now() + r.expires_in * 1000, user: r.user };
+    profile = null;
     save();
     await refreshProfile();
   }

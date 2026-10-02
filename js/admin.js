@@ -110,8 +110,8 @@ function shell(inner) {
   ];
   return `
     <div class="topbar"><div class="topbar-inner">
-      <div class="brand"><div class="brand-logo" style="background:#0b3d3a">AD</div>
-        <div><div class="brand-name">Admin — Oman EM Prep</div></div></div>
+      <div class="brand"><div class="brand-logo">AD</div>
+        <div><div class="brand-name">Admin</div></div></div>
       <div style="display:flex;gap:8px;align-items:center">
         ${SB.profile ? `<span class="card-meta">${esc(SB.profile.email)}</span>` : ''}
         ${SB.session ? `<button class="btn" onclick="SB.logout();location.reload()">خروج</button>` : ''}

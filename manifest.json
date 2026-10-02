@@ -1,0 +1,23 @@
+{
+  "id": "./",
+  "name": "Oman EM Prep",
+  "short_name": "EM Prep",
+  "description": "Practice questions, explanations and timed simulations for the Oman Emergency Medicine exam.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0C2A34",
+  "theme_color": "#0C2A34",
+  "dir": "auto",
+  "categories": ["education", "medical"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Practice", "url": "./#/practice", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Exams", "url": "./#/exams", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

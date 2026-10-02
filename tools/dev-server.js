@@ -25,7 +25,7 @@ const crypto = require('crypto');
 
 const PORT = +process.argv[2] || 8000;
 const ROOT = path.resolve(__dirname, '..');
-const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json' };
+const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml' };
 
 const db = {
   users: [],          // { id, email, password }
