@@ -7,6 +7,7 @@
    - Home: "what should I do today?" — resume + 3-item smart queue
    - Practice: 18 sections -> section page with coverage checkpoints
    - Exams: OEEM full simulation (unlock credits) + attempt history
+   - First run: intro slides (why / how it works), then a tour of Home
 
    Scoring model (per question): unseen 0 · streak 1 = 50 · 2 = 75 ·
    3+ = 100 (Mastered); any wrong answer resets the streak.
@@ -52,6 +53,7 @@ const ICONS = {
   plus: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/>',
   dots: '<path d="M12 5v.01M12 12v.01M12 19v.01" stroke-width="3"/>',
   user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><path d="M12 7.5v.01" stroke-width="2.6"/>',
 };
 const icon = (name, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
 // the ECG mark — same drawing as icons/icon.svg and tools/make-icons.js
@@ -292,6 +294,12 @@ async function loadData() {
   DB.sections = sections;
   ALL_QUESTIONS = sections.flatMap((s) => DB[s.id]);
 
+  await loadBlueprint();
+}
+
+// on its own so the intro can quote the ladder's numbers before the bank is fetched
+async function loadBlueprint() {
+  if (BLUEPRINT) return;
   try {
     const bpRes = await fetch('data/blueprint.json');
     if (bpRes.ok) BLUEPRINT = await bpRes.json();
@@ -315,16 +323,31 @@ function coverageRatio() { return ALL_QUESTIONS.length ? uniqueCovered() / ALL_Q
 /* ---------------- access: free trial -> payment -> approval ---------------- */
 /* A new account gets TRIAL_LIMIT unique questions (counted from the progress
    the server holds, so clearing the browser does not reset it), then the
-   payment screen. Full access = admin, redeemed code, or approved receipt. */
+   payment screen. Full access = admin, redeemed code, or approved receipt.
+   The bank can also be bought in PARTS thirds: each approved part raises the
+   same limit by a third of the bank, spent in whatever sections the doctor
+   likes; the last third is full access. */
 const TRIAL_LIMIT = 15;
+const PARTS = 3;
+const PART_WARN = 100;             // a paid part is not nagged about until this few questions are left
+const PRICE_FULL = '25 ر.ع';       // shown until prices are saved in admin.html
+const PRICE_PART = '10 ر.ع';
 let PAY = {};                      // payment_settings row, managed in admin.html
+
+const partSize = () => Math.ceil(ALL_QUESTIONS.length / PARTS);
+const partsOwned = () => Math.min(PARTS, (window.SB && SB.profile?.parts) || 0);
+// the profile has no such column until supabase/003_plans.sql has run: only the full plan is offered then
+const partsOn = () => SB.profile?.parts !== undefined;
+const planPrice = (plan) => (plan === 'part' ? PAY.part_price || PRICE_PART : PAY.price || PRICE_FULL);
 
 function hasFullAccess() {
   if (!window.SB || !SB.configured || !SB.profile) return true;   // local mode
   const p = SB.profile;
-  return p.role === 'admin' || !!p.code_id || p.access_status === 'active';
+  return p.role === 'admin' || !!p.code_id || p.access_status === 'active' || (p.parts || 0) >= PARTS;
 }
-function trialLeft() { return Math.max(0, TRIAL_LIMIT - uniqueCovered()); }
+// unique questions this account may cover: the free trial, or the parts paid for so far
+function accessLimit() { return partsOwned() ? partsOwned() * partSize() : TRIAL_LIMIT; }
+function trialLeft() { return Math.max(0, accessLimit() - uniqueCovered()); }
 
 // true (and shows the payment screen) when the trial is used up
 function trialBlocked() {
@@ -787,7 +810,7 @@ document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#/"]');
   if (a && a.getAttribute('href') === (location.hash || '#/')) { e.preventDefault(); route(); }
 });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeSheet(); closeGrid(); } });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeSheet(); closeGrid(); Guide.endTour(); } });
 
 const profileOrNull = () => (window.SB && SB.configured && SB.profile) || null;
 const initialOf = (p) => (p.name || p.email || '').replace(/^(د|dr)\.?\s*/i, '').trim().charAt(0).toUpperCase();
@@ -805,6 +828,7 @@ function appBar(o = {}) {
 function openAccount() {
   const p = profileOrNull();
   const dark = document.documentElement.dataset.theme === 'dark';
+  const own = partsOwned();
   const row = (attrs, ic, title, sub = '', cls = '') => `
     <button class="row ${cls}" ${attrs}>
       <span class="row-icon">${icon(ic)}</span>
@@ -817,9 +841,11 @@ function openAccount() {
         <div class="row-body"><span class="row-title">${esc(p.name || 'طبيب')}</span><span class="row-sub" dir="ltr" style="text-align:right">${esc(p.email || '')}</span></div>
       </div>` : ''}
       <div class="list">
-        ${!hasFullAccess() ? row(`onclick="closeSheet();location.hash='#/upgrade'"`, 'lock', 'فعّل حسابك الكامل', `بقي لك ${trialLeft()} من ${TRIAL_LIMIT} سؤالاً مجانياً`) : ''}
+        ${!hasFullAccess() ? row(`onclick="closeSheet();location.hash='#/upgrade'"`, 'lock', own ? `اشترك في الجزء ${own + 1} من ${PARTS}` : 'اشترك لتفتح كل الأسئلة',
+          own ? `أنت في الجزء ${own}، بقي لك ${trialLeft().toLocaleString('en')} سؤالاً` : `بقي لك ${trialLeft()} من ${TRIAL_LIMIT} سؤالاً مجانياً`) : ''}
         ${Install.available() ? row('onclick="Install.open()"', 'download', `ثبّت التطبيق على ${Install.device}`, 'يفتح من شاشتك الرئيسية بلمسة واحدة') : ''}
         ${row('onclick="toggleTheme()"', dark ? 'sun' : 'moon', dark ? 'المظهر الفاتح' : 'المظهر الداكن')}
+        ${row('onclick="Guide.replay()"', 'info', 'كيف يعمل التطبيق', 'جولة قصيرة في الفكرة والأقسام والاختبارات')}
         ${p ? row('onclick="logout()"', 'logout', 'تسجيل الخروج', '', 'danger') : ''}
       </div>
     </div>`);
@@ -836,11 +862,15 @@ function chrome(content, bar = {}) {
   if (!hasFullAccess()) {
     const left = trialLeft();
     const st = SB.profile.access_status;
-    const msg = st === 'pending' ? `إيصالك قيد المراجعة، بقي لك <b>${left}</b> سؤالاً`
+    const own = partsOwned();
+    const msg = st === 'pending' ? `إيصالك قيد المراجعة، بقي لك <b>${left.toLocaleString('en')}</b> سؤالاً`
       : st === 'rejected' ? 'لم نتمكن من قبول الإيصال، أعد رفعه'
+      : own ? `الجزء ${own} من ${PARTS}: بقي لك <b>${left}</b> سؤالاً`
       : `بقي لك <b>${left}</b> من ${TRIAL_LIMIT} سؤالاً مجانياً`;
-    trialBar = `<a class="trial-bar ${st === 'rejected' ? 'warn' : ''}" href="#/upgrade">
-      <span>${msg}</span><span class="trial-bar-cta">${st === 'pending' ? 'التفاصيل' : 'فعّل حسابك'}${icon('chev', 'chev')}</span></a>`;
+    if (!own || st !== 'trial' || left <= PART_WARN) {
+      trialBar = `<a class="trial-bar ${st === 'rejected' ? 'warn' : ''}" href="#/upgrade">
+        <span>${msg}</span><span class="trial-bar-cta">${st === 'pending' ? 'التفاصيل' : own ? 'الجزء التالي' : 'اشترك'}${icon('chev', 'chev')}</span></a>`;
+    }
   }
   return `
     ${appBar(bar)}
@@ -946,7 +976,7 @@ const Install = {
     if (this.state.nudged || !this.cardVisible() || uniqueCovered() < 5) return;
     this.state.nudged = true;
     this.save();
-    setTimeout(() => { if ($('.monitor') && !$('#sheetRoot')) this.open(); }, 700);
+    setTimeout(() => { if ($('.monitor') && !$('#sheetRoot') && !$('#tourRoot')) this.open(); }, 700);
   },
 };
 
@@ -968,10 +998,286 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
 }
 
+/* ---------------- first run: intro slides, then a tour of Home ---------------- */
+/* The slides say why the app works the way it does (the explanation at once,
+   mistakes that come back, exams that open with coverage); the tour then
+   points at the parts of Home. Each runs once per browser and both can be
+   replayed from the account sheet. */
+const GUIDE_KEY = 'oman-em-prep.guide';
+const BEAT = 'h30q5-8 10 0h10l4 4 7-28 8 38 6-14h13q8-12 16 0h16';   // one heartbeat, 120 units wide
+
+// the ladder's numbers as the blueprint states them, so the copy cannot drift from the rules
+function ladderFacts() {
+  const ms = BLUEPRINT?.milestoneTests || [];
+  const sims = BLUEPRINT?.simulations || [];
+  if (!ms.length || !sims.length) return null;
+  return {
+    ms, sims, m: ms[0], sim: sims[0],
+    code: esc(BLUEPRINT.exam.code),
+    first: ms[0].unlockAt,
+    step: ms.length > 1 ? ms[1].unlockAt - ms[0].unlockAt : 0,
+    simPct: Math.round(sims[0].unlockAtCoverage * 100),
+    covered: Math.round(ms[0].mix.covered * 100),
+  };
+}
+
+// art: a specimen of the real interface, drawn on the brand panel
+function introSlides() {
+  const f = ladderFacts();
+  const num = (x) => x.toLocaleString('en');
+  const row = (lead, text, tail = '', cls = '') => `<div class="sp-row ${cls}">${lead}<span class="sp-t">${text}</span>${tail}</div>`;
+  const pips = (...kinds) => `<span class="sp-pips">${kinds.map((k) => `<i class="${k}"></i>`).join('')}</span>`;
+  const slides = [
+    {
+      title: 'تعلّم لتعرف، لا لتجتاز فقط',
+      text: 'ما تدرسه بنيّة الفهم يبقى معك في قسم الطوارئ بعد سنوات، وما تحفظه لأجل ورقة الاختبار يتبخّر بعدها. لذلك يظهر شرح كل إجابة فور اختيارك، سواء أصبت أم أخطأت.',
+      art: `<div class="sp">
+        ${row('<span class="sp-key">B</span>', 'IM adrenaline 0.5 mg', icon('check'), 'ok')}
+        <p class="sp-note"><b>Why</b>First-line in anaphylaxis. Give it in the outer thigh and repeat after 5 minutes if there is no response.</p>
+      </div>`,
+    },
+    {
+      title: 'أكثر من 5,000 حالة تضعك أمام 80% من أقرانك',
+      text: '18 قسماً مرتبة بأوزان المخطط الرسمي للاختبار. كل حالة تحلّها بفهم تقرّبك من مقدمة دفعتك، ومؤشر الجاهزية في الصفحة الرئيسية يريك أين وصلت.',
+      art: `<div class="sp sp-people">
+        ${Array.from({ length: 10 }, (_, k) => icon('user', k === 8 ? 'you' : '')).join('')}
+        <span class="sp-span">80% of your peers</span><span class="sp-span you">You</span>
+      </div>`,
+    },
+    {
+      title: 'أخطاؤك تعود إليك حتى تتقنها',
+      text: 'كل سؤال تخطئ فيه يدخل قائمة مراجعة الأخطاء، ويبقى فيها حتى تجيبه صحيحاً مرتين متتاليتين. ثلاث إجابات صحيحة متتالية تجعله متقَناً، وأضعف أسئلتك تنتظرك بطاقات سريعة للمراجعة.',
+      art: `<div class="sp">
+        ${row(pips('no'), 'Wrong: it joins your review pile')}
+        ${row(pips('ok', 'ok'), 'Right twice in a row: it leaves the pile')}
+        ${row(pips('ok', 'ok', 'ok'), 'Right three times: <b>Mastered</b>')}
+      </div>`,
+    },
+  ];
+  if (f) {
+    slides.push({
+      title: 'الاختبارات تُفتح بما تحلّه',
+      text: `أول اختبار يُفتح بعد ${num(f.first)} سؤال${f.step ? `، ثم اختبار جديد كل ${num(f.step)} سؤال` : ''}. محاكاة الاختبار الرسمي تُفتح عندما تغطي ${f.simPct}% من بنك الأسئلة. إعادة السؤال نفسه لا تُحتسب، فالعدّ للأسئلة الجديدة فقط.`,
+      art: `<div class="sp">
+        ${row(`<span class="sp-gate">${num(f.first)} solved</span>`, 'Milestone Test 1', icon('lock'))}
+        ${f.ms[1] ? row(`<span class="sp-gate">${num(f.ms[1].unlockAt)} solved</span>`, 'Milestone Test 2', icon('lock')) : ''}
+        ${f.step ? `<p class="sp-more">then one more every ${num(f.step)} questions</p>` : ''}
+        ${row(`<span class="sp-gate">${f.simPct}% covered</span>`, `${f.code} Simulation 1`, icon('lock'))}
+      </div>`,
+    }, {
+      title: 'نوعان من الاختبارات',
+      // dir on the Latin names keeps the digits that follow them in the Arabic run
+      text: [
+        `<b dir="ltr">Milestone</b> يقيس ما ترسّخ فعلاً: ${f.m.size} سؤالاً في ${f.m.minutes} دقيقة، ${f.covered}% منها مما درسته و${100 - f.covered}% جديد.`,
+        `<b dir="ltr">${f.code} Simulation</b> ورقة واحدة ثابتة لكل الأطباء بتوزيع المخطط الرسمي: ${f.sim.size} سؤال في ${f.sim.minutes} دقيقة.`,
+      ],
+      art: `<div class="sp sp-duo">
+        <div class="sp-card"><b>Milestone test</b><span>${f.ms.length} tests</span><span>${f.m.size} questions, ${f.m.minutes} min</span><span>${f.covered}% studied, ${100 - f.covered}% new</span></div>
+        <div class="sp-card alt"><b>${f.code} simulation</b><span>${f.sims.length} papers</span><span>${f.sim.size} questions, ${f.sim.minutes} min</span><span>Same paper for everyone</span></div>
+      </div>`,
+    });
+  }
+  return slides;
+}
+
+// done: where the last slide leads. login: given when the visitor may already have an account
+function renderIntro(done, login = null) {
+  session = null;
+  const slides = introSlides();
+  const trace = `M0 30${BEAT.repeat(3)}`;
+  let i = 0;
+  app.innerHTML = `
+    <div class="auth-wrap intro">
+      <div class="auth-hero">
+        <div class="intro-bar" dir="rtl">
+          <div class="brand-logo">${LOGO}</div>
+          <button class="intro-skip" id="in-skip">تخطي</button>
+        </div>
+        <svg class="intro-trace" viewBox="0 0 360 48" preserveAspectRatio="none" role="img">
+          <path class="rail" d="${trace}"/><path class="live" pathLength="100" d="${trace}"/>
+        </svg>
+        <div class="intro-stage" id="in-stage" aria-hidden="true"></div>
+      </div>
+      <div class="auth-card" dir="rtl">
+        <div class="intro-copy" id="in-copy" aria-live="polite"></div>
+        <div class="intro-actions">
+          <button class="btn btn-primary btn-lg btn-block" id="in-next"></button>
+          <button class="btn btn-ghost btn-block" id="in-alt"></button>
+        </div>
+      </div>
+    </div>`;
+  $('meta[name="theme-color"]')?.setAttribute('content', document.documentElement.dataset.theme === 'dark' ? '#113039' : '#0c2a34');
+  window.scrollTo(0, 0);
+
+  const leave = (to) => { Guide.mark('intro'); to(); };
+  const show = () => {
+    const s = slides[i];
+    const last = i === slides.length - 1;
+    $('#in-stage').innerHTML = `<div class="intro-in">${s.art}</div>`;
+    $('#in-copy').innerHTML = `<div class="intro-in"><h1>${s.title}</h1>${[].concat(s.text).map((p) => `<p>${p}</p>`).join('')}</div>`;
+    // the trace is the progress bar: it has drawn this far through the slides
+    $('.intro-trace .live').style.strokeDashoffset = 100 - ((i + 1) / slides.length) * 100;
+    $('.intro-trace').setAttribute('aria-label', `الشاشة ${i + 1} من ${slides.length}`);
+    $('#in-next').textContent = !last ? 'التالي' : login ? `ابدأ بـ ${TRIAL_LIMIT} سؤالاً مجاناً` : 'ابدأ الآن';
+    $('#in-alt').textContent = i ? 'السابق' : 'لديّ حساب، تسجيل الدخول';
+    $('#in-alt').style.visibility = i || login ? '' : 'hidden';
+    $('#in-skip').style.visibility = last ? 'hidden' : '';
+  };
+  const go = (d) => {
+    if (i + d < 0 || i + d >= slides.length) return;
+    i += d;
+    show();
+  };
+  $('#in-next').addEventListener('click', () => (i === slides.length - 1 ? leave(done) : go(1)));
+  $('#in-alt').addEventListener('click', () => (i ? go(-1) : leave(login)));
+  $('#in-skip').addEventListener('click', () => leave(done));
+
+  // right-to-left reading: the next slide is pulled in from the left
+  let x0 = 0, y0 = 0;
+  const wrap = $('.intro');
+  wrap.addEventListener('touchstart', (e) => { x0 = e.changedTouches[0].clientX; y0 = e.changedTouches[0].clientY; }, { passive: true });
+  wrap.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - x0;
+    const dy = e.changedTouches[0].clientY - y0;
+    if (Math.abs(dx) >= 60 && Math.abs(dx) > Math.abs(dy) * 2) go(dx > 0 ? 1 : -1);
+  }, { passive: true });
+  show();
+}
+
+const Guide = {
+  state: (() => { try { return JSON.parse(localStorage.getItem(GUIDE_KEY)) || {}; } catch (e) { return {}; } })(),
+  place: null,   // set while the tour is on screen: re-aims the spotlight after a scroll or resize
+  mark(key, on = 1) {
+    this.state[key] = on;
+    try { localStorage.setItem(GUIDE_KEY, JSON.stringify(this.state)); } catch (e) { /* private mode */ }
+  },
+
+  // r: corner radius of the part being pointed at
+  tourSteps() {
+    const f = ladderFacts();
+    return [
+      {
+        sel: '.monitor', r: 22,
+        title: 'مؤشر جاهزيتك للاختبار',
+        text: 'يرتفع كلما أجبت السؤال نفسه صحيحاً أكثر من مرة. Coverage ما حللته من البنك، Accuracy دقة إجاباتك، Mastered ما أتقنته بثلاث إجابات صحيحة متتالية.',
+      }, {
+        sel: '.next-card', r: 20,
+        title: 'خطوتك التالية جاهزة دائماً',
+        text: 'التطبيق يختار لك ما تفعله الآن: إكمال قسم، مراجعة أخطائك، أو بطاقات سريعة لأضعف أسئلتك. لمسة واحدة وتبدأ.',
+      }, {
+        sel: '.nav-item[href="#/practice"]', r: 16,
+        title: 'Practice: الدراسة بالأقسام',
+        text: `${DB.sections.length} قسماً، الأثقل وزناً في الاختبار أولاً. داخل كل قسم أسئلته مع الشرح، وأخطاؤك فيه، وما حفظته بالعلامة، واختبارات قصيرة تُفتح عند 25% و50% و75% من أسئلته.`,
+      }, {
+        sel: '.nav-item[href="#/exams"]', r: 16,
+        title: 'Exams: سلّم الاختبارات',
+        text: f
+          ? `${f.ms.length} اختبارات Milestone و${f.sims.length} محاكاة للاختبار الرسمي. تُفتح تباعاً بعدد الأسئلة التي حللتها، وأولها بعد ${f.first.toLocaleString('en')} سؤال.`
+          : 'اختبارات موقوتة تُفتح تباعاً بعدد الأسئلة التي حللتها.',
+      }, {
+        sel: '.topbar .avatar-btn', r: 99,
+        title: 'حسابك وإعداداتك',
+        text: 'المظهر الداكن، تثبيت التطبيق على جوالك، وإعادة هذه الجولة متى شئت.',
+      },
+    ].filter((s) => $(s.sel));
+  },
+
+  // true when the tour took the screen
+  startTour() {
+    if (this.state.tour || this.place || !$('.monitor')) return false;
+    const steps = this.tourSteps();
+    if (!steps.length) return false;
+    const root = document.createElement('div');
+    root.className = 'tour';
+    root.id = 'tourRoot';
+    root.innerHTML = '<div class="tour-hole"></div><div class="tour-bubble" dir="rtl" role="dialog" aria-live="polite"></div>';
+    document.body.appendChild(root);
+    app.inert = true;   // the screen underneath is being shown, not used
+    const hole = $('.tour-hole', root);
+    const bubble = $('.tour-bubble', root);
+    let i = 0;
+
+    const place = () => {
+      const el = $(steps[i].sel);
+      if (!el) { this.endTour(); return; }
+      const r = el.getBoundingClientRect();
+      const pad = 6, gap = 14;
+      Object.assign(hole.style, {
+        top: `${r.top - pad}px`, left: `${r.left - pad}px`,
+        width: `${r.width + pad * 2}px`, height: `${r.height + pad * 2}px`,
+        borderRadius: `${steps[i].r + pad}px`,
+      });
+      const vw = document.documentElement.clientWidth, vh = window.innerHeight;
+      const bw = bubble.offsetWidth, bh = bubble.offsetHeight;
+      const mid = r.left + r.width / 2;
+      // under the part when it fits there, otherwise above it
+      const below = r.bottom + pad + gap + bh <= vh - 8 || r.top - pad - gap - bh < 8;
+      const top = below ? r.bottom + pad + gap : r.top - pad - gap - bh;
+      const left = Math.max(12, Math.min(vw - bw - 12, mid - bw / 2));
+      bubble.classList.toggle('above', !below);
+      bubble.style.top = `${Math.max(8, Math.min(top, vh - bh - 8))}px`;
+      bubble.style.left = `${left}px`;
+      bubble.style.setProperty('--arrow-x', `${Math.max(18, Math.min(bw - 32, mid - left - 7))}px`);
+    };
+    const show = () => {
+      const s = steps[i];
+      const last = i === steps.length - 1;
+      bubble.innerHTML = `
+        <h3>${s.title}</h3>
+        <p>${s.text}</p>
+        <div class="tour-foot">
+          <span class="tour-count">${i + 1} من ${steps.length}</span>
+          ${last ? '' : '<button class="btn btn-ghost btn-sm" data-act="end">تخطي</button>'}
+          <button class="btn btn-primary btn-sm" data-act="next">${last ? 'ابدأ الدراسة' : 'التالي'}</button>
+        </div>`;
+      const el = $(s.sel);
+      if (el?.closest('main')) el.scrollIntoView({ block: 'center' });
+      place();
+      $('[data-act="next"]', bubble).focus({ preventScroll: true });
+    };
+    root.addEventListener('click', (e) => {
+      const act = e.target.closest('[data-act]')?.dataset.act;
+      if (!act && e.target.closest('.tour-bubble')) return;   // a tap on the text is reading, not "next"
+      if (act === 'end' || i === steps.length - 1) { this.endTour(); return; }
+      i += 1;
+      show();
+    });
+
+    this.place = place;
+    window.addEventListener('resize', place);
+    window.addEventListener('scroll', place, { passive: true });
+    show();
+    document.fonts?.ready.then(() => this.place?.());   // web fonts land after the first paint and move things
+    return true;
+  },
+
+  endTour() {
+    if (!this.place) return;
+    window.removeEventListener('resize', this.place);
+    window.removeEventListener('scroll', this.place);
+    this.place = null;
+    $('#tourRoot')?.remove();
+    app.inert = false;
+    window.scrollTo(0, 0);   // the tour scrolled Home to reach its parts
+    this.mark('tour');
+  },
+
+  // from the account sheet: the slides again, then the tour
+  replay() {
+    closeSheet();
+    this.mark('tour', 0);
+    renderIntro(() => {
+      if ((location.hash || '#/') === '#/') route();
+      else location.hash = '#/';
+    });
+  },
+};
+
 function route() {
   stopTimer();
   clearInterval(payPoll);
   closeSheet();
+  Guide.endTour();
   applyTheme();
   const hash = location.hash || '#/';
   if (!hasFullAccess() && (hash.startsWith('#/upgrade') || trialLeft() === 0)) {
@@ -1138,7 +1444,7 @@ function renderHome() {
     ${histHtml}`;
   app.innerHTML = chrome(content);
   traceDrawn = true;
-  Install.nudge();
+  if (!Guide.startTour()) Install.nudge();   // one thing at a time on a first visit
 }
 
 /* ---------------- practice tab ---------------- */
@@ -1319,6 +1625,16 @@ function exitQuiz() {
   else location.hash = '#/';
 }
 
+// how close the gate is: always during the free trial, only near the end of a paid part
+function trialPill() {
+  if (hasFullAccess()) return '';
+  const left = trialLeft();
+  const own = partsOwned();
+  if (own && left > 20) return '';
+  const text = left ? `بقي ${left} سؤالاً ${own ? 'في هذا الجزء' : 'مجانياً'}` : own ? 'آخر سؤال في هذا الجزء' : 'آخر سؤال مجاني';
+  return `<span class="trial-pill">${text}</span>`;
+}
+
 function renderQuiz() {
   const isExam = session.mode === 'exam';
   const isCram = session.mode === 'cram';
@@ -1469,7 +1785,7 @@ function renderQuiz() {
       </div>`,
     })}
     <main class="wrap quiz-wrap">
-      ${!hasFullAccess() ? `<span class="trial-pill">${trialLeft() ? `بقي ${trialLeft()} سؤالاً مجانياً` : 'آخر سؤال مجاني'}</span>` : ''}
+      ${trialPill()}
       ${paceBar}
       <div class="q-card">
         ${q.vignette ? `<div class="q-vignette">${esc(q.vignette)}</div>` : ''}
@@ -2022,6 +2338,7 @@ function renderAuth(mode = null, msg = null) {
 /* ---------------- payment screen: bank details -> receipt -> review ---------------- */
 const RECEIPT_MAX_BYTES = 10 * 1024 * 1024;
 let payPoll = null;
+let payPlan = 'full';              // what the receipt being uploaded pays for: 'full' or 'part'
 
 // phone photos are 3-8 MB; a 1600px JPEG uploads instantly and stays readable
 async function compressImage(file) {
@@ -2050,10 +2367,13 @@ function payRow(label, value, copy) {
 
 function renderActivated() {
   clearInterval(payPoll);
+  const own = hasFullAccess() ? 0 : partsOwned();   // a part was opened, not the whole bank
   cardShell(`
     <div class="pay-state">${icon('check')}</div>
-    <h1>تم تفعيل حسابك</h1>
-    <p class="auth-sub">وصول كامل ودائم لكل الأسئلة والاختبارات. بالتوفيق.</p>
+    <h1>${own ? `تم فتح الجزء ${own} من ${PARTS}` : 'تم تفعيل حسابك'}</h1>
+    <p class="auth-sub">${own
+      ? `بين يديك الآن ${trialLeft().toLocaleString('en')} سؤالاً من أي قسم تختاره. بالتوفيق.`
+      : 'وصول كامل ودائم لكل الأسئلة والاختبارات. بالتوفيق.'}</p>
     <button class="btn btn-primary btn-lg btn-block" id="act-go">ابدأ الآن</button>`);
   $('#act-go').addEventListener('click', () => { location.hash = '#/'; route(); });
 }
@@ -2062,10 +2382,11 @@ function renderPaywall(err = null) {
   clearInterval(payPoll);
   const p = SB.profile;
   const left = trialLeft();
+  const own = partsOwned();
   const wa = String(PAY.whatsapp || '').replace(/\D/g, '');
   const waLink = (text) => `https://wa.me/${wa}?text=${encodeURIComponent(text)}`;
   const foot = `
-    ${left > 0 ? `<a class="btn btn-ghost btn-block" href="#/">متابعة التجربة — بقي ${left} سؤالاً</a>` : ''}
+    ${left > 0 ? `<a class="btn btn-ghost btn-block" href="#/">${own ? 'متابعة الدراسة' : 'متابعة التجربة'}، بقي ${left.toLocaleString('en')} سؤالاً</a>` : ''}
     <button class="btn btn-ghost btn-block" onclick="logout()">تسجيل الخروج</button>`;
 
   if (p.access_status === 'pending') {
@@ -2077,7 +2398,7 @@ function renderPaywall(err = null) {
       ${foot}`);
     payPoll = setInterval(async () => {
       await SB.refreshProfile();
-      if (hasFullAccess()) renderActivated();
+      if (hasFullAccess() || partsOwned() > own) renderActivated();
       else if (SB.profile.access_status !== 'pending') renderPaywall();
     }, 15000);
     return;
@@ -2087,20 +2408,42 @@ function renderPaywall(err = null) {
   const link = /^https?:\/\//i.test(PAY.pay_link || '') ? PAY.pay_link : null;
   const hasDetails = PAY.account || PAY.beneficiary || PAY.bank || link;
   const perk = (text) => `<li>${icon('check')}<span>${text}</span></li>`;
+  const total = ALL_QUESTIONS.length.toLocaleString('en');
+  const size = partSize().toLocaleString('en');
+  // a doctor already paying by parts goes on by parts; a new one chooses between the two plans
+  const choose = !own && partsOn();
+  if (own) payPlan = 'part';
+  else if (!choose) payPlan = 'full';
+  const amount = (text) => parseFloat(String(text).replace(/[^\d.]/g, ''));
+  const cheaper = amount(planPrice('full')) < amount(planPrice('part')) * PARTS;
+  const plan = (id, name, desc, per = '', tag = '') => `
+    <button class="plan ${payPlan === id ? 'on' : ''}" role="radio" aria-checked="${payPlan === id}" data-plan="${id}">
+      <span class="plan-dot"></span>
+      <span class="plan-name">${name}${tag ? `<span class="plan-tag">${tag}</span>` : ''}</span>
+      <span class="plan-price"><b dir="auto">${esc(planPrice(id))}</b>${per}</span>
+      <span class="plan-desc">${desc}</span>
+    </button>`;
   cardShell(`
-    <h1>${left === 0 ? 'أنهيت أسئلتك المجانية' : 'فعّل حسابك الكامل'}</h1>
-    <p class="auth-sub">${left > 0 ? 'دفعة واحدة — وصول دائم لكل المحتوى.'
-      : st.accuracy >= 60 ? `بداية قوية — دقتك ${st.accuracy}%. أكمل الطريق إلى الاختبار.`
-      : 'هذه البداية فقط — أكمل الطريق إلى الاختبار.'}</p>
-    <ul class="perks">
-      ${perk(`${ALL_QUESTIONS.length.toLocaleString('en')} سؤالاً مع الشرح في ${DB.sections.length} قسماً`)}
-      ${perk('اختبارات محاكاة بالتوقيت الحقيقي')}
-      ${perk('دفعة واحدة — وصول دائم وتقدّمك محفوظ')}
-    </ul>
+    <h1>${own ? (left === 0 ? `أنهيت الجزء ${own} من ${PARTS}` : `اشترك في الجزء ${own + 1} من ${PARTS}`)
+      : left === 0 ? 'أنهيت أسئلتك المجانية' : 'اختر اشتراكك'}</h1>
+    <p class="auth-sub">${own ? `الجزء ${own + 1} يضيف ${size} سؤالاً إلى حسابك، من أي قسم تختاره.`
+      : left === 0 && st.accuracy >= 60 ? `بداية قوية، دقتك ${st.accuracy}%. ${choose ? 'اختر اشتراكك وأكمل' : 'أكمل'} الطريق إلى الاختبار.`
+      : choose ? 'ادفع مرة واحدة، أو خذ بنك الأسئلة على ثلاثة أجزاء.'
+      : 'دفعة واحدة ووصول دائم لكل المحتوى.'}</p>
+    ${choose ? `
+      <div class="plans" role="radiogroup" aria-label="نوع الاشتراك">
+        ${plan('full', 'الاشتراك الكامل', `كل الأسئلة (${total}) وكل الاختبارات، بدفعة واحدة ووصول دائم.`, '', cheaper ? 'الأوفر' : '')}
+        ${plan('part', 'على ثلاثة أجزاء', `كل جزء يفتح ${size} سؤالاً من أي قسم تختاره. تدفع الجزء التالي عندما تنهي الحالي.`, ' للجزء')}
+      </div>` : own ? '' : `
+      <ul class="perks">
+        ${perk(`${total} سؤالاً مع الشرح في ${DB.sections.length} قسماً`)}
+        ${perk('اختبارات محاكاة بالتوقيت الحقيقي')}
+        ${perk('دفعة واحدة، وصول دائم وتقدّمك محفوظ')}
+      </ul>`}
     ${p.access_status === 'rejected' ? `<div class="auth-err">لم نتمكن من قبول الإيصال${p.reject_reason ? ': ' + esc(p.reject_reason) : ''}. ارفع إيصالاً آخر وسنراجعه فوراً.</div>` : ''}
     ${err ? `<div class="auth-err">${esc(err)}</div>` : ''}
     <div class="pay-box">
-      ${PAY.price ? `<div class="pay-price"><span>رسوم التفعيل</span><b dir="auto">${esc(PAY.price)}</b></div>` : ''}
+      <div class="pay-price"><span>${own ? `رسوم الجزء ${own + 1} من ${PARTS}` : 'المبلغ المطلوب تحويله'}</span><b dir="auto" id="pay-amount">${esc(planPrice(payPlan))}</b></div>
       ${payRow('المستفيد', PAY.beneficiary)}
       ${payRow('البنك', PAY.bank)}
       ${payRow('رقم الحساب', PAY.account, true)}
@@ -2130,6 +2473,14 @@ function renderPaywall(err = null) {
       setTimeout(() => { b.textContent = 'نسخ'; }, 1600);
     } catch (e) { /* clipboard blocked: the number stays selectable */ }
   }));
+  $$('.plan').forEach((el) => el.addEventListener('click', () => {
+    payPlan = el.dataset.plan;
+    $$('.plan').forEach((x) => {
+      x.classList.toggle('on', x === el);
+      x.setAttribute('aria-checked', String(x === el));
+    });
+    $('#pay-amount').textContent = planPrice(payPlan);
+  }));
   $('#rc-pick').addEventListener('click', () => $('#rc-file').click());
   $('#rc-file').addEventListener('change', (e) => { if (e.target.files[0]) previewReceipt(e.target.files[0]); });
   $('#code-go').addEventListener('click', async () => {
@@ -2147,7 +2498,7 @@ function previewReceipt(file) {
     <div class="rc-preview">${isImage
       ? `<img src="${URL.createObjectURL(file)}" alt="الإيصال">`
       : `<div class="rc-doc">📄 ${esc(file.name)}</div>`}</div>
-    <button class="btn btn-primary btn-block" id="rc-send">إرسال الإيصال</button>
+    <button class="btn btn-primary btn-block" id="rc-send">إرسال طلب الاشتراك</button>
     <button class="btn btn-ghost btn-block" id="rc-change">اختيار ملف آخر</button>`;
   $('#rc-change').addEventListener('click', () => $('#rc-file').click());
   $('#rc-send').addEventListener('click', async () => {
@@ -2157,7 +2508,7 @@ function previewReceipt(file) {
     try {
       const blob = await compressImage(file);
       if (blob.size > RECEIPT_MAX_BYTES) { renderPaywall('الملف أكبر من 10MB — التقط صورة للإيصال بدلاً منه'); return; }
-      await SB.submitReceipt(blob);
+      await SB.submitReceipt(blob, payPlan);
       renderPaywall();
     } catch (e) {
       renderPaywall('تعذّر إرسال الإيصال — تحقق من اتصالك وحاول مرة أخرى');
@@ -2186,7 +2537,12 @@ function logout() {
   applyTheme(false);
   if (window.SB && SB.configured) {
     const authed = await SB.init().catch(() => false);
-    if (!authed) { renderAuth(); return; }   // the sign-in screen keeps the brand colour in the status bar
+    if (!authed) {   // these screens keep the brand colour in the status bar
+      // a first-time visitor meets the idea before the form; a returning one goes straight to sign-in
+      if (Guide.state.intro || localStorage.getItem(KNOWN_KEY)) renderAuth();
+      else { await loadBlueprint(); renderIntro(() => renderAuth('signup'), () => renderAuth('login')); }
+      return;
+    }
     adoptStoreFor(SB.session.user.id);
   }
   try {
@@ -2202,7 +2558,8 @@ function logout() {
       }
       Sync.start(!hasFullAccess());
     }
-    route();
+    if (!Guide.state.intro && !profileOrNull()) renderIntro(route);   // local mode: no sign-up screen to follow
+    else route();
   } catch (err) {
     applyTheme();
     const served = location.protocol !== 'file:';

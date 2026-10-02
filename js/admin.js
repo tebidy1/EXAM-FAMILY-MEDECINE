@@ -173,8 +173,15 @@ function renderOverview() {
 }
 
 /* ---------------- doctors ---------------- */
-const accessOf = (u) => (u.code_id || u.access_status === 'active') ? 'active' : (u.access_status || 'trial');
-const statusChip = (u) => u.role === 'admin' ? '' : ` <span class="status-chip ${accessOf(u)}">${accessOf(u)}</span>`;
+const PARTS = 3;   // the bank can be bought in thirds (supabase/003_plans.sql)
+const accessOf = (u) => (u.code_id || u.access_status === 'active' || (u.parts || 0) >= PARTS) ? 'active' : (u.access_status || 'trial');
+// a doctor paying by parts shows how many they hold: "part 1/3", "pending 1/3"
+const accessLabel = (u) => {
+  const a = accessOf(u);
+  return a === 'active' || !u.parts ? a : `${a === 'trial' ? 'part' : a} ${u.parts}/${PARTS}`;
+};
+const statusChip = (u) => u.role === 'admin' ? '' : ` <span class="status-chip ${accessOf(u)}">${accessLabel(u)}</span>`;
+const planLabel = (r) => r.plan === 'part' ? `جزء من ${PARTS}` : 'اشتراك كامل';
 const waHref = (phone) => 'https://wa.me/' + String(phone || '').replace(/\D/g, '');
 
 function renderDoctors() {
@@ -260,11 +267,12 @@ function renderDrill() {
         <div class="card-meta">coverage ${u.covered || 0}/5093 · attempts ${u.attempts || 0} · mastered ${u.mastered || 0}</div>
         ${u.role === 'admin' ? '' : `
           <div class="req-actions">
-            <span class="status-chip ${accessOf(u)}">${accessOf(u)}</span>
+            <span class="status-chip ${accessOf(u)}">${accessLabel(u)}</span>
             ${u.phone ? `<a class="btn" target="_blank" rel="noopener" href="${waHref(u.phone)}">💬 ${esc(u.phone)}</a>` : ''}
             ${accessOf(u) === 'active'
               ? (u.code_id ? '' : `<button class="btn" onclick="setAccess('${u.id}', 'trial')">إلغاء التفعيل</button>`)
-              : `<button class="btn btn-primary" onclick="setAccess('${u.id}', 'active')">تفعيل يدوي (وصول كامل)</button>`}
+              : `<button class="btn btn-primary" onclick="setAccess('${u.id}', 'active')">تفعيل يدوي (وصول كامل)</button>
+                 ${u.parts === undefined ? '' : `<button class="btn" onclick="addPart('${u.id}', ${(u.parts || 0) + 1})">فتح الجزء ${(u.parts || 0) + 1} من ${PARTS} يدوياً</button>`}`}
           </div>`}
       </div>
     </div>
@@ -278,6 +286,14 @@ function renderDrill() {
 async function setAccess(id, status) {
   try {
     await SB.req('/rest/v1/profiles?id=eq.' + id, { method: 'PATCH', body: { access_status: status, reject_reason: null } });
+    await loadAll(); render();
+  } catch (e) { alert('تعذر التعديل: ' + e.message); }
+}
+
+// open one more third without a receipt; the last third is full access
+async function addPart(id, parts) {
+  try {
+    await SB.req('/rest/v1/profiles?id=eq.' + id, { method: 'PATCH', body: { parts, access_status: parts >= PARTS ? 'active' : 'trial', reject_reason: null } });
     await loadAll(); render();
   } catch (e) { alert('تعذر التعديل: ' + e.message); }
 }
@@ -303,6 +319,7 @@ function renderRequests() {
       <div class="req-body">
         <div class="card-title">${esc(r.name || r.email)}</div>
         <div class="card-meta">${esc(r.email || '')} · ${r.covered || 0} questions answered · sent ${relTime(r.created_at)}</div>
+        <div class="card-meta">يطلب: <b>${r.plan === 'part' ? `الجزء ${(r.parts || 0) + 1} من ${PARTS}` : 'الاشتراك الكامل'}</b> · المبلغ المتوقع في الإيصال: <b dir="auto">${esc((r.plan === 'part' ? payCache.part_price : payCache.price) || '—')}</b></div>
         ${r.phone ? `<a class="btn" style="margin-top:8px" target="_blank" rel="noopener" href="${waHref(r.phone)}">💬 ${esc(r.phone)}</a>` : ''}
         ${rejectingId === r.id ? `
           <div class="card-meta" style="margin-top:10px">سبب الرفض — يظهر للطبيب ويستطيع إعادة الرفع فوراً:</div>
@@ -311,7 +328,7 @@ function renderRequests() {
             <button class="btn btn-ghost" onclick="openReject(null)">تراجع</button>
           </div>` : `
           <div class="req-actions">
-            <button class="btn btn-primary" onclick="approveRequest('${r.id}')">✓ قبول وفتح الحساب</button>
+            <button class="btn btn-primary" onclick="approveRequest('${r.id}')">${r.plan === 'part' ? `✓ قبول وفتح الجزء ${(r.parts || 0) + 1}` : '✓ قبول وفتح الحساب'}</button>
             <button class="btn" onclick="openReject('${r.id}')">✗ رفض</button>
           </div>`}
       </div>
@@ -319,7 +336,7 @@ function renderRequests() {
 
   const doneHtml = done.map((r) => `
     <div class="hist-row">
-      <span class="hist-title">${esc(r.name || r.email)} <span class="status-chip ${r.status}">${r.status}</span>
+      <span class="hist-title">${esc(r.name || r.email)} <span class="status-chip ${r.status}">${r.status}</span> <span class="hist-meta">${planLabel(r)}</span>
         ${r.reject_reason ? `<span class="hist-meta">${esc(r.reject_reason)}</span>` : ''}</span>
       <span class="hist-meta">${new Date(r.reviewed_at || r.created_at).toLocaleDateString()}</span>
       <button class="btn" onclick="openReceipt('${esc(r.receipt_path)}')">الإيصال</button>
@@ -368,7 +385,8 @@ async function rejectRequest(id, reason) {
 
 /* ---------------- payment details shown to doctors ---------------- */
 const PAY_FIELDS = [
-  ['price', 'رسوم التفعيل', '15 ر.ع'],
+  ['price', 'سعر الاشتراك الكامل', '25 ر.ع'],
+  ['part_price', 'سعر الجزء الواحد (البنك 3 أجزاء)', '10 ر.ع'],
   ['beneficiary', 'اسم المستفيد', ''],
   ['bank', 'البنك', 'Bank Muscat'],
   ['account', 'رقم الحساب / IBAN', ''],
@@ -399,6 +417,7 @@ function renderPayment() {
 async function savePayment() {
   const body = { updated_at: new Date().toISOString(), note: $('#pay-note').value.trim() || null };
   PAY_FIELDS.forEach(([key]) => { body[key] = $('#pay-' + key).value.trim() || null; });
+  if (!('part_price' in payCache)) delete body.part_price;   // the column arrives with supabase/003_plans.sql
   try {
     await SB.req('/rest/v1/payment_settings?id=eq.1', { method: 'PATCH', body });
     payCache = { ...payCache, ...body };
@@ -517,5 +536,5 @@ function relTime(ts) {
 /* expose handlers */
 Object.assign(window, {
   switchTab, openDrill, closeDrill, toggleCode, SB,
-  setAccess, approveRequest, rejectRequest, openReject, openReceipt,
+  setAccess, addPart, approveRequest, rejectRequest, openReject, openReceipt,
 });

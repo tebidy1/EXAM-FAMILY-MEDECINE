@@ -6,7 +6,7 @@
      node tools/dev-server.js [port]      (default 8000)
 
    Nothing is persisted: restart = clean slate. It mirrors the rules of
-   supabase/schema.sql + 002_trial_paywall.sql closely enough to test the
+   supabase/schema.sql + 002_trial_paywall.sql + 003_plans.sql closely enough to test the
    UI; the SQL itself still has to be run on the real project.
 
    Seeded test accounts (local only):
@@ -36,7 +36,7 @@ const db = {
   sessions: [],
   files: new Map(),   // receipt path -> { type, buf }
   tokens: new Map(),  // access token -> user id
-  pay: { id: 1, price: '15 ر.ع', beneficiary: 'Test Beneficiary', bank: 'Bank Muscat', account: 'OM00 0000 0000 0000 0000 000', pay_link: null, whatsapp: '+96890000000', note: null },
+  pay: { id: 1, price: '25 ر.ع', part_price: '10 ر.ع', beneficiary: 'Test Beneficiary', bank: 'Bank Muscat', account: 'OM00 0000 0000 0000 0000 000', pay_link: null, whatsapp: '+96890000000', note: null },
 };
 
 function addUser(email, password, meta = {}) {
@@ -46,7 +46,7 @@ function addUser(email, password, meta = {}) {
   db.profiles.push({
     id, email, name: meta.name || email.split('@')[0], phone: meta.phone || null,
     role: first ? 'admin' : 'doctor', code_id: null,
-    access_status: first ? 'active' : 'trial', reject_reason: null,
+    access_status: first ? 'active' : 'trial', reject_reason: null, parts: 0,
     created_at: new Date().toISOString(), last_seen: new Date().toISOString(),
   });
   return id;
@@ -108,7 +108,7 @@ function api(req, res, url, raw) {
     const row = profileOf(id);
     if (req.method === 'PATCH') {
       const b = body();
-      if (!admin) ['role', 'code_id', 'access_status', 'reject_reason'].forEach((k) => delete b[k]);   // protect_role()
+      if (!admin) ['role', 'code_id', 'access_status', 'reject_reason', 'parts'].forEach((k) => delete b[k]);   // protect_role()
       Object.assign(row, b);
       return send(res, 204, null);
     }
@@ -150,7 +150,7 @@ function api(req, res, url, raw) {
   if (p === '/rest/v1/v_admin_requests') {
     return send(res, 200, [...db.requests].reverse().map((r) => {
       const o = profileOf(r.user_id) || {};
-      return { ...r, name: o.name, email: o.email, phone: o.phone, covered: stats(r.user_id).covered };
+      return { ...r, name: o.name, email: o.email, phone: o.phone, covered: stats(r.user_id).covered, parts: o.parts };
     }));
   }
 
@@ -165,11 +165,12 @@ function api(req, res, url, raw) {
     return send(res, 200, true);
   }
   if (p === '/rest/v1/rpc/submit_request') {
-    const { p_path } = body();
+    const { p_path, p_plan = 'full' } = body();
     if (!String(p_path).startsWith(uid + '/')) return send(res, 400, { message: 'bad receipt path' });
-    if (me.access_status === 'active') return send(res, 200, null);
+    if (!['full', 'part'].includes(p_plan)) return send(res, 400, { message: 'bad plan' });
+    if (me.access_status === 'active' || me.parts >= 3) return send(res, 200, null);
     db.requests = db.requests.filter((r) => !(r.user_id === uid && r.status === 'pending'));
-    const r = { id: crypto.randomUUID(), user_id: uid, receipt_path: p_path, status: 'pending', reject_reason: null, created_at: new Date().toISOString(), reviewed_at: null };
+    const r = { id: crypto.randomUUID(), user_id: uid, receipt_path: p_path, plan: p_plan, status: 'pending', reject_reason: null, created_at: new Date().toISOString(), reviewed_at: null };
     db.requests.push(r);
     Object.assign(me, { access_status: 'pending', reject_reason: null });
     return send(res, 200, r.id);
@@ -180,9 +181,13 @@ function api(req, res, url, raw) {
     const r = db.requests.find((x) => x.id === b.p_id);
     if (!r) return send(res, 200, false);
     const approve = p.endsWith('approve_request');
+    if (approve && r.status !== 'pending') return send(res, 200, false);   // a second click cannot add a second part
     Object.assign(r, { status: approve ? 'approved' : 'rejected', reject_reason: approve ? null : b.p_reason, reviewed_at: new Date().toISOString() });
     const owner = profileOf(r.user_id);
-    if (approve) Object.assign(owner, { access_status: 'active', reject_reason: null });
+    if (approve && r.plan === 'part') {
+      owner.parts = Math.min(owner.parts + 1, 3);
+      Object.assign(owner, { access_status: owner.parts >= 3 ? 'active' : 'trial', reject_reason: null });
+    } else if (approve) Object.assign(owner, { access_status: 'active', reject_reason: null });
     else if (owner.access_status !== 'active') Object.assign(owner, { access_status: 'rejected', reject_reason: b.p_reason });
     return send(res, 200, true);
   }

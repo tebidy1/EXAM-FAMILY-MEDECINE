@@ -128,7 +128,8 @@ window.SB = (function () {
     return (await req('/rest/v1/payment_settings?id=eq.1&select=*'))[0] || {};
   }
   const RECEIPT_EXT = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/heic': 'heic', 'image/heif': 'heif', 'application/pdf': 'pdf' };
-  async function submitReceipt(blob) {
+  // plan: 'full', or 'part' for one third of the bank (needs supabase/003_plans.sql)
+  async function submitReceipt(blob, plan = 'full') {
     const path = session.user.id + '/' + Date.now() + '.' + (RECEIPT_EXT[blob.type] || 'jpg');
     const res = await fetch(cfg.url + '/storage/v1/object/receipts/' + path, {
       method: 'POST',
@@ -140,7 +141,8 @@ window.SB = (function () {
       try { const j = await res.json(); msg = j.message || j.error || msg; } catch (e) { /* non-json */ }
       throw new Error(msg);
     }
-    await req('/rest/v1/rpc/submit_request', { method: 'POST', body: { p_path: path } });
+    // a full-plan call keeps the old one-argument shape, so it works before and after 003 has run
+    await req('/rest/v1/rpc/submit_request', { method: 'POST', body: plan === 'part' ? { p_path: path, p_plan: plan } : { p_path: path } });
     await refreshProfile();
   }
   async function fetchReceipt(path) {   // admin (or owner): private bucket -> blob

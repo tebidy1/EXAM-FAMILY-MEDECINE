@@ -619,6 +619,23 @@ kbd {
 .auth-note { font-size: 14px; color: var(--text-2); margin-bottom: 16px; }
 .auth-card .perks { margin: 0 auto 18px; }
 
+/* the two ways to pay: one radio card each */
+.plans { display: grid; gap: 10px; margin-bottom: 14px; }
+.plan {
+  appearance: none; width: 100%; font: inherit; color: inherit; text-align: start; cursor: pointer;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 4px 12px;
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px;
+  transition: border-color .12s ease, background .12s ease;
+}
+.plan.on { border-color: var(--primary); background: var(--primary-soft); }
+.plan-dot { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--text-3); background: var(--surface); }
+.plan.on .plan-dot { border: 6px solid var(--primary); }
+.plan-name { font-size: 15.5px; font-weight: 600; display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; }
+.plan-tag { font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: var(--correct-soft); color: var(--correct); }
+.plan-price { font-size: 13px; color: var(--text-2); white-space: nowrap; }
+.plan-price b { font-size: 17px; font-weight: 600; color: var(--text); }
+.plan-desc { grid-column: 2 / -1; font-size: 13.5px; line-height: 1.6; color: var(--text-2); }
+
 .pay-state { width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 12px; background: var(--correct-soft); color: var(--correct); display: flex; align-items: center; justify-content: center; }
 .pay-state .ic { width: 30px; height: 30px; stroke-width: 2.4; }
 .pay-box {
@@ -645,6 +662,96 @@ kbd {
 .pay-code-row { display: flex; gap: 8px; margin: 4px 0 10px; }
 .pay-code-row input { flex: 1; min-width: 0; margin-top: 0; }
 .auth-card .pay-code-row .btn { flex: none; width: auto; margin: 0; min-height: 50px; }
+
+/* ---------- first-run intro (same shell as sign in, so the form follows without a jump) ---------- */
+.intro .auth-hero { padding: calc(10px + var(--safe-t)) 20px 40px; text-align: start; }
+.intro-bar { display: flex; align-items: center; justify-content: space-between; min-height: 44px; }
+.intro .intro-bar .brand-logo { width: 40px; height: 40px; border-radius: 12px; margin: 0; }
+.intro-skip {
+  appearance: none; border: 0; background: none; cursor: pointer;
+  min-height: 44px; padding: 0 6px; font-size: 14.5px; font-weight: 600; color: rgba(255, 255, 255, .72);
+}
+/* the heartbeat is the progress bar: the bright line has drawn as far as the slides have gone */
+.intro-trace {
+  display: block; width: 100%; height: 40px; margin: 6px 0 12px;
+  fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.intro-trace .rail { stroke: rgba(255, 255, 255, .16); }
+.intro-trace .live { stroke: var(--ch-cov); stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset .6s ease; }
+.intro-stage { height: clamp(150px, 26vh, 200px); height: clamp(150px, 26dvh, 200px); display: flex; align-items: center; }
+.intro-in { width: 100%; animation: rise .22s ease; }
+.intro .auth-card { display: flex; flex-direction: column; text-align: start; }
+.intro-copy { flex: 1; width: 100%; }
+.intro-copy h1 { font-size: 23px; line-height: 1.4; }
+.intro-copy p { font-size: 15.5px; line-height: 1.75; color: var(--text-2); margin-top: 10px; }
+.intro-copy p b { font-weight: 600; color: var(--text); }
+.intro-actions { width: 100%; margin-top: 18px; }
+
+/* specimens of the real interface, drawn on the brand panel */
+.sp {
+  width: 100%; max-width: 340px; margin: 0 auto;
+  direction: ltr; text-align: left; color: #fff; font-size: 13.5px; line-height: 1.4;
+}
+.sp-row {
+  display: flex; align-items: center; gap: 10px; min-height: 38px;
+  padding: 6px 12px; border-radius: 12px; background: rgba(255, 255, 255, .08);
+}
+.sp-row + .sp-row { margin-top: 6px; }
+.sp-t { flex: 1; min-width: 0; }
+.sp-t b { font-weight: 600; color: var(--ch-mas); }
+.sp-row .ic { width: 16px; height: 16px; color: rgba(255, 255, 255, .45); }
+.sp-row.ok { box-shadow: inset 0 0 0 1.5px var(--ch-acc); }
+.sp-row.ok .ic { color: var(--ch-acc); stroke-width: 2.6; }
+.sp-key {
+  flex: none; width: 24px; height: 24px; border-radius: 50%;
+  background: var(--ch-acc); color: #0c2a34; font-size: 12.5px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+}
+.sp-note { margin-top: 12px; padding-left: 12px; border-left: 2px solid var(--ch-acc); font-size: 13px; color: rgba(255, 255, 255, .78); }
+.sp-note b { font-weight: 600; color: var(--ch-acc); margin-right: 6px; }
+.sp-gate { flex: none; width: 96px; font-weight: 600; color: var(--ch-cov); font-variant-numeric: tabular-nums; }
+.sp-more { padding: 5px 12px; font-size: 12.5px; color: rgba(255, 255, 255, .6); }
+.sp-pips { flex: none; width: 40px; display: flex; gap: 5px; }
+.sp-pips i { width: 10px; height: 10px; border-radius: 50%; background: var(--ch-acc); }
+.sp-pips i.no { background: #f58b81; }
+.sp-people { display: grid; grid-template-columns: repeat(10, 1fr); justify-items: center; row-gap: 12px; }
+.sp-people .ic { width: 24px; height: 24px; color: rgba(255, 255, 255, .3); }
+.sp-people .ic.you { color: var(--ch-acc); transform: scale(1.35); }
+.sp-span {
+  grid-column: 1 / 9; justify-self: stretch; margin: 0 4px; padding-top: 6px; text-align: center;
+  border-top: 1.5px solid rgba(255, 255, 255, .28); font-size: 12.5px; color: rgba(255, 255, 255, .65);
+}
+.sp-span.you { grid-column: 9 / 11; border-color: var(--ch-acc); color: var(--ch-acc); font-weight: 600; }
+.sp-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sp-card {
+  display: grid; gap: 3px; align-content: start; padding: 10px 12px; border-radius: 14px;
+  background: rgba(255, 255, 255, .08); font-size: 13px; color: rgba(255, 255, 255, .8);
+}
+.sp-card b { font-size: 14px; font-weight: 600; color: var(--ch-cov); margin-bottom: 2px; }
+.sp-card.alt b { color: var(--ch-mas); }
+
+/* ---------- tour of Home: a spotlight on one part, a bubble that explains it ---------- */
+.tour { position: fixed; inset: 0; z-index: 80; touch-action: none; }
+.tour-hole {
+  position: fixed; pointer-events: none;
+  box-shadow: 0 0 0 2px var(--ch-cov), 0 0 0 200vmax rgba(4, 16, 20, .68);
+  transition: top .28s ease, left .28s ease, width .28s ease, height .28s ease, border-radius .28s ease;
+}
+.tour-bubble {
+  position: fixed; width: min(340px, calc(100vw - 24px)); padding: 16px;
+  background: var(--surface); color: var(--text); border-radius: 18px; box-shadow: var(--shadow);
+  text-align: start; transition: top .28s ease, left .28s ease;
+}
+.tour-bubble::before {
+  content: ''; position: absolute; top: -7px; left: var(--arrow-x, 50%);
+  width: 14px; height: 14px; border-radius: 3px; background: inherit; transform: rotate(45deg);
+}
+.tour-bubble.above::before { top: auto; bottom: -7px; }
+:root[data-theme="dark"] .tour-bubble { background: var(--surface-2); }   /* --surface would sink into the dimmed screen */
+.tour-bubble h3 { position: relative; font-size: 16.5px; font-weight: 600; line-height: 1.4; }
+.tour-bubble p { position: relative; font-size: 14.5px; line-height: 1.7; color: var(--text-2); margin-top: 4px; }
+.tour-foot { display: flex; align-items: center; gap: 6px; margin-top: 14px; }
+.tour-count { margin-inline-end: auto; font-size: 13px; color: var(--text-3); font-variant-numeric: tabular-nums; }
 
 /* ---------- admin ---------- */
 .tabbar { display: flex; gap: 6px; overflow-x: auto; margin: 4px -16px 16px; padding: 2px 16px; scrollbar-width: none; }
@@ -703,6 +810,7 @@ kbd {
   .auth-wrap { align-items: center; justify-content: center; padding: 24px; }
   .auth-hero { padding: 8px 20px 44px; width: min(460px, 100%); }
   .auth-card { flex: none; width: min(460px, 100%); border-radius: 24px; padding: 28px; }
+  .intro-copy { min-height: 200px; }   /* the card no longer fills the screen: keep the buttons from jumping between slides */
 }
 
 @media (min-width: 768px) {
