@@ -63,22 +63,26 @@ window.SB = (function () {
         return false;
       }
     }
-    try {
-      profile = (await req('/rest/v1/profiles?id=eq.' + session.user.id + '&select=*'))[0] || null;
-    } catch (e) { profile = null; }
-    return !!profile;
+    return !!(await refreshProfile());
   }
 
-  async function signup(email, password, name) {
+  async function refreshProfile() {
+    try {
+      profile = (await req('/rest/v1/profiles?id=eq.' + session.user.id + '&select=*'))[0] || null;
+    } catch (e) { /* offline blip: keep what we have */ }
+    return profile;
+  }
+
+  async function signup(email, password, name, phone) {
     const r = await req('/auth/v1/signup', {
       method: 'POST', auth: false,
-      body: { email, password, data: { name } },
+      body: { email, password, data: { name, phone } },
     });
-    if (!r.access_token) throw new Error('تحقق من بريدك ثم سجّل الدخول'); // email confirmation on
+    if (!r.access_token) return { needsConfirm: true }; // email confirmation on
     session = { access_token: r.access_token, refresh_token: r.refresh_token, expires_at: Date.now() + r.expires_in * 1000, user: r.user };
     save();
-    try { profile = (await req('/rest/v1/profiles?id=eq.' + session.user.id + '&select=*'))[0] || null; } catch (e) { profile = null; }
-    return { needsCode: !profile || !profile.code_id };
+    await refreshProfile();
+    return { needsConfirm: false };
   }
 
   async function login(email, password) {
@@ -88,8 +92,7 @@ window.SB = (function () {
     });
     session = { access_token: r.access_token, refresh_token: r.refresh_token, expires_at: Date.now() + r.expires_in * 1000, user: r.user };
     save();
-    try { profile = (await req('/rest/v1/profiles?id=eq.' + session.user.id + '&select=*'))[0] || null; } catch (e) { profile = null; }
-    return { needsCode: !profile || !profile.code_id };
+    await refreshProfile();
   }
 
   async function logout() {
@@ -105,6 +108,32 @@ window.SB = (function () {
     const ok = await req('/rest/v1/rpc/redeem_code', { method: 'POST', body: { p_code: code } });
     if (ok) { try { profile = (await req('/rest/v1/profiles?id=eq.' + session.user.id + '&select=*'))[0] || profile; } catch (e) { /* keep */ } }
     return ok;
+  }
+
+  /* ---------- payment: settings + receipt upload ---------- */
+  async function paymentSettings() {
+    return (await req('/rest/v1/payment_settings?id=eq.1&select=*'))[0] || {};
+  }
+  const RECEIPT_EXT = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/heic': 'heic', 'image/heif': 'heif', 'application/pdf': 'pdf' };
+  async function submitReceipt(blob) {
+    const path = session.user.id + '/' + Date.now() + '.' + (RECEIPT_EXT[blob.type] || 'jpg');
+    const res = await fetch(cfg.url + '/storage/v1/object/receipts/' + path, {
+      method: 'POST',
+      headers: { ...hdr(true, false), 'Content-Type': blob.type || 'image/jpeg' },
+      body: blob,
+    });
+    if (!res.ok) {
+      let msg = 'HTTP ' + res.status;
+      try { const j = await res.json(); msg = j.message || j.error || msg; } catch (e) { /* non-json */ }
+      throw new Error(msg);
+    }
+    await req('/rest/v1/rpc/submit_request', { method: 'POST', body: { p_path: path } });
+    await refreshProfile();
+  }
+  async function fetchReceipt(path) {   // admin (or owner): private bucket -> blob
+    const res = await fetch(cfg.url + '/storage/v1/object/authenticated/receipts/' + path, { headers: hdr(true, false) });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.blob();
   }
 
   /* ---------- data ---------- */
@@ -153,8 +182,9 @@ window.SB = (function () {
   return {
     configured,
     req,
-    init, signup, login, logout,
+    init, signup, login, logout, refreshProfile,
     checkCode, redeemCode,
+    paymentSettings, submitReceipt, fetchReceipt,
     fetchProgress, upsertProgress, logSession, event, heartbeat, updateName,
     get session() { return session; },
     get profile() { return profile; },

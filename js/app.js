@@ -55,12 +55,20 @@ function loadStore() {
       }
     }
   } catch (e) { /* corrupted -> reset */ }
-  return { v: 2, q: {}, starred: [], history: [], active: null, mocksTaken: 0 };
+  return freshStore();
 }
+function freshStore() { return { v: 2, q: {}, starred: [], history: [], active: null, mocksTaken: 0 }; }
 let store = loadStore();
 
 function saveStore() {
   try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) { /* private mode */ }
+}
+
+// the local cache belongs to one account: another doctor signing in on the
+// same browser must not inherit (or upload) the previous one's progress
+function adoptStoreFor(uid) {
+  if (store.uid && store.uid !== uid) store = freshStore();
+  if (store.uid !== uid) { store.uid = uid; saveStore(); }
 }
 
 function recordAttempt(qid, correct) {
@@ -73,7 +81,10 @@ function recordAttempt(qid, correct) {
   rec.lastSeen = Date.now();
   store.q[qid] = rec;
   saveStore();
-  if (window.Sync) Sync.queueQuestion(qid);
+  if (window.Sync) {
+    Sync.queueQuestion(qid);
+    if (!hasFullAccess()) Sync.flush();   // trial answers reach the server at once: it holds the count
+  }
 }
 
 function pushHistory(entry) {
@@ -254,6 +265,29 @@ function uniqueCovered() {
 }
 function coverageRatio() { return ALL_QUESTIONS.length ? uniqueCovered() / ALL_QUESTIONS.length : 0; }
 
+/* ---------------- access: free trial -> payment -> approval ---------------- */
+/* A new account gets TRIAL_LIMIT unique questions (counted from the progress
+   the server holds, so clearing the browser does not reset it), then the
+   payment screen. Full access = admin, redeemed code, or approved receipt. */
+const TRIAL_LIMIT = 15;
+let PAY = {};                      // payment_settings row, managed in admin.html
+
+function hasFullAccess() {
+  if (!window.SB || !SB.configured || !SB.profile) return true;   // local mode
+  const p = SB.profile;
+  return p.role === 'admin' || !!p.code_id || p.access_status === 'active';
+}
+function trialLeft() { return Math.max(0, TRIAL_LIMIT - uniqueCovered()); }
+
+// true (and shows the payment screen) when the trial is used up
+function trialBlocked() {
+  if (hasFullAccess() || trialLeft() > 0) return false;
+  stopTimer();
+  session = null;
+  renderPaywall();
+  return true;
+}
+
 function milestoneState(m) {
   const cov = uniqueCovered();
   return {
@@ -388,6 +422,7 @@ function buildFixedSimulation(s) {
 function startMilestone(id) {
   const m = (BLUEPRINT?.milestoneTests || []).find((x) => x.id === id);
   if (!BLUEPRINT || !m || !milestoneState(m).unlocked) { renderExams(); return; }
+  if (trialBlocked()) return;
   stopTimer();
   const qs = buildMilestoneExam(m);
   if (!qs.length) { renderExams(); return; }
@@ -407,6 +442,7 @@ function startMilestone(id) {
 function startSimulation(id) {
   const s = (BLUEPRINT?.simulations || []).find((x) => x.id === id);
   if (!BLUEPRINT || !s || !simState(s).unlocked) { renderExams(); return; }
+  if (trialBlocked()) return;
   stopTimer();
   const qs = buildFixedSimulation(s);
   if (!qs.length) { renderExams(); return; }
@@ -560,6 +596,7 @@ function startCheckpoint(secId, tier) {
   const cov = sectionCoverage(secId);
   const cp = CHECKPOINTS[tier - 1];
   if (cov.pct < cp.gate - 1e-9) { renderSectionPage(secId); return; }
+  if (trialBlocked()) return;
   const seenQs = sectionQuestions(secId).filter((q) => { const r = store.q[q.id]; return r && r.s > 0; });
   const qs = shuffle(seenQs).slice(0, Math.min(20, seenQs.length));
   if (!qs.length) { renderSectionPage(secId); return; }
@@ -613,7 +650,8 @@ function buildSession(sectionId, mode) {
     const sec = DB.sections.find((s) => s.id === sectionId);
     title = sec ? `${sec.name} — ${sec.nameAr}` : sectionId;
   }
-  if (mode === 'exam') qs = qs.filter(isAnswerable).slice(0, EXAM_MAX_Q);
+  // exam answers are only recorded at the end, so a trial exam is cut to what is left
+  if (mode === 'exam') qs = qs.filter(isAnswerable).slice(0, hasFullAccess() ? EXAM_MAX_Q : Math.min(EXAM_MAX_Q, trialLeft()));
   if (mode === 'cram') qs = qs.filter(isAnswerable).slice(0, CRAM_MAX);
   return {
     sectionId, mode, title,
@@ -658,6 +696,7 @@ function clearActive() {
 function resumeSession() {
   const a = store.active;
   if (!a) return;
+  if (trialBlocked()) return;
   if (a.mode === 'mock' && !a.mockKind) { clearActive(); renderHome(); return; }   // pre-ladder attempt
   const questions = (a.qIds || []).map((id) => DB.byId[id]);
   if (!questions.length || questions.some((q) => !q)) { clearActive(); renderHome(); return; }
@@ -705,6 +744,16 @@ function chrome(content) {
   const userChip = (window.SB && SB.configured && SB.profile)
     ? `<button class="btn user-chip" onclick="logout()" title="تسجيل الخروج">${esc(SB.profile.name || SB.profile.email || 'طبيب')} · خروج</button>`
     : '';
+  let trialBar = '';
+  if (!hasFullAccess()) {
+    const left = trialLeft();
+    const st = SB.profile.access_status;
+    const msg = st === 'pending' ? `⏳ إيصالك قيد المراجعة — بقي لك <b>${left}</b> سؤالاً مجانياً`
+      : st === 'rejected' ? '⚠️ لم نتمكن من قبول الإيصال — أعد رفعه'
+      : `🎁 تجربة مجانية — بقي لك <b>${left}</b> من ${TRIAL_LIMIT} سؤالاً`;
+    trialBar = `<a class="trial-bar ${st === 'rejected' ? 'warn' : ''}" href="#/upgrade">
+      <span>${msg}</span><span class="trial-bar-cta">${st === 'pending' ? 'التفاصيل' : 'فعّل حسابك'} ›</span></a>`;
+  }
   return `
     <div class="topbar"><div class="topbar-inner">
       <div class="brand" onclick="location.hash='#/'">
@@ -726,12 +775,18 @@ function chrome(content) {
         </a>`;
       }).join('')}
     </nav>
-    <div class="wrap">${content}</div>`;
+    <div class="wrap">${trialBar}${content}</div>`;
 }
 
 function route() {
   stopTimer();
+  clearInterval(payPoll);
   const hash = location.hash || '#/';
+  if (!hasFullAccess() && (hash.startsWith('#/upgrade') || trialLeft() === 0)) {
+    session = null;
+    renderPaywall();
+    return;
+  }
   const qm = hash.match(/^#\/quiz\/([\w-]+)\/(study|exam|cram|mock)/);
   if (qm) {
     if (qm[2] === 'mock') { renderBriefing(); return; }
@@ -1238,6 +1293,7 @@ function renderQuiz() {
     <div class="wrap">
       <div class="quiz-header">
         <button class="back-link" onclick="location.hash='#/'">← Exit</button>
+        ${!hasFullAccess() ? `<span class="trial-pill">🎁 ${trialLeft() ? `بقي ${trialLeft()} مجاناً` : 'آخر سؤال مجاني'}</span>` : ''}
         <span class="quiz-counter">${noun} ${session.idx + 1} of ${session.questions.length}</span>
       </div>
       ${progress}
@@ -1331,6 +1387,7 @@ function revealCram() {
 
 function next() {
   if (session.idx < session.questions.length - 1) {
+    if (session.mode === 'study' && trialBlocked()) return;   // last free question answered
     session.idx += 1;
     persistSession();
     renderQuiz();
@@ -1544,7 +1601,9 @@ function retakeSame() {
     if (session.mockKind === 'simulation' && session.simId != null) { startSimulation(session.simId); return; }
   }
   if (session.checkpoint) { startCheckpoint(session.checkpoint.sectionId, session.checkpoint.tier); return; }
-  session = buildSession(session.sectionId, session.mode);
+  const { sectionId, mode } = session;
+  if (trialBlocked()) return;
+  session = buildSession(sectionId, mode);
   if (session.questions.length === 0) { renderEmpty(session); return; }
   if (session.mode === 'exam') startTimer();
   persistSession();
@@ -1642,9 +1701,9 @@ function progressRow(qid, rec) {
 
 const Sync = {
   queue: [],
-  start() {
+  start(merged = false) {
     if (!SB.configured || !SB.session) return;
-    this.merge().catch(() => {});
+    if (!merged) this.merge().catch(() => {});
     SB.heartbeat().catch(() => {});
     setInterval(() => this.flush(), 30000);
     this.flush();
@@ -1673,7 +1732,7 @@ const Sync = {
     saveStore();
     SB.event('login_sync', { uploaded: up.length, remote: remote.length }).catch(() => {});
   },
-  queueQuestion(qid) { this.queue.push(qid); },
+  queueQuestion(qid) { if (SB.configured && SB.session) this.queue.push(qid); },
   async flush() {
     if (!SB.configured || !SB.session || !this.queue.length) return;
     const ids = [...new Set(this.queue)];
@@ -1694,90 +1753,232 @@ const Sync = {
     SB.event('session_complete', { kind: entry.kind || entry.mode, score: entry.correct, total: entry.total }).catch(() => {});
   },
 };
+window.Sync = Sync;   // callers above test window.Sync; a top-level const is not a window property
 
 /* ---------------- auth screens ---------------- */
-function authShell(inner) {
+const KNOWN_KEY = 'oman-em-prep.known';   // this browser already has an account: open on login, not signup
+
+function cardShell(inner) {
   app.innerHTML = `
     <div class="auth-wrap">
-      <div class="q-card auth-card">
+      <div class="q-card auth-card" dir="rtl">
         <div class="brand-logo auth-logo">EM</div>
-        <h1>Oman EM Prep</h1>
-        <p class="auth-sub">استعد لاختبار الطوارئ — تقدّمك يتبعك على كل أجهزتك</p>
         ${inner}
       </div>
     </div>`;
 }
 
-function renderAuth(mode = 'login', msg = null, err = null) {
+// onboarding (default for a new visitor) + login
+function renderAuth(mode = null, msg = null) {
   session = null;
+  mode = mode || (localStorage.getItem(KNOWN_KEY) ? 'login' : 'signup');
   const login = mode === 'login';
-  authShell(`
+  cardShell(`
+    <h1>Oman EM Prep</h1>
+    <p class="auth-sub">${login ? 'مرحباً بعودتك — تقدّمك بانتظارك' : `جرّب ${TRIAL_LIMIT} سؤالاً مجاناً — بلا بطاقة ولا رمز`}</p>
+    ${login ? '' : `
+      <ul class="pay-perks">
+        <li>أكثر من 5,000 سؤال لاختبار الطوارئ مع شرح كل إجابة</li>
+        <li>18 قسماً واختبارات محاكاة بالتوقيت الحقيقي</li>
+        <li>تقدّمك محفوظ ويتبعك على كل أجهزتك</li>
+      </ul>`}
     ${msg ? `<div class="auth-ok">${esc(msg)}</div>` : ''}
-    ${err ? `<div class="auth-err">${esc(err)}</div>` : ''}
+    <div class="auth-err" id="au-err" hidden></div>
+    ${login ? '' : `
+      <label class="auth-label">الاسم
+        <input id="au-name" type="text" autocomplete="name" placeholder="د. ...">
+      </label>`}
     <label class="auth-label">البريد الإلكتروني
       <input id="au-email" type="email" dir="ltr" autocomplete="email" placeholder="doctor@example.com">
     </label>
+    ${login ? '' : `
+      <label class="auth-label">رقم الواتساب
+        <input id="au-phone" type="tel" dir="ltr" autocomplete="tel" placeholder="+968 9xxx xxxx">
+      </label>`}
     <label class="auth-label">كلمة المرور
       <input id="au-pass" type="password" dir="ltr" autocomplete="${login ? 'current' : 'new'}-password" placeholder="6+ أحرف">
     </label>
-    ${!login ? `
-      <label class="auth-label">الاسم
-        <input id="au-name" type="text" placeholder="د. ...">
-      </label>
-      <label class="auth-label">رمز التفعيل
-        <input id="au-code" dir="ltr" placeholder="XXXX-XXXX" autocomplete="off">
-      </label>` : ''}
-    <button class="btn btn-primary btn-block" id="au-go">${login ? 'دخول' : 'إنشاء الحساب'}</button>
-    <button class="btn btn-ghost btn-block" id="au-switch">${login ? 'ليس لديك حساب؟ أنشئ حساباً برمز تفعيل' : 'لديك حساب؟ تسجيل الدخول'}</button>
+    <button class="btn btn-primary btn-block" id="au-go">${login ? 'دخول' : 'ابدأ التجربة المجانية'}</button>
+    <button class="btn btn-ghost btn-block" id="au-switch">${login ? 'جديد هنا؟ ابدأ تجربتك المجانية' : 'لديك حساب؟ تسجيل الدخول'}</button>
   `);
+  const btn = $('#au-go');
+  const fail = (text) => {   // inline, so the doctor never retypes the form
+    const box = $('#au-err');
+    box.textContent = text; box.hidden = false;
+    btn.disabled = false;
+  };
   $('#au-switch').addEventListener('click', () => renderAuth(login ? 'signup' : 'login'));
-  $('#au-go').addEventListener('click', async () => {
-    const btn = $('#au-go');
+  $$('.auth-card input').forEach((el) => el.addEventListener('keydown', (e) => { if (e.key === 'Enter') btn.click(); }));
+  btn.addEventListener('click', async () => {
     const email = $('#au-email').value.trim();
     const pass = $('#au-pass').value;
-    if (!email || !pass) { renderAuth(mode, null, 'أدخل البريد وكلمة المرور'); return; }
+    if (!email || !pass) return fail('أدخل البريد وكلمة المرور');
     btn.disabled = true;
     try {
       if (login) {
-        const r = await SB.login(email, pass);
-        if (r.needsCode) { renderRedeem(); return; }
-        location.reload();
+        await SB.login(email, pass);
       } else {
         const name = $('#au-name').value.trim();
-        const code = $('#au-code').value.trim();
-        if (!name || !code) { renderAuth(mode, null, 'أدخل الاسم ورمز التفعيل'); return; }
-        const valid = await SB.checkCode(code);
-        if (!valid) { renderAuth(mode, null, 'رمز التفعيل غير صالح أو منتهي — تأكد من كتابته كما أُعطي لك'); return; }
-        const r = await SB.signup(email, pass, name);
-        if (r.needsCode) {
-          const ok = await SB.redeemCode(code);
-          if (!ok) { renderAuth(mode, null, 'تعذر تفعيل الرمز — جرّب مرة أخرى'); return; }
-        }
-        location.reload();
+        const phone = $('#au-phone').value.trim();
+        if (!name) return fail('أدخل اسمك');
+        if (phone.replace(/\D/g, '').length < 8) return fail('أدخل رقم واتساب صحيحاً');
+        if (pass.length < 6) return fail('كلمة المرور قصيرة — 6 أحرف على الأقل');
+        const r = await SB.signup(email, pass, name, phone);
+        localStorage.setItem(KNOWN_KEY, '1');
+        if (r.needsConfirm) { renderAuth('login', 'أرسلنا رابط تأكيد إلى بريدك — افتحه ثم سجّل الدخول هنا'); return; }
+        localStorage.removeItem(STORE_KEY);   // a new account starts from zero
       }
+      localStorage.setItem(KNOWN_KEY, '1');
+      history.replaceState(null, '', location.pathname);   // land on Home (no hashchange before the reload)
+      location.reload();
     } catch (e) {
-      renderAuth(mode, null, humanAuthError(e.message));
+      fail(humanAuthError(e.message));
     }
   });
 }
 
-function renderRedeem(err = null) {
-  session = null;
-  authShell(`
+/* ---------------- payment screen: bank details -> receipt -> review ---------------- */
+const RECEIPT_MAX_BYTES = 10 * 1024 * 1024;
+let payPoll = null;
+
+// phone photos are 3-8 MB; a 1600px JPEG uploads instantly and stays readable
+async function compressImage(file) {
+  if (!file.type.startsWith('image/')) return file;
+  try {
+    const bmp = await createImageBitmap(file);
+    const scale = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+    const c = document.createElement('canvas');
+    c.width = Math.round(bmp.width * scale);
+    c.height = Math.round(bmp.height * scale);
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    const blob = await new Promise((res) => c.toBlob(res, 'image/jpeg', 0.82));
+    return blob && blob.size < file.size ? blob : file;
+  } catch (e) { return file; }   // format the browser cannot decode: send as-is
+}
+
+function payRow(label, value, copy) {
+  if (!value) return '';
+  return `
+    <div class="pay-row">
+      <span class="pay-k">${label}</span>
+      <span class="pay-v" dir="auto">${esc(value)}</span>
+      ${copy ? `<button class="btn pay-copy" data-copy="${esc(value)}">نسخ</button>` : ''}
+    </div>`;
+}
+
+function renderActivated() {
+  clearInterval(payPoll);
+  cardShell(`
+    <div class="pay-state">🎉</div>
+    <h1>تم تفعيل حسابك</h1>
+    <p class="auth-sub">وصول كامل ودائم لكل الأسئلة والاختبارات — بالتوفيق.</p>
+    <button class="btn btn-primary btn-block" id="act-go">ابدأ الآن</button>`);
+  $('#act-go').addEventListener('click', () => { location.hash = '#/'; route(); });
+}
+
+function renderPaywall(err = null) {
+  clearInterval(payPoll);
+  const p = SB.profile;
+  const left = trialLeft();
+  const wa = String(PAY.whatsapp || '').replace(/\D/g, '');
+  const waLink = (text) => `https://wa.me/${wa}?text=${encodeURIComponent(text)}`;
+  const foot = `
+    ${left > 0 ? `<a class="btn btn-ghost btn-block" href="#/">متابعة التجربة — بقي ${left} سؤالاً</a>` : ''}
+    <button class="btn btn-ghost btn-block" onclick="logout()">تسجيل الخروج</button>`;
+
+  if (p.access_status === 'pending') {
+    cardShell(`
+      <div class="pay-state">✅</div>
+      <h1>استلمنا إيصالك</h1>
+      <p class="auth-sub">نراجعه في أقرب وقت، وسيُفتح حسابك هنا تلقائياً — لا حاجة لأي خطوة أخرى.</p>
+      ${wa ? `<a class="btn btn-primary btn-block" target="_blank" rel="noopener" href="${waLink(`مرحباً، أرسلت إيصال الدفع لتفعيل حسابي في Oman EM Prep — ${p.email || ''}`)}">نبّهنا عبر واتساب لتفعيل أسرع</a>` : ''}
+      ${foot}`);
+    payPoll = setInterval(async () => {
+      await SB.refreshProfile();
+      if (hasFullAccess()) renderActivated();
+      else if (SB.profile.access_status !== 'pending') renderPaywall();
+    }, 15000);
+    return;
+  }
+
+  const st = readiness();
+  const link = /^https?:\/\//i.test(PAY.pay_link || '') ? PAY.pay_link : null;
+  const hasDetails = PAY.account || PAY.beneficiary || PAY.bank || link;
+  cardShell(`
+    <h1>${left === 0 ? 'أنهيت أسئلتك المجانية 🎉' : 'فعّل حسابك الكامل'}</h1>
+    <p class="auth-sub">${left > 0 ? 'دفعة واحدة — وصول دائم لكل المحتوى.'
+      : st.accuracy >= 60 ? `بداية قوية — دقتك ${st.accuracy}%. أكمل الطريق إلى الاختبار.`
+      : 'هذه البداية فقط — أكمل الطريق إلى الاختبار.'}</p>
+    <ul class="pay-perks">
+      <li>${ALL_QUESTIONS.length.toLocaleString('en')} سؤالاً مع الشرح في ${DB.sections.length} قسماً</li>
+      <li>اختبارات محاكاة بالتوقيت الحقيقي</li>
+      <li>دفعة واحدة — وصول دائم وتقدّمك محفوظ</li>
+    </ul>
+    ${p.access_status === 'rejected' ? `<div class="auth-err">لم نتمكن من قبول الإيصال${p.reject_reason ? ': ' + esc(p.reject_reason) : ''}. ارفع إيصالاً آخر وسنراجعه فوراً.</div>` : ''}
     ${err ? `<div class="auth-err">${esc(err)}</div>` : ''}
-    <p class="auth-note">بقي خطوة واحدة — أدخل رمز التفعيل الذي حصلت عليه لفتح المنصة.</p>
-    <label class="auth-label">رمز التفعيل
-      <input id="au-code" dir="ltr" placeholder="XXXX-XXXX" autocomplete="off">
-    </label>
-    <button class="btn btn-primary btn-block" id="au-go">تفعيل</button>
-    <button class="btn btn-ghost btn-block" onclick="logout()">تسجيل الخروج</button>
-  `);
-  $('#au-go').addEventListener('click', async () => {
+    <div class="pay-box">
+      ${PAY.price ? `<div class="pay-price"><span>رسوم التفعيل</span><b dir="auto">${esc(PAY.price)}</b></div>` : ''}
+      ${payRow('المستفيد', PAY.beneficiary)}
+      ${payRow('البنك', PAY.bank)}
+      ${payRow('رقم الحساب', PAY.account, true)}
+      ${link ? `<a class="btn btn-block" target="_blank" rel="noopener" href="${esc(link)}">ادفع عبر الرابط ↗</a>` : ''}
+      ${PAY.note ? `<p class="pay-note" dir="auto">${esc(PAY.note)}</p>` : ''}
+      ${hasDetails ? '' : '<p class="pay-note">تواصل معنا للحصول على بيانات التحويل.</p>'}
+    </div>
+    <input type="file" id="rc-file" accept="image/*,application/pdf" hidden>
+    <div id="rc-zone">
+      <button class="btn btn-primary btn-block" id="rc-pick">📎 حوّلت؟ ارفع صورة الإيصال</button>
+    </div>
+    <details class="pay-code">
+      <summary>لديك رمز تفعيل؟</summary>
+      <div class="pay-code-row">
+        <input id="au-code" dir="ltr" placeholder="XXXX-XXXX" autocomplete="off">
+        <button class="btn" id="code-go">تفعيل</button>
+      </div>
+      <div class="auth-err" id="code-err" hidden>رمز غير صالح أو مستهلك</div>
+    </details>
+    ${wa ? `<a class="btn btn-ghost btn-block" target="_blank" rel="noopener" href="${waLink('مرحباً، لدي استفسار عن تفعيل حسابي في Oman EM Prep')}">💬 تواصل معنا عبر واتساب</a>` : ''}
+    ${foot}`);
+
+  $$('.pay-copy').forEach((b) => b.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(b.dataset.copy);
+      b.textContent = 'تم النسخ ✓';
+      setTimeout(() => { b.textContent = 'نسخ'; }, 1600);
+    } catch (e) { /* clipboard blocked: the number stays selectable */ }
+  }));
+  $('#rc-pick').addEventListener('click', () => $('#rc-file').click());
+  $('#rc-file').addEventListener('change', (e) => { if (e.target.files[0]) previewReceipt(e.target.files[0]); });
+  $('#code-go').addEventListener('click', async () => {
     const code = $('#au-code').value.trim();
-    if (!code) { renderRedeem('أدخل الرمز'); return; }
+    if (!code) return;
     const ok = await SB.redeemCode(code).catch(() => false);
-    if (ok) location.reload();
-    else renderRedeem('رمز غير صالح أو مستهلك');
+    if (ok) renderActivated();
+    else $('#code-err').hidden = false;
+  });
+}
+
+function previewReceipt(file) {
+  const isImage = file.type.startsWith('image/');
+  $('#rc-zone').innerHTML = `
+    <div class="rc-preview">${isImage
+      ? `<img src="${URL.createObjectURL(file)}" alt="الإيصال">`
+      : `<div class="rc-doc">📄 ${esc(file.name)}</div>`}</div>
+    <button class="btn btn-primary btn-block" id="rc-send">إرسال الإيصال</button>
+    <button class="btn btn-ghost btn-block" id="rc-change">اختيار ملف آخر</button>`;
+  $('#rc-change').addEventListener('click', () => $('#rc-file').click());
+  $('#rc-send').addEventListener('click', async () => {
+    const btn = $('#rc-send');
+    btn.disabled = true;
+    btn.textContent = 'جارٍ الإرسال…';
+    try {
+      const blob = await compressImage(file);
+      if (blob.size > RECEIPT_MAX_BYTES) { renderPaywall('الملف أكبر من 10MB — التقط صورة للإيصال بدلاً منه'); return; }
+      await SB.submitReceipt(blob);
+      renderPaywall();
+    } catch (e) {
+      renderPaywall('تعذّر إرسال الإيصال — تحقق من اتصالك وحاول مرة أخرى');
+    }
   });
 }
 
@@ -1785,6 +1986,7 @@ function humanAuthError(msg) {
   const m = String(msg || '');
   if (m.includes('Invalid login')) return 'بريد أو كلمة مرور غير صحيحة';
   if (m.includes('already registered')) return 'هذا البريد مسجل بالفعل — سجّل الدخول';
+  if (m.includes('not confirmed')) return 'أكّد بريدك أولاً من الرسالة التي وصلتك ثم سجّل الدخول';
   if (m.includes('Password') && m.includes('bytes')) return 'كلمة المرور قصيرة — 6 أحرف على الأقل';
   if (m.includes('rate limit') || m.includes('Rate')) return 'محاولات كثيرة — انتظر قليلاً ثم جرّب';
   if (m.includes('Failed to fetch')) return 'تعذر الاتصال بالخادم — تحقق من اتصالك';
@@ -1802,12 +2004,22 @@ function logout() {
   if (window.SB && SB.configured) {
     const authed = await SB.init().catch(() => false);
     if (!authed) { renderAuth(); return; }
-    if (SB.profile && SB.profile.role !== 'admin' && !SB.profile.code_id) { renderRedeem(); return; }
+    adoptStoreFor(SB.session.user.id);
   }
   try {
     await loadData();
+    if (window.SB && SB.configured) {
+      if (!hasFullAccess()) {
+        // the trial counter is the progress the server holds: pull it (and the
+        // payment details) before the first screen so the count is right
+        await Promise.all([
+          Sync.merge().catch(() => {}),
+          SB.paymentSettings().then((row) => { PAY = row; }).catch(() => {}),
+        ]);
+      }
+      Sync.start(!hasFullAccess());
+    }
     route();
-    if (window.SB && SB.configured) Sync.start();
   } catch (err) {
     const served = location.protocol !== 'file:';
     app.innerHTML = `

@@ -3,6 +3,7 @@
 -- Run ONCE in the SQL Editor.
 -- ⚠ Re-running after real usage DROPS ALL DATA (guards at top).
 -- The FIRST user to sign up becomes admin (bootstrap).
+-- Then run 002_trial_paywall.sql (free trial + payment receipts).
 -- ============================================================
 
 -- ---------- 0) clean-slate guards (safe on first run) ----------
