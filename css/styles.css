@@ -830,3 +830,81 @@ kbd {
   .monitor-value { font-size: 64px; }
   .toast { bottom: 32px; }
 }
+
+/* ---------------- recalls: read-only archive ---------------- */
+.hand {
+  font-family: 'Caveat', 'Aref Ruqaa', cursive;
+  font-size: 1.3em;
+  line-height: 1.45;
+  color: var(--text);
+}
+.recall-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 10px; }
+.recall-chip {
+  appearance: none; border: 1px solid var(--border); background: var(--surface); color: var(--text-2);
+  font: inherit; font-size: 13.5px; font-weight: 600; min-height: 34px; padding: 4px 12px;
+  border-radius: 99px; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;
+}
+.recall-chip b { font-weight: 700; color: var(--text-3); }
+.recall-chip.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+.recall-chip.on b { color: inherit; }
+.recall-search {
+  width: 100%; min-height: 46px; margin-bottom: 14px; padding: 10px 16px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--text); font: inherit; font-size: 15px;
+}
+.recall-list { display: flex; flex-direction: column; gap: 14px; padding-bottom: 32px; }
+.recall-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px 16px 12px;
+}
+.recall-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.recall-topic { font-size: 13px; font-weight: 700; color: var(--text-2); letter-spacing: .01em; }
+.recall-badge {
+  flex: none; display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 99px;
+}
+.recall-badge .ic { width: 13px; height: 13px; }
+.recall-badge.ok   { background: var(--correct-soft); color: var(--correct); }
+.recall-badge.warn { background: var(--flag-soft); color: var(--flag); }
+.recall-badge.dim  { background: var(--surface-2); color: var(--text-2); }
+.recall-ans {
+  display: flex; align-items: baseline; gap: 8px; margin: 2px 0 8px;
+  border-inline-start: 3px solid var(--correct); padding-inline-start: 10px;
+}
+.recall-ans span { font-size: 12px; color: var(--text-3); white-space: nowrap; }
+.recall-ans b { font-size: 15px; color: var(--correct); }
+.recall-why { font-size: 14px; line-height: 1.65; color: var(--text); margin: 0 0 10px; }
+.recall-srcs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.recall-src {
+  display: inline-flex; align-items: center; gap: 5px; text-decoration: none;
+  font-size: 12.5px; font-weight: 600; color: var(--primary);
+  background: var(--primary-soft); border-radius: 8px; padding: 4px 10px;
+}
+.recall-src .ic { width: 12px; height: 12px; }
+.recall-searchbtns { display: flex; gap: 8px; margin-bottom: 12px; }
+.recall-go { background: var(--ink); border-color: var(--ink); color: #fff; }
+.recall-go.alt { background: var(--surface); color: var(--text); }
+.recall-arch-t {
+  appearance: none; width: 100%; border: 0; border-top: 1px dashed var(--border);
+  background: none; color: var(--text-2); font: inherit; font-size: 13px; font-weight: 600;
+  padding: 10px 2px 6px; cursor: pointer; display: flex; align-items: baseline; gap: 8px;
+  text-align: start;
+}
+.recall-arch-t::before { content: '▸'; transition: transform .15s ease; }
+.recall-arch-t.open::before { transform: rotate(90deg); }
+.recall-arch-hint { font-size: 11px; color: var(--text-3); font-weight: 400; }
+.recall-arch {
+  background: var(--surface-2); border-radius: var(--radius-sm);
+  padding: 12px 14px; margin-bottom: 8px;
+}
+.recall-arch .hand { margin: 0 0 10px; }
+.recall-arch ul.hand { margin: 0 0 10px; padding-inline-start: 22px; }
+.recall-arch .recall-student { color: var(--primary); font-weight: 600; }
+.recall-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 11.5px; color: var(--text-3); }
+
+/* Google Search verify button (explanations + recalls) */
+.gsearch {
+  background: #fff; border-color: var(--border); color: #3c4043;
+  gap: 8px; margin-top: 10px;
+}
+.gsearch .glogo { width: 16px; height: 16px; flex: none; }

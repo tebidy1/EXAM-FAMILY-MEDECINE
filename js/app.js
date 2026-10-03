@@ -54,6 +54,7 @@ const ICONS = {
   dots: '<path d="M12 5v.01M12 12v.01M12 19v.01" stroke-width="3"/>',
   user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
   info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><path d="M12 7.5v.01" stroke-width="2.6"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
 };
 const icon = (name, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
 // the ECG mark — same drawing as icons/icon.svg and tools/make-icons.js
@@ -61,6 +62,13 @@ const LOGO = '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M14 56H35L4
 const TRACE = (cls = '') => `<svg class="monitor-trace ${cls}" viewBox="0 0 240 64" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40H34l5-7 5 7h12l7-30 9 46 6-16h16q7-13 14 0h26l5-7 5 7h12l7-30 9 46 6-16H240"/></svg>`;
 const ring = (pct, cls = '') => `<span class="ring ${cls}" style="--pct:${pct}"><b>${pct}${cls ? '<i>%</i>' : ''}</b></span>`;
 const bar = (pct) => `<span class="mastery" style="display:block"><span class="mastery-fill" style="display:block;width:${Math.max(0, Math.min(100, Math.round(pct)))}%"></span></span>`;
+// official four-colour Google G — used by the verify button on every explanation
+const GOOGLE_G = '<svg class="glogo" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.7-.4-3.9z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.7-.4-3.9z"/></svg>';
+// opens Google with the question stem pre-typed (web results, no AI panel) — results ready, nothing to copy-paste
+const googleBtn = (q, seed) => {
+  const query = String(seed ?? q.question ?? '').replace(/\s+/g, ' ').trim().slice(0, 110);
+  return `<a class="btn btn-sm gsearch" href="https://www.google.com/search?q=${encodeURIComponent(query)}&udm=14" target="_blank" rel="noopener">${GOOGLE_G} Google Search</a>`;
+};
 
 function openSheet(html, cls = '') {
   closeSheet();
@@ -233,6 +241,7 @@ function toggleTheme() {
 let DB = { sections: [], byId: {} };
 let ALL_QUESTIONS = [];
 let BLUEPRINT = null;
+let RECALLS = null;   // read-only exam-recall archive (data/recalls.json)
 
 const OPT_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 const CTRL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g;
@@ -304,6 +313,17 @@ async function loadBlueprint() {
     const bpRes = await fetch('data/blueprint.json');
     if (bpRes.ok) BLUEPRINT = await bpRes.json();
   } catch (e) { /* simulation stays hidden if blueprint missing */ }
+}
+
+// recalls never block boot: they are a reading section, not the bank
+async function loadRecalls() {
+  try {
+    const res = await fetch('data/recalls.json');
+    if (!res.ok) return;
+    RECALLS = await res.json();
+    const h = location.hash || '#/';
+    if (h === '#/' || h.startsWith('#/recalls')) route();
+  } catch (e) { /* section simply stays hidden */ }
 }
 
 function sectionQuestions(id) { return DB[id] || []; }
@@ -1299,6 +1319,7 @@ function route() {
   if (sm) { renderSectionPage(decodeURIComponent(sm[1])); return; }
   if (hash.startsWith('#/practice')) { renderPractice(); return; }
   if (hash.startsWith('#/exams')) { renderExams(); return; }
+  if (hash.startsWith('#/recalls')) { renderRecalls(); return; }
   session = null;
   renderHome();
 }
@@ -1441,10 +1462,109 @@ function renderHome() {
     ${queueRows ? `<div class="list">${queueRows}</div>` : ''}
     ${goalHtml}
     <div class="section-heading"><h2>Recent sessions</h2><span>آخر الجلسات</span></div>
-    ${histHtml}`;
+    ${histHtml}
+    ${RECALLS?.length ? recallsHomeCard() : ''}`;
   app.innerHTML = chrome(content);
   traceDrawn = true;
   if (!Guide.startTour()) Install.nudge();   // one thing at a time on a first visit
+}
+
+/* ---------------- recalls: read-only archive ---------------- */
+function recallsHomeCard() {
+  return `
+    <div class="section-heading"><h2>Exam recalls</h2><span>أسئلة وردت في اختبارات سابقة</span></div>
+    <a class="row" href="#/recalls">
+      <span class="row-icon">${icon('bookmark')}</span>
+      <span class="row-body">
+        <span class="row-title">ريكولات — للقراءة فقط</span>
+        <span class="row-sub">${RECALLS.length} سؤالاً كما ورد، مع تبرير علمي موثق لكل واحد</span>
+      </span>
+      ${icon('chev', 'chev')}
+    </a>`;
+}
+
+const RECALL_STATE = {
+  confirmed: { label: 'مؤكَّد علمياً', cls: 'ok', ic: 'check' },
+  probable:  { label: 'مُرجَّح', cls: 'warn', ic: 'info' },
+  unresolved:{ label: 'غير محسوم', cls: 'dim', ic: 'search' },
+};
+// archive options/answers are shown in a handwriting face; the scientific layer stays in the normal face
+const splitOpts = (s) => String(s || '').split(/\s*(?:\/|—|؛|;)\s*/).filter(Boolean);
+
+let recallFilter = { q: '', state: 'all' };
+
+function renderRecalls() {
+  session = null;
+  if (!RECALLS) {
+    app.innerHTML = chrome(`<div class="page-head"><h1>Exam recalls</h1><p>…</p></div>`);
+    return;
+  }
+  const counts = { all: RECALLS.length, confirmed: 0, probable: 0, unresolved: 0 };
+  RECALLS.forEach((r) => { counts[r.state]++; });
+  const q = recallFilter.q.trim().toLowerCase();
+  const rows = RECALLS.filter((r) =>
+    (recallFilter.state === 'all' || r.state === recallFilter.state) &&
+    (!q || [r.raw_text, r.raw_options, r.raw_answer, r.topic, r.answer, r.justification]
+      .some((f) => f && String(f).toLowerCase().includes(q))));
+  const chip = (id, label) => `
+    <button class="recall-chip ${recallFilter.state === id ? 'on' : ''}"
+      onclick="recallFilter.state='${id}';renderRecalls()">${label} <b>${counts[id]}</b></button>`;
+  const cards = rows.map(recallCard).join('') ||
+    `<div class="card"><div class="card-meta">لا نتائج مطابقة.</div></div>`;
+  const content = `
+    <div class="page-head">
+      <h1>Exam recalls</h1>
+      <p dir="rtl">أسئلة رويتها دفعات سابقة، معروضة كما وردت حرفياً — والطبقة العلمية تحتها موثقة بمصادر عليا. اضغط أي زر تحقق لتفتح البحث بنتائجه جاهزة.</p>
+    </div>
+    <div class="recall-chips">
+      ${chip('all', 'الكل')}${chip('confirmed', 'مؤكَّد')}${chip('probable', 'مُرجَّح')}${chip('unresolved', 'غير محسوم')}
+    </div>
+    <input class="recall-search" type="search" placeholder="ابحث في الريكولات…" value="${esc(recallFilter.q)}"
+      oninput="recallFilter.q=this.value;clearTimeout(window.__rqT);window.__rqT=setTimeout(renderRecalls,250)" dir="rtl">
+    <div class="recall-list">${cards}</div>`;
+  app.innerHTML = chrome(content);
+}
+
+function recallCard(r) {
+  const st = RECALL_STATE[r.state] || RECALL_STATE.unresolved;
+  const student = r.raw_answer && !/غير مذكور/.test(r.raw_answer) ? r.raw_answer : null;
+  const opts = splitOpts(r.raw_options);
+  const sourceLinks = (r.sources || []).map((s) =>
+    `<a class="recall-src" href="${esc(s.url)}" target="_blank" rel="noopener">${icon('bookmark')} ${esc(s.label)}</a>`).join('');
+  const verdictHtml = r.state === 'unresolved'
+    ? `<p class="recall-why" dir="auto">No scientifically verified answer could be established for this item — check it yourself via the search buttons.</p>`
+    : `
+      ${r.answer ? `<div class="recall-ans" dir="auto"><span>الجواب المُرجَّح</span><b>${esc(r.answer)}</b></div>` : ''}
+      <p class="recall-why" dir="auto">${esc(r.justification)}</p>
+      ${sourceLinks ? `<div class="recall-srcs">${sourceLinks}</div>` : ''}`;
+  const archive = `
+    <button class="recall-arch-t" onclick="this.nextElementSibling.toggleAttribute('hidden');this.classList.toggle('open')">
+      كما ورد في الريكالات <span class="recall-arch-hint">النص الحرفي لم تُمسّ</span>
+    </button>
+    <div class="recall-arch" hidden dir="auto">
+      <p class="hand">${esc(r.raw_text)}</p>
+      ${opts.length ? `<ul class="hand">${opts.map((o) => `<li>${esc(o)}</li>`).join('')}</ul>` : ''}
+      ${student ? `<p class="hand recall-student">الجواب كما ورد: ${esc(student)}</p>` : ''}
+      <div class="recall-meta">
+        <span>${r.type === 'handwritten' ? 'خط يد' : 'مطبوع'}</span>
+        <span>المصدر: ${esc(r.source_file)}</span>
+        ${r.page ? `<span>صفحة ${esc(r.page)}</span>` : ''}
+        <span>ثقة الاستخراج ${r.extraction_confidence}/10</span>
+      </div>
+    </div>`;
+  return `
+    <article class="recall-card">
+      <div class="recall-top">
+        <span class="recall-topic" dir="auto">${esc(r.topic || 'Recall')}</span>
+        <span class="recall-badge ${st.cls}">${icon(st.ic)} ${st.label}</span>
+      </div>
+      ${verdictHtml}
+      <div class="recall-searchbtns">
+        <a class="btn btn-sm recall-go" href="${esc(r.google_url)}" target="_blank" rel="noopener">تحقق في Google</a>
+        <a class="btn btn-sm recall-go alt" href="${esc(r.pubmed_url)}" target="_blank" rel="noopener">PubMed</a>
+      </div>
+      ${archive}
+    </article>`;
 }
 
 /* ---------------- practice tab ---------------- */
@@ -1665,6 +1785,7 @@ function renderQuiz() {
   }).join('');
 
   const ref = q.reference ? `<div class="feedback-ref">${esc(q.reference)}</div>` : '';
+  const gBtn = googleBtn(q);
   let feedback = '';
   if (revealed && isCram) {
     feedback = `
@@ -1672,12 +1793,14 @@ function renderQuiz() {
         <div class="feedback-head">Answer: ${LETTERS[q.answer]}</div>
         <div class="feedback-body">${esc(q.explanation || '')}</div>
         ${ref}
+        ${gBtn}
       </div>`;
   } else if (revealed && q.selfScored && session.selfGrades[session.idx] == null) {
     feedback = `
       <div class="feedback">
         <div class="feedback-body">${esc(q.explanation || '')}</div>
         ${ref}
+        ${gBtn}
         <div class="self-grade">
           <span class="self-grade-q">After reading the explanation, how did you do? <span dir="rtl">كيف كانت إجابتك؟</span></span>
           <div class="self-grade-btns">
@@ -1693,6 +1816,7 @@ function renderQuiz() {
         <div class="feedback-head">${icon(ok ? 'check' : 'close')}${ok ? 'Self-graded: correct' : 'Self-graded: missed'}</div>
         <div class="feedback-body">${esc(q.explanation || '')}</div>
         ${ref}
+        ${gBtn}
       </div>`;
   } else if (revealed) {
     const ok = picked === q.answer;
@@ -1701,6 +1825,7 @@ function renderQuiz() {
         <div class="feedback-head">${icon(ok ? 'check' : 'close')}${ok ? 'Correct' : `Incorrect. The answer is ${LETTERS[q.answer]}`}</div>
         <div class="feedback-body">${esc(q.explanation || '')}</div>
         ${ref}
+        ${gBtn}
       </div>`;
   }
 
@@ -2084,6 +2209,7 @@ function reviewDetail(q, i) {
         <div class="feedback-head">${icon(ok ? 'check' : 'close')}${verdict}</div>
         <div class="feedback-body">${esc(q.explanation || '')}</div>
         ${q.reference ? `<div class="feedback-ref">${esc(q.reference)}</div>` : ''}
+        ${googleBtn(q)}
       </div>
     </div>`;
 }
@@ -2560,6 +2686,7 @@ function logout() {
     }
     if (!Guide.state.intro && !profileOrNull()) renderIntro(route);   // local mode: no sign-up screen to follow
     else route();
+    loadRecalls();
   } catch (err) {
     applyTheme();
     const served = location.protocol !== 'file:';

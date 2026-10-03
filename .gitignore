@@ -13,6 +13,14 @@ data/questions/family_medicine_questions (1).json
 # ---- internal tooling ----
 .mimosa/
 
+# ---- recall source material: private scans (student handwriting, names) ----
+# the app serves the curated data/recalls.json only
+docs/exam-recalls/
+
+# ---- recall build intermediates (regenerable by tools/*_recall*.py) ----
+# only the final data/recalls.json is a runtime file
+data/recalls_verdicts/
+
 # ---- OS / editor noise ----
 Thumbs.db
 Desktop.ini

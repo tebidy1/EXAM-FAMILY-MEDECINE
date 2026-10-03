@@ -217,8 +217,8 @@ http.createServer((req, res) => {
       if (/^\/(auth|rest|storage)\/v1\//.test(url.pathname)) return api(req, res, url, Buffer.concat(chunks));
       // point the app at this server instead of the live Supabase project
       if (url.pathname === '/js/config.js') return send(res, 200, `window.SB_CONFIG = { url: location.origin, anonKey: 'dev' };`, 'text/javascript');
-      const file = path.join(ROOT, decodeURIComponent(url.pathname === '/' ? '/index.html' : url.pathname));
-      if (!file.startsWith(ROOT) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) return send(res, 404, 'not found', 'text/plain');
+      const file = path.normalize(path.join(ROOT, decodeURIComponent(url.pathname === '/' ? '/index.html' : url.pathname)));
+      if ((!file.startsWith(ROOT + path.sep) && file !== ROOT) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) return send(res, 404, 'not found', 'text/plain');
       send(res, 200, fs.readFileSync(file), MIME[path.extname(file)] || 'application/octet-stream');
     } catch (e) {
       send(res, 500, { message: e.message });
