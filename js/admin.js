@@ -18,6 +18,7 @@ let usersCache = null;
 let codesCache = null;
 let sessionsCache = null;
 let requestsCache = [];
+let promosCache = [];
 let payCache = {};
 let rejectingId = null;            // request whose reject reasons are open
 const receiptUrls = new Map();     // receipt_path -> { url, type } once fetched from the private bucket
@@ -38,18 +39,20 @@ let drillId = null;
 })();
 
 async function loadAll() {
-  const [users, codes, sessions, requests, pay] = await Promise.all([
+  const [users, codes, sessions, requests, promos, pay] = await Promise.all([
     SB.req('/rest/v1/v_admin_users?select=*&order=last_seen.desc'),
     SB.req('/rest/v1/v_admin_codes?select=*&order=created_at.desc'),
     SB.req('/rest/v1/v_admin_sessions?select=*&order=ts.desc&limit=1000'),
-    // these two need supabase/002_trial_paywall.sql; stay usable without it
+    // these need supabase/002_trial_paywall.sql / 004_promo_referral.sql; stay usable without them
     SB.req('/rest/v1/v_admin_requests?select=*&order=created_at.desc&limit=200').catch(() => []),
+    SB.req('/rest/v1/v_admin_promos?select=*&order=created_at.desc').catch(() => []),
     SB.paymentSettings().catch(() => ({})),
   ]);
   usersCache = users || [];
   codesCache = codes || [];
   sessionsCache = sessions || [];
   requestsCache = requests || [];
+  promosCache = promos || [];
   payCache = pay || {};
 }
 
@@ -106,6 +109,7 @@ function shell(inner) {
     ['requests', '🧾', 'Requests' + (waiting ? `<span class="tab-badge">${waiting}</span>` : '')],
     ['doctors', '👨‍⚕️', 'Doctors'],
     ['codes', '🔑', 'Codes'],
+    ['growth', '🎁', 'Growth'],
     ['payment', '💳', 'Payment'],
   ];
   return `
@@ -265,6 +269,7 @@ function renderDrill() {
         <h1>${esc(u.name || u.email)}</h1>
         <div class="card-meta">${esc(u.email || '')} · member since ${new Date(u.created_at).toLocaleDateString()} · last seen ${relTime(u.last_seen)}</div>
         <div class="card-meta">coverage ${u.covered || 0}/5093 · attempts ${u.attempts || 0} · mastered ${u.mastered || 0}</div>
+        ${(u.bonus_questions || u.referrals || u.referral_code) ? `<div class="card-meta">🎁 bonus ${u.bonus_questions || 0} · referred ${u.referrals || 0} (${u.referrals_paid || 0} paid)${u.referral_code ? ' · code ' + esc(u.referral_code) : ''}</div>` : ''}
         ${u.role === 'admin' ? '' : `
           <div class="req-actions">
             <span class="status-chip ${accessOf(u)}">${accessLabel(u)}</span>
@@ -487,10 +492,113 @@ async function generateCodes() {
   }
 }
 
+/* ---------------- growth: promo codes + referral rewards ---------------- */
+/* Both open BONUS QUESTIONS (not full access): they lift a doctor's free-trial
+   ceiling. Needs supabase/004_promo_referral.sql. */
+const REF_FIELDS = [
+  ['referral_reward_signup', 'مكافأة الداعي عند تسجيل صديق', 'عدد الأسئلة التي يحصل عليها من يدعو، بمجرد انضمام الصديق'],
+  ['referral_reward_paid', 'مكافأة الداعي عند اشتراك صديقه', 'أسئلة إضافية للداعي عندما يشترك الصديق (اجعلها أكبر للتحفيز)'],
+  ['referral_signup_bonus', 'مكافأة الترحيب للمدعو', 'أسئلة إضافية يبدأ بها الصديق الجديد (0 = بلا مكافأة)'],
+];
+
+function genPromoCode() {
+  const A = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
+  const pick = () => A[crypto.getRandomValues(new Uint32Array(1))[0] % A.length];
+  return Array.from({ length: 6 }, pick).join('');
+}
+
+function renderGrowth() {
+  const needs = !('referral_reward_signup' in payCache);   // 004 not run yet
+  const refCard = `
+    <div class="card">
+      <div class="section-heading" style="margin:0 0 12px"><h2>Referral rewards</h2><span>مكافآت الدعوة بالأسئلة المجانية — 0 يُخفي الخيار من التطبيق</span></div>
+      ${needs ? '<div class="auth-err">شغّل <code>supabase/004_promo_referral.sql</code> في SQL Editor لتفعيل البرومو والدعوات.</div>' : ''}
+      <div class="settings-grid">
+        ${REF_FIELDS.map(([key, label, hint]) => `
+          <label class="auth-label">${label}
+            <input id="rf-${key}" type="number" min="0" max="100000" dir="ltr" value="${esc(payCache[key] ?? 0)}" ${needs ? 'disabled' : ''}>
+            <span class="card-meta" style="font-weight:400">${hint}</span>
+          </label>`).join('')}
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="btn btn-primary" id="rf-save" ${needs ? 'disabled' : ''}>حفظ</button>
+        <span id="rf-out" class="card-meta"></span>
+      </div>
+    </div>`;
+
+  const promoRows = promosCache.map((c) => `
+    <div class="hist-row">
+      <span class="hist-title"><code style="font-size:14px;letter-spacing:.06em">${esc(c.code)}</code>
+        <span class="hist-meta">+${c.reward_questions} سؤالاً${c.label ? ' · ' + esc(c.label) : ''}</span></span>
+      <span class="hist-meta">${c.uses}/${c.max_uses} used · ${c.redeemed_by} accounts
+        ${c.expires_at ? '· expires ' + new Date(c.expires_at).toLocaleDateString() : ''}
+        ${c.active ? '' : '· <b style="color:var(--wrong)">revoked</b>'}</span>
+      <button class="btn" onclick="togglePromo('${c.id}', ${!c.active})">${c.active ? 'Revoke' : 'Restore'}</button>
+    </div>`).join('') || '<div class="card"><div class="card-meta">لا رموز دعائية بعد.</div></div>';
+
+  const promoCard = `
+    <div class="card">
+      <div class="section-heading" style="margin:0 0 12px"><h2>Promo codes</h2><span>كل رمز يفتح عدداً من الأسئلة المجانية — للحملات الدعائية</span></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end">
+        <label class="auth-label" style="margin:0">Questions opened<input id="pr-reward" type="number" min="1" max="100000" value="50" style="width:120px" ${needs ? 'disabled' : ''}></label>
+        <label class="auth-label" style="margin:0">Code (اختياري)<input id="pr-code" type="text" placeholder="تلقائي" style="width:140px" dir="ltr" ${needs ? 'disabled' : ''}></label>
+        <label class="auth-label" style="margin:0">Max uses<input id="pr-uses" type="number" min="1" max="1000000" value="100" style="width:110px" ${needs ? 'disabled' : ''}></label>
+        <label class="auth-label" style="margin:0">Label<input id="pr-label" type="text" placeholder="حملة انستغرام" style="width:150px" ${needs ? 'disabled' : ''}></label>
+        <label class="auth-label" style="margin:0">Valid days<input id="pr-days" type="number" min="0" max="730" value="30" style="width:90px" ${needs ? 'disabled' : ''}></label>
+        <button class="btn btn-primary" id="pr-gen" ${needs ? 'disabled' : ''}>Create</button>
+      </div>
+      <div id="pr-out" class="card-meta" style="margin-top:10px"></div>
+    </div>
+    <div class="section-heading"><h2>All promo codes</h2><span>${promosCache.length} codes</span></div>
+    <div class="hist-list">${promoRows}</div>`;
+
+  return refCard + promoCard;
+}
+
+async function saveReferralSettings() {
+  const body = { updated_at: new Date().toISOString() };
+  REF_FIELDS.forEach(([key]) => { body[key] = Math.max(0, Math.min(100000, +$('#rf-' + key).value || 0)); });
+  try {
+    await SB.req('/rest/v1/payment_settings?id=eq.1', { method: 'PATCH', body });
+    payCache = { ...payCache, ...body };
+    $('#rf-out').textContent = 'تم الحفظ ✓';
+  } catch (e) {
+    $('#rf-out').textContent = 'خطأ: ' + e.message;
+  }
+}
+
+async function generatePromo() {
+  const reward = Math.max(1, Math.min(100000, +$('#pr-reward').value || 1));
+  const maxUses = Math.max(1, Math.min(1000000, +$('#pr-uses').value || 1));
+  const label = $('#pr-label').value.trim() || null;
+  const typed = $('#pr-code').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const code = typed || genPromoCode();
+  const days = +$('#pr-days').value || 0;
+  const expires = days > 0 ? new Date(Date.now() + days * 864e5).toISOString() : null;
+  try {
+    await SB.req('/rest/v1/promo_codes', {
+      method: 'POST', headers: { Prefer: 'return=minimal' },
+      body: { code, label, reward_questions: reward, max_uses: maxUses, expires_at: expires },
+    });
+    $('#pr-out').innerHTML = `تم إنشاء الرمز <code>${esc(code)}</code> — يفتح ${reward} سؤالاً، حتى ${maxUses} استخدام.`;
+    await loadAll(); render();
+  } catch (e) {
+    $('#pr-out').textContent = e.message.includes('duplicate') ? 'هذا الرمز موجود مسبقاً — اختر رمزاً آخر.' : 'خطأ: ' + e.message;
+  }
+}
+
+async function togglePromo(id, active) {
+  try {
+    await SB.req('/rest/v1/promo_codes?id=eq.' + id, { method: 'PATCH', body: { active } });
+    await loadAll(); render();
+  } catch (e) { alert('تعذر التعديل: ' + e.message); }
+}
+
 /* ---------------- render root ---------------- */
 function render() {
   if (adminTab === 'doctors') app.innerHTML = shell(renderDoctors());
   else if (adminTab === 'codes') app.innerHTML = shell(renderCodes());
+  else if (adminTab === 'growth') app.innerHTML = shell(renderGrowth());
   else if (adminTab === 'requests') app.innerHTML = shell(renderRequests());
   else if (adminTab === 'payment') app.innerHTML = shell(renderPayment());
   else app.innerHTML = shell(renderOverview());
@@ -511,6 +619,8 @@ function render() {
     search.focus();
   }
   $('#cd-gen')?.addEventListener('click', generateCodes);
+  $('#rf-save')?.addEventListener('click', saveReferralSettings);
+  $('#pr-gen')?.addEventListener('click', generatePromo);
 }
 
 function doctorsListHtml() {
@@ -535,6 +645,6 @@ function relTime(ts) {
 
 /* expose handlers */
 Object.assign(window, {
-  switchTab, openDrill, closeDrill, toggleCode, SB,
+  switchTab, openDrill, closeDrill, toggleCode, togglePromo, SB,
   setAccess, addPart, approveRequest, rejectRequest, openReject, openReceipt,
 });

@@ -84,10 +84,12 @@ window.SB = (function () {
     return profile;
   }
 
-  async function signup(email, password, name, phone) {
+  async function signup(email, password, name, phone, ref) {
+    const data = { name, phone };
+    if (ref) data.ref = ref;   // referral code from the invite link -> handle_new_user()
     const r = await req('/auth/v1/signup', {
       method: 'POST', auth: false,
-      body: { email, password, data: { name, phone } },
+      body: { email, password, data },
     });
     if (!r.access_token) return { needsConfirm: true }; // email confirmation on
     session = { access_token: r.access_token, refresh_token: r.refresh_token, expires_at: Date.now() + r.expires_in * 1000, user: r.user };
@@ -121,6 +123,14 @@ window.SB = (function () {
     const ok = await req('/rest/v1/rpc/redeem_code', { method: 'POST', body: { p_code: code } });
     if (ok) { try { profile = (await req('/rest/v1/profiles?id=eq.' + session.user.id + '&select=*'))[0] || profile; } catch (e) { /* keep */ } }
     return ok;
+  }
+
+  /* ---------- promo codes: open extra free questions (needs supabase/004) ---------- */
+  // returns { ok, reward } on success, or { ok:false, error:'invalid'|'used'|'auth' }
+  async function redeemPromo(code) {
+    const res = await req('/rest/v1/rpc/redeem_promo', { method: 'POST', body: { p_code: code } });
+    if (res && res.ok) await refreshProfile();   // bonus_questions is now higher
+    return res || { ok: false, error: 'invalid' };
   }
 
   /* ---------- payment: settings + receipt upload ---------- */
@@ -198,7 +208,7 @@ window.SB = (function () {
     configured,
     req,
     init, signup, login, logout, refreshProfile,
-    checkCode, redeemCode,
+    checkCode, redeemCode, redeemPromo,
     paymentSettings, submitReceipt, fetchReceipt,
     fetchProgress, upsertProgress, logSession, event, heartbeat, updateName,
     get session() { return session; },

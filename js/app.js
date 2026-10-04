@@ -365,8 +365,10 @@ function hasFullAccess() {
   const p = SB.profile;
   return p.role === 'admin' || !!p.code_id || p.access_status === 'active' || (p.parts || 0) >= PARTS;
 }
-// unique questions this account may cover: the free trial, or the parts paid for so far
-function accessLimit() { return partsOwned() ? partsOwned() * partSize() : TRIAL_LIMIT; }
+// extra free questions earned from promo codes and referrals (supabase/004)
+const bonusQuestions = () => (window.SB && SB.profile && +SB.profile.bonus_questions) || 0;
+// unique questions this account may cover: the free trial (plus any bonus earned), or the parts paid for
+function accessLimit() { return (partsOwned() ? partsOwned() * partSize() : TRIAL_LIMIT) + bonusQuestions(); }
 function trialLeft() { return Math.max(0, accessLimit() - uniqueCovered()); }
 
 // true (and shows the payment screen) when the trial is used up
@@ -862,13 +864,123 @@ function openAccount() {
       </div>` : ''}
       <div class="list">
         ${!hasFullAccess() ? row(`onclick="closeSheet();location.hash='#/upgrade'"`, 'lock', own ? `اشترك في الجزء ${own + 1} من ${PARTS}` : 'اشترك لتفتح كل الأسئلة',
-          own ? `أنت في الجزء ${own}، بقي لك ${trialLeft().toLocaleString('en')} سؤالاً` : `بقي لك ${trialLeft()} من ${TRIAL_LIMIT} سؤالاً مجانياً`) : ''}
+          own ? `أنت في الجزء ${own}، بقي لك ${trialLeft().toLocaleString('en')} سؤالاً` : `بقي لك ${trialLeft()} من ${accessLimit()} سؤالاً مجانياً`) : ''}
+        ${p && !hasFullAccess() ? row('onclick="openPromo()"', 'plus', 'لديك رمز دعائي؟', 'أدخله لتفتح أسئلة إضافية مجاناً') : ''}
+        ${p && referralEnabled() ? row('onclick="openReferral()"', 'share', 'ادعُ زميلاً واربح أسئلة', referralPitch()) : ''}
         ${Install.available() ? row('onclick="Install.open()"', 'download', `ثبّت التطبيق على ${Install.device}`, 'يفتح من شاشتك الرئيسية بلمسة واحدة') : ''}
         ${row('onclick="toggleTheme()"', dark ? 'sun' : 'moon', dark ? 'المظهر الفاتح' : 'المظهر الداكن')}
         ${row('onclick="Guide.replay()"', 'info', 'كيف يعمل التطبيق', 'جولة قصيرة في الفكرة والأقسام والاختبارات')}
         ${p ? row('onclick="logout()"', 'logout', 'تسجيل الخروج', '', 'danger') : ''}
       </div>
     </div>`);
+}
+
+/* ---------------- promo codes + referrals: bonus free questions ---------------- */
+/* Both top up the free-trial limit (profiles.bonus_questions). The server does
+   all the granting; the app only collects the code / shares the invite link. */
+
+// referral is "on" once the admin has set any reward (0 everywhere = hidden)
+const referralEnabled = () =>
+  !!(SB.profile?.referral_code && (+PAY.referral_reward_signup || +PAY.referral_reward_paid || +PAY.referral_signup_bonus));
+
+function referralLink() {
+  const code = SB.profile?.referral_code;
+  if (!code) return '';
+  return `${location.origin}${location.pathname}?ref=${code}`;
+}
+
+// one-line summary for the account row, from whatever rewards the admin set
+function referralPitch() {
+  const signup = +PAY.referral_reward_signup || 0;
+  const paid = +PAY.referral_reward_paid || 0;
+  const best = Math.max(signup, paid);
+  return best ? `كل زميل ينضم = أسئلة إضافية لك` : 'شارك التطبيق مع زملائك';
+}
+
+// enter a promo code -> opens extra questions
+function openPromo() {
+  closeSheet();
+  openSheet(`
+    <div dir="rtl" class="promo-sheet">
+      <div class="sheet-head"><h2>رمز دعائي</h2>
+        <button class="icon-btn" onclick="closeSheet()" aria-label="إغلاق">${icon('close')}</button></div>
+      <p class="sheet-sub">أدخل الرمز لتفتح عدداً إضافياً من الأسئلة المجانية فوراً.</p>
+      <div class="pay-code-row">
+        <input id="promo-in" dir="ltr" placeholder="XXXXXX" autocomplete="off" autocapitalize="characters">
+        <button class="btn btn-primary" id="promo-go">تفعيل</button>
+      </div>
+      <div class="auth-err" id="promo-err" hidden></div>
+    </div>`, 'sheet-sm');
+  const input = $('#promo-in');
+  input?.focus();
+  const go = $('#promo-go');
+  const fail = (msg) => { const b = $('#promo-err'); b.textContent = msg; b.hidden = false; go.disabled = false; };
+  input?.addEventListener('keydown', (e) => { if (e.key === 'Enter') go.click(); });
+  go.addEventListener('click', async () => {
+    const code = input.value.trim();
+    if (!code) return;
+    go.disabled = true;
+    $('#promo-err').hidden = true;
+    let res;
+    try { res = await SB.redeemPromo(code); } catch (e) { return fail('تعذر الاتصال — حاول مرة أخرى'); }
+    if (res && res.ok) {
+      closeSheet();
+      toast(`🎉 تم فتح ${(+res.reward).toLocaleString('en')} سؤالاً إضافياً`);
+      if (!hasFullAccess() && (location.hash.startsWith('#/upgrade') || trialLeft() <= 0)) { location.hash = '#/'; }
+      route();
+    } else {
+      fail(res && res.error === 'used' ? 'استخدمت هذا الرمز من قبل' : 'رمز غير صالح أو منتهٍ');
+    }
+  });
+}
+
+// share your invite link; the server rewards you automatically when a friend joins
+function openReferral() {
+  closeSheet();
+  const link = referralLink();
+  const p = SB.profile || {};
+  const signup = +PAY.referral_reward_signup || 0;
+  const paid = +PAY.referral_reward_paid || 0;
+  const welcome = +PAY.referral_signup_bonus || 0;
+  const perk = (text) => `<li>${icon('check')}<span>${text}</span></li>`;
+  openSheet(`
+    <div dir="rtl" class="referral-sheet">
+      <div class="sheet-head"><h2>ادعُ زملاءك</h2>
+        <button class="icon-btn" onclick="closeSheet()" aria-label="إغلاق">${icon('close')}</button></div>
+      <p class="sheet-sub">شارك رابطك الخاص. يُضاف رصيدك تلقائياً بمجرد انضمام زميلك — بلا أي خطوة منك.</p>
+      <ul class="perks">
+        ${signup ? perk(`<b>${signup}</b> سؤالاً لك عندما ينضم زميل عبر رابطك`) : ''}
+        ${paid ? perk(`<b>${paid}</b> سؤالاً إضافياً عندما يشترك`) : ''}
+        ${welcome ? perk(`وزميلك يبدأ بـ <b>${welcome}</b> سؤالاً إضافياً`) : ''}
+      </ul>
+      <div class="pay-code-row">
+        <input id="ref-link" dir="ltr" readonly value="${esc(link)}">
+        <button class="btn" id="ref-copy">نسخ</button>
+      </div>
+      <button class="btn btn-primary btn-lg btn-block" id="ref-share">${icon('share')} مشاركة الرابط</button>
+      <div class="ref-stats">
+        <div><b>${(+p.referrals || 0).toLocaleString('en')}</b><span>انضموا بدعوتك</span></div>
+        <div><b>${(+p.referrals_paid || 0).toLocaleString('en')}</b><span>اشتركوا</span></div>
+        <div><b>${bonusQuestions().toLocaleString('en')}</b><span>سؤالاً إضافياً</span></div>
+      </div>
+    </div>`, 'sheet-sm');
+
+  const shareText = 'جرّب Oman EM Prep — بنك أسئلة اختبار الطوارئ العُماني. سجّل عبر رابطي واحصل على أسئلة إضافية:';
+  $('#ref-copy').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(link);
+      const b = $('#ref-copy'); b.textContent = 'تم ✓'; setTimeout(() => { b.textContent = 'نسخ'; }, 1600);
+    } catch (e) { $('#ref-link').select(); }
+  });
+  $('#ref-share').addEventListener('click', async () => {
+    if (navigator.share) {
+      try { await navigator.share({ title: 'Oman EM Prep', text: shareText, url: link }); return; } catch (e) { /* cancelled */ }
+    }
+    try {
+      await navigator.clipboard.writeText(`${shareText} ${link}`);
+      toast('تم نسخ الرابط — الصقه في أي محادثة');
+    } catch (e) { $('#ref-link').select(); }
+  });
 }
 
 function chrome(content, bar = {}) {
@@ -886,7 +998,7 @@ function chrome(content, bar = {}) {
     const msg = st === 'pending' ? `إيصالك قيد المراجعة، بقي لك <b>${left.toLocaleString('en')}</b> سؤالاً`
       : st === 'rejected' ? 'لم نتمكن من قبول الإيصال، أعد رفعه'
       : own ? `الجزء ${own} من ${PARTS}: بقي لك <b>${left}</b> سؤالاً`
-      : `بقي لك <b>${left}</b> من ${TRIAL_LIMIT} سؤالاً مجانياً`;
+      : `بقي لك <b>${left}</b> من ${accessLimit()} سؤالاً مجانياً`;
     if (!own || st !== 'trial' || left <= PART_WARN) {
       trialBar = `<a class="trial-bar ${st === 'rejected' ? 'warn' : ''}" href="#/upgrade">
         <span>${msg}</span><span class="trial-bar-cta">${st === 'pending' ? 'التفاصيل' : own ? 'الجزء التالي' : 'اشترك'}${icon('chev', 'chev')}</span></a>`;
@@ -2374,6 +2486,29 @@ window.Sync = Sync;   // callers above test window.Sync; a top-level const is no
 
 /* ---------------- auth screens ---------------- */
 const KNOWN_KEY = 'oman-em-prep.known';   // this browser already has an account: open on login, not signup
+const REF_KEY = 'oman-em-prep.ref';       // referral code from an invite link, kept until the visitor signs up
+
+// an invite link looks like  ...?ref=AB12CD  — remember the code and clean the URL
+function captureRef() {
+  try {
+    const params = new URLSearchParams(location.search || '');
+    let code = params.get('ref');
+    if (!code && location.hash.includes('ref=')) {           // ...#/?ref=AB12CD fallback
+      code = new URLSearchParams(location.hash.split('?')[1] || '').get('ref');
+    }
+    code = (code || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12);
+    if (code) {
+      localStorage.setItem(REF_KEY, code);
+      if (params.has('ref')) {                               // tidy the address bar, keep the route
+        params.delete('ref');
+        const qs = params.toString();
+        history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
+      }
+    }
+  } catch (e) { /* private mode / bad URL: invites just won't track */ }
+}
+const pendingRef = () => { try { return localStorage.getItem(REF_KEY) || ''; } catch (e) { return ''; } };
+const clearRef = () => { try { localStorage.removeItem(REF_KEY); } catch (e) { /* ignore */ } };
 
 function cardShell(inner) {
   app.innerHTML = `
@@ -2395,10 +2530,12 @@ function renderAuth(mode = null, msg = null) {
   session = null;
   mode = mode || (localStorage.getItem(KNOWN_KEY) ? 'login' : 'signup');
   const login = mode === 'login';
+  const invited = !login && !!pendingRef();   // arrived through a colleague's invite link
   const perk = (text) => `<li>${icon('check')}<span>${text}</span></li>`;
   cardShell(`
     <h1>${login ? 'تسجيل الدخول' : `جرّب ${TRIAL_LIMIT} سؤالاً مجاناً`}</h1>
     <p class="auth-sub">${login ? 'مرحباً بعودتك، تقدّمك بانتظارك' : 'بلا بطاقة ولا رمز تفعيل'}</p>
+    ${invited ? `<div class="auth-ok">🎁 دعوة من زميل — ستبدأ بأسئلة إضافية مجانية</div>` : ''}
     ${login ? '' : `
       <ul class="perks">
         ${perk('أكثر من 5,000 سؤال لاختبار الطوارئ مع شرح كل إجابة')}
@@ -2447,7 +2584,8 @@ function renderAuth(mode = null, msg = null) {
         if (!name) return fail('أدخل اسمك');
         if (phone.replace(/\D/g, '').length < 8) return fail('أدخل رقم واتساب صحيحاً');
         if (pass.length < 6) return fail('كلمة المرور قصيرة — 6 أحرف على الأقل');
-        const r = await SB.signup(email, pass, name, phone);
+        const r = await SB.signup(email, pass, name, phone, pendingRef());
+        clearRef();   // the invite is consumed; the inviter's reward is granted server-side
         localStorage.setItem(KNOWN_KEY, '1');
         if (r.needsConfirm) { renderAuth('login', 'أرسلنا رابط تأكيد إلى بريدك — افتحه ثم سجّل الدخول هنا'); return; }
         localStorage.removeItem(STORE_KEY);   // a new account starts from zero
@@ -2589,6 +2727,8 @@ function renderPaywall(err = null) {
       </div>
       <div class="auth-err" id="code-err" hidden>رمز غير صالح أو مستهلك</div>
     </details>
+    <button class="btn btn-ghost btn-block" onclick="openPromo()">${icon('plus')} لديك رمز دعائي؟ افتح أسئلة إضافية</button>
+    ${referralEnabled() ? `<button class="btn btn-ghost btn-block" onclick="openReferral()">${icon('share')} ادعُ زملاءك واربح أسئلة مجانية</button>` : ''}
     ${wa ? `<a class="btn btn-ghost btn-block" target="_blank" rel="noopener" href="${waLink('مرحباً، لدي استفسار عن تفعيل حسابي في Oman EM Prep')}">💬 تواصل معنا عبر واتساب</a>` : ''}
     ${foot}`);
 
@@ -2661,6 +2801,7 @@ function logout() {
 /* ---------------- boot ---------------- */
 (async function boot() {
   applyTheme(false);
+  captureRef();   // remember ?ref= from an invite link before anything navigates
   if (window.SB && SB.configured) {
     const authed = await SB.init().catch(() => false);
     if (!authed) {   // these screens keep the brand colour in the status bar
@@ -2674,13 +2815,13 @@ function logout() {
   try {
     await loadData();
     if (window.SB && SB.configured) {
+      // payment + referral settings are needed on every screen (even full-access
+      // doctors can invite), so load them for everyone
+      SB.paymentSettings().then((row) => { PAY = row; }).catch(() => {});
       if (!hasFullAccess()) {
-        // the trial counter is the progress the server holds: pull it (and the
-        // payment details) before the first screen so the count is right
-        await Promise.all([
-          Sync.merge().catch(() => {}),
-          SB.paymentSettings().then((row) => { PAY = row; }).catch(() => {}),
-        ]);
+        // the trial counter is the progress the server holds: pull it before the
+        // first screen so the count is right
+        await Sync.merge().catch(() => {});
       }
       Sync.start(!hasFullAccess());
     }
