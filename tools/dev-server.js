@@ -12,8 +12,9 @@
    Seeded test accounts (local only):
      admin   admin@test.local    / admin-test-1
    Seeded access code: TEST-CODE (5 uses)
-   Referral rewards default to 10 (signup) / 25 (paid) / 5 (welcome); promo codes
-   are created from the admin Growth tab.
+   Referral rewards and the NOOR130 promo mirror supabase/005_launch_offer.sql
+   (30 on signup / 50 on paid / no welcome bonus); more promo codes are created
+   from the admin Growth tab.
    Suggested signup values for test doctors:
      doctor1@test.local / doctor-test-1 / +968 9000 0001
      doctor2@test.local / doctor-test-2 / +968 9000 0002
@@ -36,12 +37,12 @@ const db = {
   codes: [{ id: crypto.randomUUID(), code: 'TEST-CODE', label: 'dev', max_uses: 5, uses: 0, expires_at: null, active: true, created_at: new Date().toISOString() }],
   requests: [],
   sessions: [],
-  promos: [],         // { id, code, label, reward_questions, max_uses, uses, expires_at, active, created_at }
+  promos: [{ id: crypto.randomUUID(), code: 'NOOR130', label: 'عرض الانطلاق', reward_questions: 45, max_uses: 130, uses: 0, expires_at: null, active: true, created_at: new Date().toISOString() }],         // { id, code, label, reward_questions, max_uses, uses, expires_at, active, created_at }
   redemptions: [],    // { user_id, promo_id }
   files: new Map(),   // receipt path -> { type, buf }
   tokens: new Map(),  // access token -> user id
-  // referral_* mirror supabase/004; non-zero defaults so the flows are visible locally
-  pay: { id: 1, price: '25 ر.ع', part_price: '10 ر.ع', beneficiary: 'Test Beneficiary', bank: 'Bank Muscat', account: 'OM00 0000 0000 0000 0000 000', pay_link: null, whatsapp: '+96890000000', note: null, referral_reward_signup: 10, referral_reward_paid: 25, referral_signup_bonus: 5 },
+  // referral_* mirror supabase/004 + 005 (the launch offer)
+  pay: { id: 1, price: '25 ر.ع', part_price: '10 ر.ع', beneficiary: 'Test Beneficiary', bank: 'Bank Muscat', account: 'OM00 0000 0000 0000 0000 000', pay_link: null, whatsapp: '+96890000000', note: null, referral_reward_signup: 30, referral_reward_paid: 50, referral_signup_bonus: 0 },
 };
 
 const genRef = () => {

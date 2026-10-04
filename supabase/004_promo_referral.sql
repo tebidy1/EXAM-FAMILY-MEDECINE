@@ -5,7 +5,7 @@
 --
 -- A new, lighter currency than full access: BONUS QUESTIONS. They add
 -- to the free-trial limit (profiles.bonus_questions), so a doctor can
--- keep studying for free beyond the first 15 without paying. Two ways
+-- keep studying for free beyond the free trial without paying. Two ways
 -- to earn them, both configured from the admin platform:
 --
 --   • Promo codes — the doctor enters a code and it opens N more

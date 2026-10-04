@@ -347,7 +347,7 @@ function coverageRatio() { return ALL_QUESTIONS.length ? uniqueCovered() / ALL_Q
    The bank can also be bought in PARTS thirds: each approved part raises the
    same limit by a third of the bank, spent in whatever sections the doctor
    likes; the last third is full access. */
-const TRIAL_LIMIT = 15;
+const TRIAL_LIMIT = 25;
 const PARTS = 3;
 const PART_WARN = 100;             // a paid part is not nagged about until this few questions are left
 const PRICE_FULL = '25 ر.ع';       // shown until prices are saved in admin.html
@@ -968,7 +968,8 @@ function openReferral() {
       </div>
     </div>`, 'sheet-sm');
 
-  const shareText = 'جرّب Oman EM Prep — بنك أسئلة اختبار الطوارئ العُماني. سجّل عبر رابطي واحصل على أسئلة إضافية:';
+  const shareText = 'جرّب Oman EM Prep — بنك أسئلة اختبار الطوارئ العُماني مع شرح كل إجابة. '
+    + (welcome ? `سجّل عبر رابطي وابدأ بـ ${TRIAL_LIMIT + welcome} سؤالاً مجاناً:` : `سجّل عبر رابطي وجرّب ${TRIAL_LIMIT} سؤالاً مجاناً:`);
   $('#ref-copy').addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(link);
@@ -2538,7 +2539,7 @@ function renderAuth(mode = null, msg = null) {
   cardShell(`
     <h1>${login ? 'تسجيل الدخول' : `جرّب ${TRIAL_LIMIT} سؤالاً مجاناً`}</h1>
     <p class="auth-sub">${login ? 'مرحباً بعودتك، تقدّمك بانتظارك' : 'بلا بطاقة ولا رمز تفعيل'}</p>
-    ${invited ? `<div class="auth-ok">🎁 دعوة من زميل — ستبدأ بأسئلة إضافية مجانية</div>` : ''}
+    ${invited ? `<div class="auth-ok">🎁 وصلتَ بدعوة من زميل — أهلاً بك</div>` : ''}
     ${login ? '' : `
       <ul class="perks">
         ${perk('أكثر من 5,000 سؤال لاختبار الطوارئ مع شرح كل إجابة')}
