@@ -38,12 +38,15 @@ const db = {
   requests: [],
   sessions: [],
   promos: [{ id: crypto.randomUUID(), code: 'NOOR130', label: 'عرض الانطلاق', reward_questions: 45, max_uses: 130, uses: 0, expires_at: null, active: true, created_at: new Date().toISOString() }],         // { id, code, label, reward_questions, max_uses, uses, expires_at, active, created_at }
-  redemptions: [],    // { user_id, promo_id }
+  redemptions: [],    // { user_id, promo_id, reward, redeemed_at }
+  events: [],         // { id, user_id, name, meta, ts } — mirrors public.events, read by the admin Analytics tab
   files: new Map(),   // receipt path -> { type, buf }
   tokens: new Map(),  // access token -> user id
   // referral_* mirror supabase/004 + 005 (the launch offer)
   pay: { id: 1, price: '25 ر.ع', part_price: '10 ر.ع', beneficiary: 'Test Beneficiary', bank: 'Bank Muscat', account: 'OM00 0000 0000 0000 0000 000', pay_link: null, whatsapp: '+96890000000', note: null, referral_reward_signup: 30, referral_reward_paid: 350, referral_signup_bonus: 0 },
 };
+
+const logEvent = (user_id, name, meta) => db.events.push({ id: db.events.length + 1, user_id, name, meta: meta || {}, ts: new Date().toISOString() });
 
 const genRef = () => {
   const A = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
@@ -68,8 +71,10 @@ function addUser(email, password, meta = {}) {
     created_at: new Date().toISOString(), last_seen: new Date().toISOString(),
   });
   if (inviter) {
-    inviter.bonus_questions = (+inviter.bonus_questions || 0) + (+db.pay.referral_reward_signup || 0);
+    const reward = +db.pay.referral_reward_signup || 0;
+    inviter.bonus_questions = (+inviter.bonus_questions || 0) + reward;
     inviter.referrals = (+inviter.referrals || 0) + 1;
+    logEvent(inviter.id, 'referral_signup', { invitee: id, reward });
   }
   return id;
 }
@@ -83,8 +88,10 @@ function maybeGrantReferralPaid(owner) {
   owner.ref_paid_rewarded = true;
   const inviter = profileOf(owner.referred_by);
   if (inviter) {
-    inviter.bonus_questions = (+inviter.bonus_questions || 0) + (+db.pay.referral_reward_paid || 0);
+    const reward = +db.pay.referral_reward_paid || 0;
+    inviter.bonus_questions = (+inviter.bonus_questions || 0) + reward;
     inviter.referrals_paid = (+inviter.referrals_paid || 0) + 1;
+    logEvent(inviter.id, 'referral_paid', { invitee: owner.id, reward });
   }
 }
 
@@ -166,7 +173,11 @@ function api(req, res, url, raw) {
     if (req.method === 'POST') { db.sessions.push({ id: db.sessions.length + 1, ts: new Date().toISOString(), ...body() }); return send(res, 201, null); }
     return send(res, 200, db.sessions.filter((s) => s.user_id === eq(q, 'user_id')));
   }
-  if (p === '/rest/v1/events') return send(res, 201, null);
+  if (p === '/rest/v1/events') {
+    if (req.method === 'POST') { logEvent(uid, body().name, body().meta); return send(res, 201, null); }
+    return send(res, 200, admin ? [...db.events].reverse() : db.events.filter((e) => e.user_id === uid).reverse());
+  }
+  if (p === '/rest/v1/promo_redemptions') return send(res, 200, admin ? db.redemptions : db.redemptions.filter((r) => r.user_id === uid));
   if (p === '/rest/v1/payment_settings') {
     if (req.method === 'PATCH') { if (!admin) return deny(); Object.assign(db.pay, body()); return send(res, 204, null); }
     return send(res, 200, [db.pay]);
@@ -212,6 +223,7 @@ function api(req, res, url, raw) {
     c.uses += 1;
     Object.assign(me, { code_id: c.id, access_status: 'active', reject_reason: null });
     maybeGrantReferralPaid(me);   // a redeemed full-access code also pays the inviter
+    logEvent(uid, 'code_redeemed', { code: c.code });
     return send(res, 200, true);
   }
   if (p === '/rest/v1/rpc/redeem_promo') {
@@ -220,9 +232,11 @@ function api(req, res, url, raw) {
     if (!c) return send(res, 200, { ok: false, error: 'invalid' });
     if (db.redemptions.some((r) => r.user_id === uid && r.promo_id === c.id)) return send(res, 200, { ok: false, error: 'used' });
     c.uses += 1;
-    db.redemptions.push({ user_id: uid, promo_id: c.id });
-    me.bonus_questions = (+me.bonus_questions || 0) + (+c.reward_questions || 0);
-    return send(res, 200, { ok: true, reward: +c.reward_questions || 0 });
+    const reward = +c.reward_questions || 0;
+    db.redemptions.push({ user_id: uid, promo_id: c.id, reward, redeemed_at: new Date().toISOString() });
+    me.bonus_questions = (+me.bonus_questions || 0) + reward;
+    logEvent(uid, 'promo_redeemed', { code, reward });
+    return send(res, 200, { ok: true, reward });
   }
   if (p === '/rest/v1/rpc/submit_request') {
     const { p_path, p_plan = 'full' } = body();
@@ -233,6 +247,7 @@ function api(req, res, url, raw) {
     const r = { id: crypto.randomUUID(), user_id: uid, receipt_path: p_path, plan: p_plan, status: 'pending', reject_reason: null, created_at: new Date().toISOString(), reviewed_at: null };
     db.requests.push(r);
     Object.assign(me, { access_status: 'pending', reject_reason: null });
+    logEvent(uid, 'receipt_submitted', { request: r.id, plan: p_plan });
     return send(res, 200, r.id);
   }
   if (p === '/rest/v1/rpc/approve_request' || p === '/rest/v1/rpc/reject_request') {

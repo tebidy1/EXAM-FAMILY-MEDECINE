@@ -820,6 +820,17 @@ kbd {
 .status-chip.rejected { background: var(--wrong-soft); color: var(--wrong); }
 .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 4px 14px; }
 .settings-grid textarea { min-height: 76px; resize: vertical; }
+.seg { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.seg-btn {
+  appearance: none; border: 1px solid var(--border); background: var(--surface); color: var(--text-2);
+  font: inherit; font-size: 13px; font-weight: 600; min-height: 32px; padding: 0 12px; border-radius: 99px; cursor: pointer;
+}
+.seg-btn.active { background: var(--primary); color: var(--on-primary); border-color: transparent; }
+.hbar-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+.hbar-label { flex: none; width: 150px; font-size: 13.5px; color: var(--text-2); }
+.hbar-track { flex: 1; height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.hbar-fill { height: 100%; border-radius: 99px; background: var(--primary); transition: width .4s ease; }
+.hbar-num { flex: none; width: 56px; text-align: end; font-size: 13.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }

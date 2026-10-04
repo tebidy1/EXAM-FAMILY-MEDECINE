@@ -20,6 +20,8 @@ let sessionsCache = null;
 let requestsCache = [];
 let promosCache = [];
 let payCache = {};
+let eventsCache = [];
+let promoRedCache = [];
 let rejectingId = null;            // request whose reject reasons are open
 const receiptUrls = new Map();     // receipt_path -> { url, type } once fetched from the private bucket
 let drillId = null;
@@ -39,7 +41,7 @@ let drillId = null;
 })();
 
 async function loadAll() {
-  const [users, codes, sessions, requests, promos, pay] = await Promise.all([
+  const [users, codes, sessions, requests, promos, pay, events, promoRed] = await Promise.all([
     SB.req('/rest/v1/v_admin_users?select=*&order=last_seen.desc'),
     SB.req('/rest/v1/v_admin_codes?select=*&order=created_at.desc'),
     SB.req('/rest/v1/v_admin_sessions?select=*&order=ts.desc&limit=1000'),
@@ -47,6 +49,9 @@ async function loadAll() {
     SB.req('/rest/v1/v_admin_requests?select=*&order=created_at.desc&limit=200').catch(() => []),
     SB.req('/rest/v1/v_admin_promos?select=*&order=created_at.desc').catch(() => []),
     SB.paymentSettings().catch(() => ({})),
+    // funnel history for Analytics: who got how many bonus questions, from what, and when
+    SB.req('/rest/v1/events?select=*&order=ts.desc&limit=5000').catch(() => []),
+    SB.req('/rest/v1/promo_redemptions?select=*').catch(() => []),
   ]);
   usersCache = users || [];
   codesCache = codes || [];
@@ -54,6 +59,8 @@ async function loadAll() {
   requestsCache = requests || [];
   promosCache = promos || [];
   payCache = pay || {};
+  eventsCache = events || [];
+  promoRedCache = promoRed || [];
 }
 
 const pendingRequests = () => requestsCache.filter((r) => r.status === 'pending');
@@ -108,6 +115,7 @@ function shell(inner) {
     ['overview', '📊', 'Overview'],
     ['requests', '🧾', 'Requests' + (waiting ? `<span class="tab-badge">${waiting}</span>` : '')],
     ['doctors', '👨‍⚕️', 'Doctors'],
+    ['analytics', '📈', 'Analytics'],
     ['codes', '🔑', 'Codes'],
     ['growth', '🎁', 'Growth'],
     ['payment', '💳', 'Payment'],
@@ -432,6 +440,130 @@ async function savePayment() {
   }
 }
 
+/* ---------------- analytics: paid vs bonus, coupons, referrals, revenue ---------------- */
+/* Answers "how is the app really being used": for every doctor, whether their
+   access is paid (receipt), free (code/manual), or still trial/pending/rejected;
+   how each coupon performs and whether its redeemers go on to pay; how referrals
+   convert; and where every bonus question ever granted came from (public.events
+   already logs code_redeemed / receipt_submitted / promo_redeemed / referral_*). */
+const AN_RANGES = [[7, '7 أيام'], [30, '30 يوماً'], [90, '90 يوماً'], [0, 'الكل']];
+const SOURCE_LABEL = {
+  trial: 'تجربة مجانية', pending: 'بانتظار المراجعة',
+  paid_full: 'مدفوع — اشتراك كامل', paid_part: 'مدفوع — بالأجزاء',
+  code: 'رمز وصول مجاني', manual: 'تفعيل يدوي بلا إيصال', rejected: 'مرفوض',
+};
+const priceNum = (s) => parseFloat(String(s || '').match(/[\d.]+/)?.[0] || 0) || 0;
+
+// why a doctor currently has (or doesn't have) access: a real receipt, a free code,
+// an admin's manual override, or still trial/pending/rejected
+function sourceOf(u, reqByUser) {
+  const reqs = reqByUser.get(u.id) || [];
+  if (u.code_id) return 'code';
+  if (reqs.some((r) => r.status === 'approved' && r.plan === 'full')) return 'paid_full';
+  if (reqs.some((r) => r.status === 'approved' && r.plan === 'part')) return 'paid_part';
+  if (u.access_status === 'active' || (u.parts || 0) >= 3) return 'manual';
+  if (u.access_status === 'pending') return 'pending';
+  if (u.access_status === 'rejected') return 'rejected';
+  return 'trial';
+}
+
+function setAnRange(n) { window._anRange = n; render(); }
+
+function hbar(label, n, max) {
+  const pct = max ? Math.round((n / max) * 100) : 0;
+  return `<div class="hbar-row"><span class="hbar-label">${esc(label)}</span>
+    <div class="hbar-track"><div class="hbar-fill" style="width:${pct}%"></div></div>
+    <span class="hbar-num">${n}</span></div>`;
+}
+
+function renderAnalytics() {
+  const range = window._anRange ?? 30;
+  const cutoff = range ? Date.now() - range * 864e5 : 0;
+  const doctors = usersCache.filter((u) => u.role !== 'admin');
+
+  const reqByUser = new Map();
+  requestsCache.forEach((r) => { const a = reqByUser.get(r.user_id) || []; a.push(r); reqByUser.set(r.user_id, a); });
+  const srcByUser = new Map();
+  const counts = {};
+  doctors.forEach((u) => { const s = sourceOf(u, reqByUser); srcByUser.set(u.id, s); counts[s] = (counts[s] || 0) + 1; });
+  const total = doctors.length || 1;
+
+  const signupsInRange = doctors.filter((u) => new Date(u.created_at).getTime() >= cutoff).length;
+  const reqsInRange = requestsCache.filter((r) => new Date(r.created_at).getTime() >= cutoff);
+  const approvedInRange = reqsInRange.filter((r) => r.status === 'approved');
+  const rejectedInRange = reqsInRange.filter((r) => r.status === 'rejected');
+  const revenue = approvedInRange.reduce((a, r) => a + (r.plan === 'part' ? priceNum(payCache.part_price) : priceNum(payCache.price)), 0);
+  const reviewed = approvedInRange.length + rejectedInRange.length;
+  const approvalRate = reviewed ? Math.round((approvedInRange.length / reviewed) * 100) : 0;
+  const avgCoveredAtRequest = reqsInRange.length ? Math.round(reqsInRange.reduce((a, r) => a + (r.covered || 0), 0) / reqsInRange.length) : 0;
+
+  const PAID = new Set(['paid_full', 'paid_part', 'code', 'manual']);
+  const promoRows = promosCache.map((c) => {
+    const reds = promoRedCache.filter((r) => r.promo_id === c.id);
+    const granted = reds.length ? reds.reduce((a, r) => a + (r.reward || 0), 0) : c.uses * (c.reward_questions || 0);
+    const converted = reds.filter((r) => PAID.has(srcByUser.get(r.user_id))).length;
+    return `<div class="hist-row">
+      <span class="hist-title"><code style="font-size:14px;letter-spacing:.06em">${esc(c.code)}</code>
+        ${c.label ? `<span class="hist-meta">${esc(c.label)}</span>` : ''}${c.active ? '' : ' · <b style="color:var(--wrong)">ملغى</b>'}</span>
+      <span class="hist-meta">${c.uses}/${c.max_uses} استخدام · ${granted} سؤال مُنح · ${converted}/${reds.length || c.uses} دفعوا بعدها</span>
+    </div>`;
+  }).join('') || '<div class="card"><div class="card-meta">لا رموز دعائية بعد.</div></div>';
+
+  const totalReferrals = doctors.reduce((a, u) => a + (u.referrals || 0), 0);
+  const totalReferralsPaid = doctors.reduce((a, u) => a + (u.referrals_paid || 0), 0);
+  const topReferrers = doctors.filter((u) => (u.referrals || 0) > 0)
+    .sort((a, b) => (b.referrals_paid - a.referrals_paid) || (b.referrals - a.referrals)).slice(0, 8)
+    .map((u) => `<div class="hist-row">
+      <span class="hist-title">${esc(u.name || u.email)}</span>
+      <span class="hist-meta">${u.referrals} دعوة · ${u.referrals_paid} اشترك · رصيد ${u.bonus_questions || 0}</span>
+    </div>`).join('') || '<div class="card"><div class="card-meta">لا دعوات بعد.</div></div>';
+
+  const bonusBySource = {};
+  eventsCache.forEach((e) => {
+    if (['promo_redeemed', 'referral_signup', 'referral_paid'].includes(e.name)) {
+      bonusBySource[e.name] = (bonusBySource[e.name] || 0) + ((e.meta && e.meta.reward) || 0);
+    }
+  });
+  const grantedEver = Object.values(bonusBySource).reduce((a, b) => a + b, 0);
+  const heldNow = doctors.reduce((a, u) => a + (u.bonus_questions || 0), 0);
+
+  return `
+    <div class="seg">${AN_RANGES.map(([v, l]) => `<button class="seg-btn ${range === v ? 'active' : ''}" onclick="setAnRange(${v})">${l}</button>`).join('')}</div>
+    <div class="overall" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+      <div class="stat-card"><div class="stat-num">${signupsInRange}</div><div class="stat-label">تسجيلات جديدة</div></div>
+      <div class="stat-card"><div class="stat-num">${approvedInRange.length}</div><div class="stat-label">تحويلات مدفوعة</div></div>
+      <div class="stat-card"><div class="stat-num">${revenue}</div><div class="stat-label">عائد تقديري (ر.ع)</div></div>
+      <div class="stat-card"><div class="stat-num">${approvalRate}%</div><div class="stat-label">نسبة قبول الإيصالات</div></div>
+      <div class="stat-card"><div class="stat-num">${avgCoveredAtRequest}</div><div class="stat-label">متوسط الأسئلة عند الطلب</div></div>
+    </div>
+
+    <div class="card">
+      <div class="section-heading" style="margin:0 0 6px"><h2>نوع دخول الأطباء الآن</h2><span>${doctors.length} طبيب · كل الفترات</span></div>
+      ${['trial', 'pending', 'paid_full', 'paid_part', 'code', 'manual', 'rejected'].map((k) => hbar(SOURCE_LABEL[k], counts[k] || 0, total)).join('')}
+    </div>
+
+    <div class="section-heading"><h2>الطلبات خلال الفترة</h2><span>${reqsInRange.length} طلب</span></div>
+    <div class="hist-list">
+      <div class="hist-row"><span class="hist-title">مقبولة <span class="status-chip approved">approved</span></span><span class="hist-meta">${approvedInRange.length} طلب</span></div>
+      <div class="hist-row"><span class="hist-title">مرفوضة <span class="status-chip rejected">rejected</span></span><span class="hist-meta">${rejectedInRange.length} طلب</span></div>
+      <div class="hist-row"><span class="hist-title">بانتظار المراجعة <span class="status-chip pending">pending</span></span><span class="hist-meta">${pendingRequests().length} طلب (كل الوقت)</span></div>
+    </div>
+
+    <div class="section-heading"><h2>أداء أكواد البروموكود</h2><span>${promosCache.length} كود · كل الفترات</span></div>
+    <div class="hist-list">${promoRows}</div>
+
+    <div class="section-heading"><h2>أداء الدعوات (الريفيرال)</h2><span>${totalReferrals} دعوة · ${totalReferralsPaid} اشترك</span></div>
+    <div class="hist-list">${topReferrers}</div>
+
+    <div class="card">
+      <div class="section-heading" style="margin:0 0 6px"><h2>مصدر الأسئلة الإضافية الممنوحة</h2><span>إجمالي ${grantedEver} سؤال</span></div>
+      ${hbar('عبر بروموكود', bonusBySource.promo_redeemed || 0, grantedEver || 1)}
+      ${hbar('دعوة صديق — عند التسجيل', bonusBySource.referral_signup || 0, grantedEver || 1)}
+      ${hbar('دعوة صديق — عند اشتراكه', bonusBySource.referral_paid || 0, grantedEver || 1)}
+      <div class="card-meta" style="margin-top:8px">الرصيد الحالي المجمّع لدى الأطباء: ${heldNow}${heldNow !== grantedEver ? ' (الفرق عن الإجمالي الممنوح يعود لتعديلات يدوية أو بيانات أقدم من سجل الأحداث)' : ''}</div>
+    </div>`;
+}
+
 /* ---------------- codes ---------------- */
 function genCode() {
   const A = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
@@ -597,6 +729,7 @@ async function togglePromo(id, active) {
 /* ---------------- render root ---------------- */
 function render() {
   if (adminTab === 'doctors') app.innerHTML = shell(renderDoctors());
+  else if (adminTab === 'analytics') app.innerHTML = shell(renderAnalytics());
   else if (adminTab === 'codes') app.innerHTML = shell(renderCodes());
   else if (adminTab === 'growth') app.innerHTML = shell(renderGrowth());
   else if (adminTab === 'requests') app.innerHTML = shell(renderRequests());
@@ -646,5 +779,5 @@ function relTime(ts) {
 /* expose handlers */
 Object.assign(window, {
   switchTab, openDrill, closeDrill, toggleCode, togglePromo, SB,
-  setAccess, addPart, approveRequest, rejectRequest, openReject, openReceipt,
+  setAccess, addPart, approveRequest, rejectRequest, openReject, openReceipt, setAnRange,
 });
