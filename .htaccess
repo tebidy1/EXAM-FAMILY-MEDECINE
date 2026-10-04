@@ -1,0 +1,15 @@
+# Oman EM Prep — cache rules for the host (Hostinger / LiteSpeed)
+#
+# Pages, the service worker, the manifest and the question data carry no version
+# in their URL, so the browser must ask the server before reusing its copy (the
+# answer is a cheap 304 when nothing changed). Without this header a browser
+# guesses a lifetime from the file's age and keeps showing the previous deploy
+# for hours. css/js are named with ?v=N in the pages and stay cached.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|json)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <Files "sw.js">
+    Header set Cache-Control "no-cache"
+  </Files>
+</IfModule>

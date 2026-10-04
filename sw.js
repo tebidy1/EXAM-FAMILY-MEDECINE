@@ -39,12 +39,16 @@ self.addEventListener('activate', (e) => {
   );
 });
 
+// Pages carry no ?v= in their URL, so ask the server every time: left to guess a
+// lifetime, a browser keeps opening the previous deploy for hours after a new one.
+const fresh = (req) => (req.mode === 'navigate' ? new Request(req.url, { cache: 'no-cache', redirect: 'manual' }) : req);
+
 // `saveAs`: the cache key the page is kept under (and reopened from) instead of its own URL.
 // `ms`: a connected-but-dead network must not hold the launch — after `ms` open the saved copy.
 async function networkFirst(req, cacheName, saveAs, ms) {
   const cache = await caches.open(cacheName);
   const saved = async () => await cache.match(req) || (saveAs ? await cache.match(saveAs) : undefined);
-  const net = fetch(req).then((res) => {
+  const net = fetch(fresh(req)).then((res) => {
     if (res.ok) cache.put(saveAs || req, res.clone());
     return res;
   });
