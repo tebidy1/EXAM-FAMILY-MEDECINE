@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Oman EM Prep — 5,000+ explained cases for the OEEM</title>
+  <meta name="description" content="More than 5,000 explained cases, exam recalls and timed simulations for the Oman Emergency Medicine exam. Install the app on your iPhone or Android in under a minute.">
+  <meta property="og:title" content="Oman EM Prep — study with focus, pass with calm">
+  <meta property="og:description" content="More than 5,000 explained cases for the Oman Emergency Medicine exam. Free to start.">
+  <meta property="og:image" content="../icons/icon-512.png">
+
+  <!-- same installable app as the root: installing from here opens the app itself -->
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#0c2a34">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="EM Prep">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="../icons/icon.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --ink:#0c2a34; --deep:#071b22; --card:#113540; --line:#1f4b57; --teal:#62d3d9; --amber:#f4b740; --green:#35c98a; --text:#f2f7f8; --soft:#b5ccd2; --mute:#86a7b0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { font-family: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif; color: var(--text); min-height: 100vh; min-height: 100svh;
+  background: radial-gradient(120% 620px at 50% 0%, #14596a 0%, rgba(20,89,106,0) 70%) no-repeat, var(--deep);
+  -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; line-height: 1.5; }
+a { color: inherit; }
+button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+img { display: block; max-width: 100%; height: auto; }
+:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
+[hidden] { display: none !important; }
+.wrap { max-width: 480px; margin: 0 auto; padding: 0 22px; }
+.ico { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* ---------- buttons ---------- */
+.cta { width: 100%; min-height: 62px; padding: 10px 20px; border-radius: 18px; background: var(--teal); color: #04252c; font-size: 18.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 11px; text-decoration: none;
+  box-shadow: 0 16px 38px rgba(98,211,217,.3), inset 0 -3px 0 rgba(4,37,44,.14); transition: transform .12s ease; }
+.cta:active { transform: scale(.98); }
+.cta.alt { background: rgba(255,255,255,.07); color: var(--text); box-shadow: inset 0 0 0 1.5px rgba(98,211,217,.5); }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.under { margin-top: 12px; text-align: center; font-size: 14px; color: var(--mute); }
+.under a { color: var(--soft); text-underline-offset: 3px; }
+
+/* ---------- hero ---------- */
+.hero { padding-top: calc(18px + env(safe-area-inset-top)); }
+.brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 17px; }
+.mark { width: 42px; height: 42px; border-radius: 11px; background: var(--ink); display: grid; place-items: center; box-shadow: inset 0 0 0 1.5px rgba(98,211,217,.3); flex: none; }
+.mark svg { width: 70%; height: 70%; fill: none; stroke: #fff; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+.mark circle { fill: var(--teal); stroke: none; }
+.eyebrow { margin-top: 24px; font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--teal); }
+h1 { margin-top: 10px; font-size: clamp(32px, 9.4vw, 40px); line-height: 1.1; font-weight: 700; letter-spacing: -.02em; }
+.lead { margin-top: 14px; font-size: 16.5px; color: var(--soft); }
+.facts { list-style: none; margin: 18px 0 24px; display: grid; gap: 10px; }
+.facts li { display: flex; align-items: center; gap: 12px; font-size: 15.5px; font-weight: 500; }
+.tick { flex: none; width: 22px; height: 22px; padding: 4px; border-radius: 50%; background: rgba(53,201,138,.18); stroke: var(--green); stroke-width: 3.2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.peek { margin: 30px auto 0; width: min(84%, 340px); height: 300px; overflow: hidden; border-radius: 40px 40px 0 0; padding: 9px 9px 0; background: #0a0e11; box-shadow: 0 0 0 1.5px #2c3d45, 0 -20px 70px rgba(98,211,217,.12); }
+.peek img { width: 100%; border-radius: 32px 32px 0 0; }
+
+/* ---------- sections ---------- */
+section.wrap { padding-top: 46px; padding-bottom: 6px; }
+.band { background: var(--deep); position: relative; }
+h2 { font-size: 26px; line-height: 1.18; letter-spacing: -.015em; }
+.kicker { font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--teal); margin-bottom: 8px; }
+.say { margin-top: 12px; font-size: 16px; color: var(--soft); }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.stat { padding: 16px 16px 15px; border-radius: 18px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+.stat b { display: block; font-size: 30px; line-height: 1.1; letter-spacing: -.02em; }
+.stat span { font-size: 13.5px; color: var(--soft); }
+.feat { margin-top: 22px; display: grid; gap: 16px; }
+.f { border-radius: 22px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
+.f .shot { margin: 14px 14px 0; border-radius: 14px; overflow: hidden; max-height: 250px; background: #f3f6f7; position: relative; }
+.f .shot::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 40px; background: linear-gradient(rgba(243,246,247,0), #f3f6f7); }
+.f .shot.full { max-height: none; } .f .shot.full::after { display: none; }
+.f .txt { padding: 15px 18px 18px; }
+.f h3 { font-size: 18.5px; line-height: 1.25; }
+.f p { margin-top: 5px; font-size: 15px; color: var(--soft); }
+.how { list-style: none; margin-top: 20px; display: grid; gap: 12px; }
+.how li { display: flex; gap: 14px; align-items: flex-start; padding: 15px 16px; border-radius: 18px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+.num { flex: none; width: 32px; height: 32px; border-radius: 50%; background: var(--teal); color: #04252c; font-weight: 700; display: grid; place-items: center; font-size: 15.5px; }
+.how b { display: block; font-size: 16.5px; } .how span { font-size: 14.5px; color: var(--soft); }
+.plans { margin-top: 18px; display: grid; gap: 12px; }
+.plan { padding: 16px 18px; border-radius: 18px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+.plan b { font-size: 16.5px; } .plan p { font-size: 14.5px; color: var(--soft); margin-top: 2px; }
+.plan.free { box-shadow: inset 0 0 0 1.5px rgba(53,201,138,.6); background: rgba(53,201,138,.1); }
+details { border-top: 1px solid var(--line); }
+details:last-of-type { border-bottom: 1px solid var(--line); }
+summary { list-style: none; cursor: pointer; padding: 16px 0; font-size: 16.5px; font-weight: 600; display: flex; justify-content: space-between; gap: 14px; align-items: center; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: '+'; font-size: 24px; font-weight: 400; color: var(--teal); line-height: 1; }
+details[open] summary::after { content: '–'; }
+details p { padding: 0 0 16px; font-size: 15px; color: var(--soft); }
+.faq { margin-top: 16px; }
+section.last { text-align: center; padding-bottom: 30px; }
+.last .say { margin-bottom: 20px; }
+.foot { padding: 22px 22px calc(104px + env(safe-area-inset-bottom)); text-align: center; font-size: 12.5px; color: var(--mute); }
+
+/* ---------- the promo film ---------- */
+.player { position: relative; margin: 18px auto 0; width: min(100%, 320px); aspect-ratio: 9 / 16; border-radius: 28px; overflow: hidden; background: #051318; box-shadow: 0 0 0 1.5px #2c3d45, 0 30px 70px rgba(0,0,0,.45); }
+.player video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.play { position: absolute; inset: 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: linear-gradient(rgba(5,19,24,.2), rgba(5,19,24,.6)); }
+.play .disc { width: 86px; height: 86px; border-radius: 50%; background: var(--teal); display: grid; place-items: center; box-shadow: 0 0 0 10px rgba(98,211,217,.22), 0 18px 40px rgba(0,0,0,.4); }
+.play .disc svg { width: 38px; height: 38px; fill: #04252c; margin-left: 5px; }
+.play .len { padding: 6px 14px; border-radius: 999px; background: rgba(5,19,24,.75); font-size: 14.5px; font-weight: 600; }
+
+/* ---------- always-reachable install bar ---------- */
+.dock { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: rgba(7,27,34,.92); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-top: 1px solid var(--line);
+  transform: translateY(110%); transition: transform .28s cubic-bezier(.16,1,.3,1); }
+.dock.on { transform: none; }
+.dock .cta { max-width: 448px; margin: 0 auto; min-height: 56px; font-size: 17.5px; }
+
+/* ---------- install guide ---------- */
+.top { display: flex; align-items: center; gap: 6px; min-height: 48px; margin-left: -10px; padding-top: calc(14px + env(safe-area-inset-top)); box-sizing: content-box; }
+.back { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; }
+.top h1 { margin: 0; font-size: 22px; letter-spacing: -.01em; }
+.intro { margin-top: 8px; font-size: 15.5px; color: var(--soft); }
+.note { margin-top: 16px; padding: 15px 16px; border-radius: 16px; background: rgba(244,183,64,.13); box-shadow: inset 0 0 0 1.5px rgba(244,183,64,.5); font-size: 15px; }
+.note b { display: block; margin-bottom: 3px; }
+.note.ok { background: rgba(53,201,138,.14); box-shadow: inset 0 0 0 1.5px rgba(53,201,138,.55); }
+.note .cta { margin-top: 12px; min-height: 48px; font-size: 15.5px; }
+.steps { list-style: none; margin-top: 18px; display: grid; gap: 14px; }
+.step { border-radius: 20px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
+.step svg.pic { display: block; width: 100%; height: auto; background: #0c2c36; }
+.step .cap { display: flex; gap: 13px; padding: 14px 16px 16px; }
+.step h3 { font-size: 17px; line-height: 1.3; }
+.step p { margin-top: 3px; font-size: 14.5px; color: var(--soft); }
+.form { position: relative; margin: 14px 14px 0; padding-left: 34px; border-radius: 14px; overflow: hidden; background: #f3f6f7; }
+.pin { position: absolute; left: 7px; width: 28px; height: 28px; margin-top: -14px; border-radius: 50%; background: var(--amber); color: #2b1c00; font-weight: 700; font-size: 15px; display: grid; place-items: center; box-shadow: 0 3px 8px rgba(0,0,0,.22); }
+.legend { list-style: none; margin-top: 10px; display: grid; gap: 7px; }
+.legend li { display: flex; gap: 10px; align-items: center; font-size: 14.5px; color: var(--soft); }
+.legend i { flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--amber); color: #2b1c00; font-style: normal; font-weight: 700; font-size: 12.5px; display: grid; place-items: center; }
+.finish { margin: 22px 0 10px; padding: 20px 18px; border-radius: 22px; background: linear-gradient(160deg, rgba(20,104,122,.6), rgba(12,42,52,.9)); box-shadow: inset 0 0 0 1.5px rgba(98,211,217,.4); text-align: center; }
+.finish h3 { font-size: 20px; } .finish p { margin: 6px 0 14px; font-size: 15px; color: var(--soft); }
+.finish p:last-child { margin-bottom: 0; }
+.switch { display: block; margin: 8px auto 34px; padding: 10px; text-align: center; font-size: 14px; color: var(--mute); text-decoration: underline; text-underline-offset: 3px; }
+.share-ic { display: inline-grid; place-items: center; vertical-align: -6px; width: 28px; height: 28px; margin: 0 2px; border-radius: 8px; background: rgba(98,211,217,.16); }
+.share-ic svg { width: 18px; height: 18px; }
+
+/* illustration vocabulary */
+.pic .ln { fill: #1b4551; } .pic .bar { fill: #143b46; } .pic .pill { fill: #0c2c36; } .pic .row { fill: #143b46; } .pic .dim { fill: #1b4551; }
+.pic .ic { fill: none; stroke: #9fc0c8; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.pic text { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 12.5px; font-weight: 500; fill: #dcebee; }
+.pic .s { font-size: 10.5px; fill: #9fc0c8; } .pic .b { font-weight: 700; fill: #fff; } .pic .k { fill: var(--teal); font-weight: 600; }
+.pic .hl { fill: none; stroke: var(--amber); stroke-width: 2.5; }
+.pic .pulse { fill: none; stroke: var(--amber); stroke-width: 2; transform-box: fill-box; transform-origin: center; animation: pulse 1.8s ease-out infinite; }
+@keyframes pulse { from { opacity: .9; transform: scale(1); } to { opacity: 0; transform: scale(1.7); } }
+.pic .glow { fill: none; stroke: var(--amber); stroke-width: 3; animation: glow 1.8s ease-in-out infinite; }
+@keyframes glow { 0%, 100% { opacity: 0; } 50% { opacity: .55; } }
+@media (prefers-reduced-motion: reduce) { .pic .pulse, .pic .glow { animation: none; opacity: 0; } .cta, .dock { transition: none; } html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<!-- ============ the landing page ============ -->
+<main id="home">
+  <div class="wrap hero">
+    <div class="brand">
+      <span class="mark"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M14 56H35L44 28L56 78L64 56H86"/><circle cx="86" cy="56" r="6.5"/></svg></span>
+      Oman EM Prep
+    </div>
+    <p class="eyebrow">Oman Emergency Medicine exam · OEEM</p>
+    <h1>Study with focus.<br>Pass with calm.</h1>
+    <p class="lead">More than 5,000 exam-style cases, each with a clear explanation — so your effort goes into learning, not searching.</p>
+    <ul class="facts">
+      <li><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>5,000+ cases, every one explained</li>
+      <li><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Weighted to the official OEEM blueprint</li>
+      <li><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Free to start. No card, no app store.</li>
+    </ul>
+    <div class="getapp" id="heroCta"></div>
+    <div class="peek" aria-hidden="true"><img src="app-home.jpg" width="640" height="821" alt="" decoding="async"></div>
+  </div>
+
+  <div class="band">
+    <section class="wrap film">
+      <p class="kicker">Watch</p>
+      <h2>The whole idea, in a minute and a half.</h2>
+      <div class="player">
+        <video id="promo" playsinline preload="none" poster="promo-poster.jpg" width="720" height="1280">
+          <source src="promo.mp4" type="video/mp4">
+        </video>
+        <button class="play" id="playPromo" aria-label="Play the video, 1 minute 37 seconds">
+          <span class="disc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+          <span class="len">Play · 1:37</span>
+        </button>
+      </div>
+      <p class="under">Narrated in Arabic, with the real app on screen.</p>
+    </section>
+
+    <section class="wrap">
+      <div class="stats">
+        <div class="stat"><b>5,093</b><span>explained cases</span></div>
+        <div class="stat"><b>18</b><span>sections, by blueprint weight</span></div>
+        <div class="stat"><b>206</b><span>past-exam recalls</span></div>
+        <div class="stat"><b>100</b><span>questions per timed simulation</span></div>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <p class="kicker">Why we built it</p>
+      <h2>You already work hard. The effort just goes to the wrong place.</h2>
+      <p class="say">A file from a group, photos from a colleague, past questions nobody can vouch for. Every hour spent collecting is an hour not spent learning.</p>
+      <p class="say">We do not offer a shortcut — there isn't one. We put the whole bank in one organised place, explain every case, and let you spend your effort where it counts.</p>
+    </section>
+
+    <section class="wrap">
+      <p class="kicker">What you get</p>
+      <h2>Everything you need to prepare, in one app.</h2>
+      <div class="feat">
+        <article class="f"><div class="shot"><img src="f-today.jpg" width="640" height="706" alt="The app's home screen: exam readiness and today's list" loading="lazy" decoding="async"></div>
+          <div class="txt"><h3>It tells you where to start</h3><p>A readiness score and a short list for today, ordered by what earns the most marks.</p></div></article>
+        <article class="f"><div class="shot"><img src="f-explain.jpg" width="640" height="689" alt="A case answered correctly with its explanation" loading="lazy" decoding="async"></div>
+          <div class="txt"><h3>Every case explained, the moment you answer</h3><p>Choose your answer and read why straight away. No waiting for the end of a set.</p></div></article>
+        <article class="f"><div class="shot full"><img src="f-sources.jpg" width="640" height="351" alt="The Google Search button under an explanation" loading="lazy" decoding="async"></div>
+          <div class="txt"><h3>One tap to the sources</h3><p>A Google Search button under every explanation opens the case itself, ready to check and go deeper.</p></div></article>
+        <article class="f"><div class="shot"><img src="f-mistakes.jpg" width="640" height="656" alt="A wrong answer marked with the correct one" loading="lazy" decoding="async"></div>
+          <div class="txt"><h3>Your mistakes come back</h3><p>Wrong answers return to your review list until you get each one right twice in a row.</p></div></article>
+        <article class="f"><div class="shot"><img src="f-recalls.jpg" width="640" height="689" alt="An exam recall with its reasoned answer and source" loading="lazy" decoding="async"></div>
+          <div class="txt"><h3>Exam recalls, to feel the real paper</h3><p>Questions remembered from past sittings, shown as they were written, with a reasoned and sourced answer where one can be established.</p></div></article>
+        <article class="f"><div class="shot"><img src="f-mock.jpg" width="640" height="492" alt="A timed test with its countdown and pace bar" loading="lazy" decoding="async"></div>
+          <div class="txt"><h3>Timed simulations when you are ready</h3><p>Milestone tests as your coverage grows, then full OEEM simulations: 100 questions against the clock.</p></div></article>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <p class="kicker">How to start</p>
+      <h2>Three steps, a couple of minutes.</h2>
+      <ol class="how">
+        <li><span class="num">1</span><div><b>Install the app</b><span>Straight from your browser. No app store, almost no space.</span></div></li>
+        <li><span class="num">2</span><div><b>Create your free account</b><span>Name, email, WhatsApp number and a password.</span></div></li>
+        <li><span class="num">3</span><div><b>Answer your first cases</b><span>Free, with the full explanation for each one.</span></div></li>
+      </ol>
+    </section>
+
+    <section class="wrap">
+      <p class="kicker">Access</p>
+      <h2>Try it first. Decide after.</h2>
+      <div class="plans">
+        <div class="plan free"><b>Free trial</b><p>Real cases with full explanations. No card needed.</p></div>
+        <div class="plan"><b>Full subscription</b><p>The whole bank open from day one.</p></div>
+        <div class="plan"><b>Or in three parts</b><p>Open one third of the bank at a time, when you need it.</p></div>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <p class="kicker">Questions</p>
+      <h2>Before you install</h2>
+      <div class="faq">
+        <details><summary>Is this a real app?</summary><p>Yes. It installs from your browser onto your home screen, opens full screen like any app, and keeps working offline after the first time you open it.</p></details>
+        <details><summary>Does it work on iPhone and Android?</summary><p>Both. Choose your phone and we show you the exact steps, with pictures.</p></details>
+        <details><summary>Do I pay anything to try it?</summary><p>No. You create an account and answer free cases first. You only pay if you decide to open more of the bank.</p></details>
+        <details><summary>Is it an official OMSB product?</summary><p>No. It is an independent study tool. The sections are weighted by the published OEEM blueprint, and it is not affiliated with OMSB.</p></details>
+      </div>
+    </section>
+
+    <section class="wrap last">
+      <h2>Ready when you are.</h2>
+      <p class="say">Install it now and answer your first cases today.</p>
+      <div class="getapp" id="lastCta"></div>
+    </section>
+    <p class="foot">An independent study tool. Not affiliated with OMSB.</p>
+  </div>
+
+  <div class="dock" id="dock"></div>
+</main>
+
+<!-- ============ the install guide for the chosen phone ============ -->
+<main id="guide" hidden>
+  <div class="wrap">
+    <div class="top">
+      <a class="back" href="#" aria-label="Back"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
+      <h1 id="guideTitle" tabindex="-1"></h1>
+    </div>
+    <div id="guideBody"></div>
+  </div>
+</main>
+
+<script>
+'use strict';
+(function () {
+  const ua = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isAndroid = /Android/i.test(ua);
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  if (standalone) { location.replace('../'); return; }   // already installed: this page has nothing left to say
+
+  // links opened inside a social app cannot install anything: the doctor has to reach the real browser first
+  const inAppHit = /(FBAN|FBAV|FB_IAB|Instagram|TikTok|musical_ly|Bytedance|Snapchat|Twitter|LinkedInApp|Line\/)/i.exec(ua);
+  const inApp = inAppHit ? ({ fban: 'Facebook', fbav: 'Facebook', fb_iab: 'Facebook', instagram: 'Instagram', tiktok: 'TikTok', musical_ly: 'TikTok', bytedance: 'TikTok', snapchat: 'Snapchat', twitter: 'X', linkedinapp: 'LinkedIn', 'line/': 'LINE' })[inAppHit[1].toLowerCase()] : null;
+  const iosBrowser = /CriOS/.test(ua) ? 'Chrome' : /FxiOS/.test(ua) ? 'Firefox' : /EdgiOS/.test(ua) ? 'Edge' : 'Safari';
+  const samsung = /SamsungBrowser/i.test(ua);
+
+  const $ = (id) => document.getElementById(id);
+  const DOWN = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg>';
+  const SHARE = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3"/><path d="m8 7 4-4 4 4"/><path d="M8 11H5v10h14V11h-3"/></svg>';
+
+  /* ---------- the landing's install buttons: one obvious button for the visitor's own phone ---------- */
+  const mine = isIOS ? 'iphone' : isAndroid ? 'android' : null;
+  const NAME = { iphone: 'iPhone', android: 'Android' };
+  const getApp = () => mine
+    ? `<a class="cta" href="#${mine}">${DOWN}Install on ${NAME[mine]} — free</a>
+       <p class="under">Takes under a minute. <a href="#${mine === 'iphone' ? 'android' : 'iphone'}">I have ${mine === 'iphone' ? 'an Android' : 'an iPhone'}</a></p>`
+    : `<div class="pair"><a class="cta" href="#iphone">${DOWN}iPhone</a><a class="cta" href="#android">${DOWN}Android</a></div>
+       <p class="under">Open this page on your phone to install. <a href="../">Or use it in the browser</a></p>`;
+  $('heroCta').innerHTML = getApp();
+  $('lastCta').innerHTML = getApp();
+  $('dock').innerHTML = mine ? `<a class="cta" href="#${mine}">${DOWN}Install on ${NAME[mine]} — free</a>` : `<a class="cta" href="#iphone" id="dockPick">${DOWN}Get the app — free</a>`;
+  // the bar appears once the first button has scrolled away, and steps aside for the last one
+  if ('IntersectionObserver' in window) {
+    const seen = new Set();
+    const io = new IntersectionObserver((es) => {
+      es.forEach((e) => (e.isIntersecting ? seen.add(e.target) : seen.delete(e.target)));
+      $('dock').classList.toggle('on', seen.size === 0);
+    });
+    io.observe($('heroCta')); io.observe($('lastCta'));
+  }
+
+  /* ---------- pictures for the steps ---------- */
+  const LOGO = '<path d="M14 56H35L44 28L56 78L64 56H86" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="86" cy="56" r="6.5" fill="#62d3d9"/>';
+  const appIcon = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s / 100})"><rect width="100" height="100" rx="24" fill="#0c2a34" stroke="#2c5560" stroke-width="3"/>${LOGO}</g>`;
+  const ring = (x, y, r) => `<circle class="pulse" cx="${x}" cy="${y}" r="${r}"/><circle class="hl" cx="${x}" cy="${y}" r="${r}"/>`;
+  const box = (x, y, w, h, r) => `<rect class="glow" x="${x - 3}" y="${y - 3}" width="${w + 6}" height="${h + 6}" rx="${r + 3}"/><rect class="hl" x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}"/>`;
+  const pic = (label, inner) => `<svg class="pic" viewBox="0 0 320 170" role="img" aria-label="${label}">${inner}</svg>`;
+  const lines = (y) => `<rect class="ln" x="24" y="${y}" width="170" height="10" rx="5"/><rect class="ln" x="24" y="${y + 20}" width="236" height="8" rx="4"/><rect class="ln" x="24" y="${y + 36}" width="196" height="8" rx="4"/>`;
+  const rows = (x, w, items, on) => items.map((t, i) => {
+    const y = 12 + i * 37;
+    return `<rect class="row" x="${x}" y="${y}" width="${w}" height="31" rx="9"/><text x="${x + 14}" y="${y + 20}" class="${i === on ? 'b' : ''}">${t}</text>` + (i === on ? box(x, y, w, 31, 9) : '');
+  }).join('');
+  const PICS = {
+    home: pic('Your home screen with the Oman EM Prep icon',
+      [0, 1, 2, 3].map((c) => [0, 1].map((r) => (c === 1 && r === 0 ? '' : `<rect class="dim" x="${34 + c * 68}" y="${20 + r * 86}" width="46" height="46" rx="12"/>`)).join('')).join('') +
+      appIcon(102, 20, 46) + ring(125, 43, 30) + `<text x="125" y="93" text-anchor="middle" class="b">EM Prep</text>`),
+    iosShare: pic('The Share button in the browser toolbar',
+      lines(16) + `<rect class="bar" x="0" y="80" width="320" height="90"/><rect class="pill" x="20" y="90" width="280" height="30" rx="15"/><text x="160" y="110" text-anchor="middle" class="s">oman-em-prep.sootnote.com</text>
+      <path class="ic" d="M48 139l-7 8 7 8"/><path class="ic" d="M98 139l7 8-7 8"/>
+      <path class="ic" stroke="#fff" d="M160 136v17M153.5 142l6.5-6.5 6.5 6.5M151 149v9h18v-9"/>
+      <path class="ic" d="M211 140c5-2 9-2 12 1 3-3 7-3 12-1v15c-5-2-9-2-12 1-3-3-7-3-12-1z"/><rect class="ic" x="268" y="139" width="15" height="15" rx="3"/>` + ring(160, 147, 21)),
+    iosAdd: pic('The share menu with Add to Home Screen',
+      rows(16, 288, ['Copy', 'Add Bookmark', 'Add to Home Screen', 'Find on Page'], 2) + `<rect class="ic" stroke="#fff" x="276" y="94" width="16" height="16" rx="4"/><path class="ic" stroke="#fff" d="M284 98v8M280 102h8"/>`),
+    iosConfirm: pic('The Add button at the top right',
+      `<rect class="bar" x="0" y="0" width="320" height="46"/><text x="20" y="29" class="k">Cancel</text><text x="160" y="29" text-anchor="middle" class="b">Add to Home Screen</text><text x="298" y="29" text-anchor="end" class="k" style="font-weight:700">Add</text>` + box(262, 11, 48, 27, 13.5) +
+      appIcon(22, 62, 48) + `<text x="84" y="83" class="b">Oman EM Prep</text><text x="84" y="100" class="s">oman-em-prep.sootnote.com</text>
+      <rect class="row" x="16" y="124" width="288" height="34" rx="10"/><text x="30" y="146">Open as Web App</text><rect x="258" y="131" width="34" height="20" rx="10" fill="#35c98a"/><circle cx="282" cy="141" r="8" fill="#fff"/>`),
+    andButton: pic('The Install app button at the end of the steps',
+      lines(22) + `<rect x="28" y="96" width="264" height="50" rx="16" fill="#62d3d9"/><path d="M118 111v13M112.5 119l5.5 5.5 5.5-5.5M110 130h16" fill="none" stroke="#04252c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text x="138" y="126" style="fill:#04252c;font-weight:700;font-size:15px">Install app</text>` + box(24, 92, 272, 58, 20)),
+    andConfirm: pic('The Install button in the dialog',
+      `<rect x="36" y="14" width="248" height="142" rx="18" fill="#143b46" stroke="#1f4b57"/>` + appIcon(54, 32, 44) + `<text x="110" y="50" class="b" style="font-size:14px">Install app</text><text x="110" y="68" class="s">Oman EM Prep</text>
+      <text x="182" y="129" text-anchor="end" class="k">Cancel</text><rect x="200" y="108" width="68" height="32" rx="16" fill="#62d3d9"/><text x="234" y="129" text-anchor="middle" style="fill:#04252c;font-weight:700">Install</text>` + box(196, 104, 76, 40, 20)),
+    andMenu: pic('The three-dot menu at the top right of the browser',
+      `<rect class="bar" x="0" y="0" width="320" height="56"/><rect class="pill" x="16" y="12" width="240" height="32" rx="16"/><circle cx="34" cy="28" r="4" fill="#35c98a"/><text x="46" y="32" class="s">oman-em-prep.sootnote.com</text>
+      <circle cx="290" cy="20" r="2.6" fill="#fff"/><circle cx="290" cy="28" r="2.6" fill="#fff"/><circle cx="290" cy="36" r="2.6" fill="#fff"/>` + ring(290, 28, 18) + lines(78)),
+    andAdd: pic('The menu with Add to Home screen',
+      lines(20) + `<rect x="112" y="4" width="200" height="162" rx="14" fill="#0c2c36" stroke="#1f4b57"/>` + rows(120, 184, ['New tab', 'Bookmarks', 'Add to Home screen', 'Settings'], 2)),
+  };
+
+  const step = (n, img, title, text) => `<li class="step">${img}<div class="cap"><span class="num">${n}</span><div><h3>${title}</h3><p>${text}</p></div></div></li>`;
+  // the real sign-up form, numbered in the order it is filled
+  const signup = (n) => `<li class="step">
+      <div class="form"><img src="signup.jpg" width="640" height="743" alt="The sign-up form inside the app" loading="lazy" decoding="async">
+        ${[15.2, 35.3, 55.6, 75.9, 90.3].map((top, i) => `<span class="pin" style="top:${top}%">${i + 1}</span>`).join('')}</div>
+      <div class="cap"><span class="num">${n}</span><div><h3>Create your free account</h3><p>The app opens on this form. Fill it top to bottom:</p>
+        <ul class="legend"><li><i>1</i>Your name</li><li><i>2</i>Your email</li><li><i>3</i>Your WhatsApp number</li><li><i>4</i>A password, 6 characters or more</li><li><i>5</i>Tap the button to start your free trial</li></ul></div></div></li>`;
+  const copyBtn = `<button class="cta alt" id="copyLink"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg><span>Copy the link</span></button>`;
+  const inAppNote = (browser) => inApp ? `<div class="note" role="status"><b>First, open this page in ${browser}.</b>You are inside ${inApp}'s built-in browser, which cannot install apps. Tap the ⋯ menu and choose “Open in browser”, or copy the link and paste it in ${browser}.${copyBtn}</div>` : '';
+
+  const GUIDES = {
+    iphone: () => ({
+      title: 'Install on iPhone',
+      html: inAppNote('Safari') + `
+        <p class="intro">iPhone installs apps like this one from the Share menu. Five short steps:</p>
+        <ol class="steps">
+          ${step(1, PICS.iosShare, 'Tap the Share button', iosBrowser === 'Safari' ? 'It is in Safari’s toolbar. If you only see ⋯, tap it first, then Share.' : `In ${iosBrowser} it sits next to the address bar, at the top right.`)}
+          ${step(2, PICS.iosAdd, 'Choose “Add to Home Screen”', 'Scroll down the menu a little to find it.')}
+          ${step(3, PICS.iosConfirm, 'Tap “Add”', 'Leave “Open as Web App” switched on if you see it.')}
+          ${step(4, PICS.home, 'Open EM Prep from your home screen', 'It opens full screen, like any other app.')}
+          ${signup(5)}
+        </ol>
+        <div class="finish"><h3>Start now</h3><p>Tap <span class="share-ic">${SHARE}</span> <b>Share</b> in your browser’s toolbar, then <b>Add to Home Screen</b>.</p></div>`,
+      other: ['android', 'Using Android instead?'],
+    }),
+    android: () => ({
+      title: 'Install on Android',
+      html: inAppNote('Chrome') + `
+        <p class="intro">One button installs it. Here is what will happen:</p>
+        <ol class="steps">
+          ${step(1, PICS.andButton, 'Tap “Install app”', 'The button is at the end of these steps.')}
+          ${step(2, PICS.andConfirm, 'Confirm with “Install”', 'Your phone asks once. The app takes almost no space.')}
+          ${step(3, PICS.home, 'Open EM Prep from your home screen', 'It opens full screen, like any other app.')}
+          ${signup(4)}
+        </ol>
+        <div class="finish" id="finish">
+          <h3>Ready? Install it now</h3><p>Free to start. No app store needed.</p>
+          <button class="cta" id="installNow">${DOWN}Install app</button>
+        </div>
+        <div class="note ok" id="installed" role="status" hidden><b>Installed.</b>Open EM Prep from your home screen and create your free account.</div>
+        <div id="manual" hidden>
+          <div class="note"><b>Install it from the browser menu instead.</b>This browser did not offer the one-tap install. It takes three taps:</div>
+          <ol class="steps">
+            ${step(1, PICS.andMenu, samsung ? 'Tap the ≡ menu' : 'Tap the ⋮ menu', samsung ? 'In Samsung Internet it is at the bottom right.' : 'It is at the top right of Chrome.')}
+            ${step(2, PICS.andAdd, 'Choose “Add to Home screen”', samsung ? 'Tap “Add to”, then “Home screen”.' : 'On some phones it is called “Install app”.')}
+            ${step(3, PICS.andConfirm, 'Tap “Install”', 'Then open EM Prep from your home screen.')}
+          </ol>
+        </div>`,
+      other: ['iphone', 'Using an iPhone instead?'],
+    }),
+  };
+
+  /* ---------- Android: the browser hands us a one-tap install when it is willing ---------- */
+  let offer = null;
+  addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); offer = e; });
+  addEventListener('appinstalled', () => {
+    offer = null;
+    const done = $('installed');
+    if (done) { done.hidden = false; $('finish').hidden = true; $('manual').hidden = true; done.scrollIntoView({ block: 'center' }); }
+  });
+
+  function render() {
+    const key = location.hash.slice(1);
+    const g = GUIDES[key] && GUIDES[key]();
+    $('home').hidden = !!g;
+    $('guide').hidden = !g;
+    if (!g) return;
+    $('guideTitle').textContent = g.title;
+    $('guideBody').innerHTML = g.html + `<p class="under" style="margin-top:18px">Prefer not to install? <a href="../">Use it in the browser</a></p><a class="switch" href="#${g.other[0]}">${g.other[1]}</a>`;
+    scrollTo(0, 0);
+    $('guideTitle').focus({ preventScroll: true });
+  }
+  addEventListener('hashchange', render);
+  document.addEventListener('click', async (e) => {
+    // on a computer the bar cannot know the phone: it leads to the two choices at the end of the page
+    if (e.target.closest('#dockPick')) { e.preventDefault(); $('lastCta').scrollIntoView({ block: 'center' }); return; }
+    const play = e.target.closest('#playPromo');
+    if (play) { const v = $('promo'); play.hidden = true; v.controls = true; v.play().catch(() => {}); return; }
+    const copy = e.target.closest('#copyLink');
+    if (copy) {
+      const url = location.origin + location.pathname;
+      try { await navigator.clipboard.writeText(url); copy.querySelector('span').textContent = 'Link copied'; }
+      catch (err) { prompt('Copy this link', url); }
+    }
+    if (e.target.closest('#installNow')) {
+      if (offer) {
+        offer.prompt();
+        const choice = await offer.userChoice.catch(() => null);
+        if (choice && choice.outcome === 'accepted') offer = null;
+      } else {
+        // no one-tap install here (other browser, or it was dismissed before): show the menu route
+        $('manual').hidden = false;
+        $('manual').scrollIntoView({ block: 'start' });
+      }
+    }
+  });
+  render();
+
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('../sw.js').catch(() => {});
+})();
+</script>
+</body>
+</html>

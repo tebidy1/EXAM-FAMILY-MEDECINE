@@ -25,7 +25,7 @@ const crypto = require('crypto');
 
 const PORT = +process.argv[2] || 8000;
 const ROOT = path.resolve(__dirname, '..');
-const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml' };
+const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.mp4': 'video/mp4' };
 
 const db = {
   users: [],          // { id, email, password }
@@ -217,8 +217,14 @@ http.createServer((req, res) => {
       if (/^\/(auth|rest|storage)\/v1\//.test(url.pathname)) return api(req, res, url, Buffer.concat(chunks));
       // point the app at this server instead of the live Supabase project
       if (url.pathname === '/js/config.js') return send(res, 200, `window.SB_CONFIG = { url: location.origin, anonKey: 'dev' };`, 'text/javascript');
-      const file = path.normalize(path.join(ROOT, decodeURIComponent(url.pathname === '/' ? '/index.html' : url.pathname)));
-      if ((!file.startsWith(ROOT + path.sep) && file !== ROOT) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) return send(res, 404, 'not found', 'text/plain');
+      let file = path.normalize(path.join(ROOT, decodeURIComponent(url.pathname === '/' ? '/index.html' : url.pathname)));
+      if ((!file.startsWith(ROOT + path.sep) && file !== ROOT) || !fs.existsSync(file)) return send(res, 404, 'not found', 'text/plain');
+      // a folder answers with its index.html, like the real host (/get → /get/)
+      if (fs.statSync(file).isDirectory()) {
+        if (!url.pathname.endsWith('/')) { res.writeHead(301, { Location: url.pathname + '/' }); return res.end(); }
+        file = path.join(file, 'index.html');
+        if (!fs.existsSync(file)) return send(res, 404, 'not found', 'text/plain');
+      }
       send(res, 200, fs.readFileSync(file), MIME[path.extname(file)] || 'application/octet-stream');
     } catch (e) {
       send(res, 500, { message: e.message });
