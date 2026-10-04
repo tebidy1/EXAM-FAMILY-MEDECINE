@@ -6,12 +6,14 @@
      node tools/dev-server.js [port]      (default 8000)
 
    Nothing is persisted: restart = clean slate. It mirrors the rules of
-   supabase/schema.sql + 002_trial_paywall.sql + 003_plans.sql closely enough to test the
-   UI; the SQL itself still has to be run on the real project.
+   supabase/schema.sql + 002_trial_paywall.sql + 003_plans.sql + 004_promo_referral.sql
+   closely enough to test the UI; the SQL itself still has to be run on the real project.
 
    Seeded test accounts (local only):
      admin   admin@test.local    / admin-test-1
    Seeded access code: TEST-CODE (5 uses)
+   Referral rewards default to 10 (signup) / 25 (paid) / 5 (welcome); promo codes
+   are created from the admin Growth tab.
    Suggested signup values for test doctors:
      doctor1@test.local / doctor-test-1 / +968 9000 0001
      doctor2@test.local / doctor-test-2 / +968 9000 0002
@@ -34,24 +36,56 @@ const db = {
   codes: [{ id: crypto.randomUUID(), code: 'TEST-CODE', label: 'dev', max_uses: 5, uses: 0, expires_at: null, active: true, created_at: new Date().toISOString() }],
   requests: [],
   sessions: [],
+  promos: [],         // { id, code, label, reward_questions, max_uses, uses, expires_at, active, created_at }
+  redemptions: [],    // { user_id, promo_id }
   files: new Map(),   // receipt path -> { type, buf }
   tokens: new Map(),  // access token -> user id
-  pay: { id: 1, price: '25 ر.ع', part_price: '10 ر.ع', beneficiary: 'Test Beneficiary', bank: 'Bank Muscat', account: 'OM00 0000 0000 0000 0000 000', pay_link: null, whatsapp: '+96890000000', note: null },
+  // referral_* mirror supabase/004; non-zero defaults so the flows are visible locally
+  pay: { id: 1, price: '25 ر.ع', part_price: '10 ر.ع', beneficiary: 'Test Beneficiary', bank: 'Bank Muscat', account: 'OM00 0000 0000 0000 0000 000', pay_link: null, whatsapp: '+96890000000', note: null, referral_reward_signup: 10, referral_reward_paid: 25, referral_signup_bonus: 5 },
+};
+
+const genRef = () => {
+  const A = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
+  let c; do { c = Array.from({ length: 6 }, () => A[Math.floor(Math.random() * A.length)]).join(''); }
+  while (db.profiles.some((p) => p.referral_code === c));
+  return c;
 };
 
 function addUser(email, password, meta = {}) {
   const id = crypto.randomUUID();
   const first = db.profiles.length === 0;
   db.users.push({ id, email, password });
+  const ref = (meta.ref || '').toUpperCase();
+  const inviter = ref ? db.profiles.find((p) => p.referral_code === ref) : null;
   db.profiles.push({
     id, email, name: meta.name || email.split('@')[0], phone: meta.phone || null,
     role: first ? 'admin' : 'doctor', code_id: null,
     access_status: first ? 'active' : 'trial', reject_reason: null, parts: 0,
+    bonus_questions: inviter ? (+db.pay.referral_signup_bonus || 0) : 0,
+    referral_code: genRef(), referred_by: inviter ? inviter.id : null,
+    referrals: 0, referrals_paid: 0, ref_paid_rewarded: false,
     created_at: new Date().toISOString(), last_seen: new Date().toISOString(),
   });
+  if (inviter) {
+    inviter.bonus_questions = (+inviter.bonus_questions || 0) + (+db.pay.referral_reward_signup || 0);
+    inviter.referrals = (+inviter.referrals || 0) + 1;
+  }
   return id;
 }
 addUser('admin@test.local', 'admin-test-1', { name: 'Admin' });
+
+// mirror supabase/004: reward the inviter the first time an invitee reaches full access
+function maybeGrantReferralPaid(owner) {
+  if (!owner || !owner.referred_by || owner.ref_paid_rewarded) return;
+  const full = owner.access_status === 'active' || (owner.parts || 0) >= 3 || !!owner.code_id;
+  if (!full) return;
+  owner.ref_paid_rewarded = true;
+  const inviter = profileOf(owner.referred_by);
+  if (inviter) {
+    inviter.bonus_questions = (+inviter.bonus_questions || 0) + (+db.pay.referral_reward_paid || 0);
+    inviter.referrals_paid = (+inviter.referrals_paid || 0) + 1;
+  }
+}
 
 const sessionFor = (id) => {
   const token = 'tok-' + crypto.randomUUID();
@@ -108,8 +142,9 @@ function api(req, res, url, raw) {
     const row = profileOf(id);
     if (req.method === 'PATCH') {
       const b = body();
-      if (!admin) ['role', 'code_id', 'access_status', 'reject_reason', 'parts'].forEach((k) => delete b[k]);   // protect_role()
+      if (!admin) ['role', 'code_id', 'access_status', 'reject_reason', 'parts', 'bonus_questions', 'referral_code', 'referred_by', 'referrals', 'referrals_paid', 'ref_paid_rewarded'].forEach((k) => delete b[k]);   // protect_role()
       Object.assign(row, b);
+      maybeGrantReferralPaid(row);   // admin may have just activated an invited doctor
       return send(res, 204, null);
     }
     return send(res, 200, row ? [row] : []);
@@ -141,11 +176,24 @@ function api(req, res, url, raw) {
     else Object.assign(db.codes.find((c) => c.id === eq(q, 'id')), body());
     return send(res, 204, null);
   }
+  if (p === '/rest/v1/promo_codes') {
+    if (!admin) return deny();
+    if (req.method === 'POST') {
+      const b = body();
+      const one = (c) => {
+        if (db.promos.some((x) => x.code === c.code)) throw new Error('duplicate key value');
+        db.promos.push({ id: crypto.randomUUID(), uses: 0, active: true, created_at: new Date().toISOString(), reward_questions: 0, max_uses: 1, expires_at: null, label: null, ...c });
+      };
+      try { (Array.isArray(b) ? b : [b]).forEach(one); } catch (e) { return send(res, 409, { message: e.message }); }
+    } else Object.assign(db.promos.find((c) => c.id === eq(q, 'id')), body());
+    return send(res, 204, null);
+  }
 
   /* ---- admin views ---- */
   if (p.startsWith('/rest/v1/v_admin_') && !admin) return send(res, 200, []);
   if (p === '/rest/v1/v_admin_users') return send(res, 200, db.profiles.map((x) => ({ ...x, ...stats(x.id) })));
   if (p === '/rest/v1/v_admin_codes') return send(res, 200, db.codes.map((c) => ({ ...c, redeemed_by: db.profiles.filter((x) => x.code_id === c.id).length })));
+  if (p === '/rest/v1/v_admin_promos') return send(res, 200, db.promos.map((c) => ({ ...c, redeemed_by: db.redemptions.filter((r) => r.promo_id === c.id).length })));
   if (p === '/rest/v1/v_admin_sessions') return send(res, 200, db.sessions.map((s) => ({ ...s, ...(({ email, name }) => ({ email, name }))(profileOf(s.user_id) || {}) })));
   if (p === '/rest/v1/v_admin_requests') {
     return send(res, 200, [...db.requests].reverse().map((r) => {
@@ -162,7 +210,18 @@ function api(req, res, url, raw) {
     if (!c) return send(res, 200, false);
     c.uses += 1;
     Object.assign(me, { code_id: c.id, access_status: 'active', reject_reason: null });
+    maybeGrantReferralPaid(me);   // a redeemed full-access code also pays the inviter
     return send(res, 200, true);
+  }
+  if (p === '/rest/v1/rpc/redeem_promo') {
+    const code = String(body().p_code || '').trim().toUpperCase();
+    const c = db.promos.find((x) => x.code === code && x.active && x.uses < x.max_uses && (!x.expires_at || new Date(x.expires_at) > new Date()));
+    if (!c) return send(res, 200, { ok: false, error: 'invalid' });
+    if (db.redemptions.some((r) => r.user_id === uid && r.promo_id === c.id)) return send(res, 200, { ok: false, error: 'used' });
+    c.uses += 1;
+    db.redemptions.push({ user_id: uid, promo_id: c.id });
+    me.bonus_questions = (+me.bonus_questions || 0) + (+c.reward_questions || 0);
+    return send(res, 200, { ok: true, reward: +c.reward_questions || 0 });
   }
   if (p === '/rest/v1/rpc/submit_request') {
     const { p_path, p_plan = 'full' } = body();
@@ -189,6 +248,7 @@ function api(req, res, url, raw) {
       Object.assign(owner, { access_status: owner.parts >= 3 ? 'active' : 'trial', reject_reason: null });
     } else if (approve) Object.assign(owner, { access_status: 'active', reject_reason: null });
     else if (owner.access_status !== 'active') Object.assign(owner, { access_status: 'rejected', reject_reason: b.p_reason });
+    if (approve) maybeGrantReferralPaid(owner);   // the invitee just subscribed: pay the inviter
     return send(res, 200, true);
   }
 
