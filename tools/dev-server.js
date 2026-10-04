@@ -13,7 +13,7 @@
      admin   admin@test.local    / admin-test-1
    Seeded access code: TEST-CODE (5 uses)
    Referral rewards and the NOOR130 promo mirror supabase/005_launch_offer.sql
-   (30 on signup / 50 on paid / no welcome bonus); more promo codes are created
+   (30 on signup / 350 on paid / no welcome bonus); more promo codes are created
    from the admin Growth tab.
    Suggested signup values for test doctors:
      doctor1@test.local / doctor-test-1 / +968 9000 0001
@@ -42,7 +42,7 @@ const db = {
   files: new Map(),   // receipt path -> { type, buf }
   tokens: new Map(),  // access token -> user id
   // referral_* mirror supabase/004 + 005 (the launch offer)
-  pay: { id: 1, price: '25 ر.ع', part_price: '10 ر.ع', beneficiary: 'Test Beneficiary', bank: 'Bank Muscat', account: 'OM00 0000 0000 0000 0000 000', pay_link: null, whatsapp: '+96890000000', note: null, referral_reward_signup: 30, referral_reward_paid: 50, referral_signup_bonus: 0 },
+  pay: { id: 1, price: '25 ر.ع', part_price: '10 ر.ع', beneficiary: 'Test Beneficiary', bank: 'Bank Muscat', account: 'OM00 0000 0000 0000 0000 000', pay_link: null, whatsapp: '+96890000000', note: null, referral_reward_signup: 30, referral_reward_paid: 350, referral_signup_bonus: 0 },
 };
 
 const genRef = () => {
