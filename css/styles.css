@@ -97,6 +97,24 @@ button, input, textarea, select { font-family: inherit; }
 .boot-logo path { fill: none; stroke: #fff; stroke-width: 7.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 190; animation: trace 1.4s ease-in-out infinite alternate; }
 .boot-logo circle { fill: #6fd3e3; }
 @keyframes trace { from { stroke-dashoffset: 190; } to { stroke-dashoffset: 0; } }
+.boot { padding: 24px; text-align: center; font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', system-ui, sans-serif; }
+.boot-title { color: #fff; font-size: 16px; font-weight: 600; }
+.boot-status { font-size: 13px; min-height: 1.5em; }
+/* the bar fills with the real steps of the launch; the sheen keeps moving between them */
+.boot-bar { width: min(260px, 72vw); height: 8px; border-radius: 99px; background: rgba(255, 255, 255, .14); overflow: hidden; }
+.boot-bar i {
+  display: block; height: 100%; width: 4%; border-radius: inherit;
+  background: #6fd3e3 linear-gradient(90deg, transparent, rgba(255, 255, 255, .55), transparent) 0 0 / 60px 100% no-repeat;
+  transition: width .5s ease-out; animation: sheen 1.3s linear infinite;
+}
+@keyframes sheen { from { background-position: 260px 0; } to { background-position: -60px 0; } }   /* right to left, the way the bar fills */
+.boot-retry {
+  margin-top: 6px; min-height: 44px; padding: 0 22px; border-radius: 99px;
+  border: 1px solid rgba(255, 255, 255, .35); background: transparent; color: #fff;
+  font: inherit; font-weight: 600; cursor: pointer;
+}
+.boot-retry[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { .boot-bar i { animation: none; } .boot-logo path { animation: none; stroke-dashoffset: 0; } }
 
 /* ---------- brand ---------- */
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; min-width: 0; }

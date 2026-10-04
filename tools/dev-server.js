@@ -269,8 +269,20 @@ function api(req, res, url, raw) {
   return send(res, 404, { message: 'dev-server: no such endpoint ' + p });
 }
 
+// simulate a request that never answers (a phone on a dead-but-connected network):
+//   /__dev/stall?match=/rest/v1/progress   → matching requests hang;  /__dev/stall  → back to normal
+let stall = null;
+const held = [];   // the hanging sockets: a browser allows 6 per host, so drop them when the stall changes
+
 http.createServer((req, res) => {
   const url = new URL(req.url, 'http://localhost');
+  if (url.pathname === '/__dev/stall') {
+    const m = url.searchParams.get('match');
+    stall = m ? new RegExp(m) : null;
+    held.splice(0).forEach((r) => r.destroy());
+    return send(res, 200, { stall: m || null });
+  }
+  if (stall && stall.test(url.pathname)) { held.push(res); return; }   // never answered
   const chunks = [];
   req.on('data', (c) => chunks.push(c));
   req.on('end', () => {

@@ -14,6 +14,7 @@ const DATA = 'em-data-v1';
 const FONTS = 'em-fonts-v1';
 const KEEP = [SHELL, DATA, FONTS];
 const DEV = ['localhost', '127.0.0.1', '[::1]'].includes(self.location.hostname);
+const ROOT = new URL('./', self.location).pathname;   // the folder the app is served from
 
 // cache the page plus every stylesheet/script/icon it names, so the next launch works offline
 async function precache() {
@@ -38,14 +39,24 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-async function networkFirst(req, cacheName, fallbackUrl) {
+// `saveAs`: the cache key the page is kept under (and reopened from) instead of its own URL.
+// `ms`: a connected-but-dead network must not hold the launch — after `ms` open the saved copy.
+async function networkFirst(req, cacheName, saveAs, ms) {
   const cache = await caches.open(cacheName);
-  try {
-    const res = await fetch(req);
-    if (res.ok) cache.put(fallbackUrl || req, res.clone());
+  const saved = async () => await cache.match(req) || (saveAs ? await cache.match(saveAs) : undefined);
+  const net = fetch(req).then((res) => {
+    if (res.ok) cache.put(saveAs || req, res.clone());
     return res;
+  });
+  try {
+    if (!ms) return await net;
+    const res = await Promise.race([net, new Promise((r) => setTimeout(r, ms))]);
+    if (res) return res;
+    const hit = await saved();
+    if (hit) { net.catch(() => {}); return hit; }
+    return await net;
   } catch (err) {
-    const hit = await cache.match(req) || (fallbackUrl && await cache.match(fallbackUrl));
+    const hit = await saved();
     if (hit) return hit;
     throw err;
   }
@@ -74,8 +85,10 @@ self.addEventListener('fetch', (e) => {
   if (/^\/(auth|rest|storage)\/v1\//.test(url.pathname)) return;   // the local dev stand-in for Supabase
 
   if (req.mode === 'navigate') {
-    const isApp = !/admin\.html$/.test(url.pathname);
-    e.respondWith(networkFirst(req, SHELL, isApp ? 'index.html' : null));
+    // only the app's own page is kept as index.html: /get and admin.html are other pages,
+    // and saving them under that key would reopen the wrong page when offline
+    const isApp = url.pathname === ROOT || url.pathname === ROOT + 'index.html';
+    e.respondWith(networkFirst(req, SHELL, isApp ? 'index.html' : null, 4000));
     return;
   }
   if (!/\.(css|js|json|png|svg|ico|woff2?)$/.test(url.pathname)) return;

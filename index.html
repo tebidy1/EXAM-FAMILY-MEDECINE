@@ -19,19 +19,21 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Caveat:wght@500;600&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=19">
+  <link rel="stylesheet" href="css/styles.css?v=20">
 </head>
 <body>
   <div id="app">
-    <div class="boot">
+    <div class="boot" dir="rtl" lang="ar">
       <svg class="boot-logo" viewBox="0 0 100 100" aria-hidden="true"><path d="M14 56H35L44 28L56 78L64 56H86"/><circle cx="86" cy="56" r="6.5"/></svg>
-      <p>Loading question bank…</p>
-      <p id="bootStatus" style="font-size:13px;opacity:.7"></p>
+      <p class="boot-title" id="bootTitle">جاري فتح التطبيق…</p>
+      <div class="boot-bar" id="bootBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="4" aria-labelledby="bootTitle"><i id="bootFill"></i></div>
+      <p class="boot-status" id="bootStatus">لحظات ويجهز كل شيء</p>
+      <button class="boot-retry" id="bootRetry" type="button" onclick="location.reload()" hidden>إعادة المحاولة</button>
     </div>
   </div>
 
   <script src="js/config.js?v=17"></script>
-  <script src="js/backend.js?v=18"></script>
-  <script src="js/app.js?v=20"></script>
+  <script src="js/backend.js?v=19"></script>
+  <script src="js/app.js?v=21"></script>
 </body>
 </html>

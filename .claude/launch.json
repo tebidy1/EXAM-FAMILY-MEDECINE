@@ -6,6 +6,12 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["tools/dev-server.js", "8137"],
       "port": 8137
+    },
+    {
+      "name": "dev-2",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/dev-server.js", "8141"],
+      "port": 8141
     }
   ]
 }

@@ -277,19 +277,78 @@ function normalizeQuestion(raw, sectionId) {
   };
 }
 
-async function loadData() {
-  const secRes = await fetch('data/sections.json');
-  if (!secRes.ok) throw new Error('sections.json not found');
-  const secData = await secRes.json();
+/* ---------------- launch screen: real progress, never a silent wait ---------------- */
+const Boot = {
+  p: 4, cap: 4, creep: null, slow: null, late: false,
+  // jump to `p` percent, then creep toward `cap` while the step is still running
+  step(title, p, cap = p, status = '') {
+    this.p = Math.max(this.p, p); this.cap = Math.max(cap, this.p);
+    const t = $('#bootTitle'), st = $('#bootStatus');
+    if (t && title) t.textContent = title;
+    if (st && !this.late) st.textContent = status;
+    this.paint();
+    if (!this.creep) this.creep = setInterval(() => { this.p += (this.cap - this.p) * 0.06; this.paint(); }, 400);
+    // long enough to be a bad connection, not a slow phone: say so and offer a way out
+    if (!this.slow) this.slow = setTimeout(() => {
+      this.late = true;
+      const s = $('#bootStatus'), r = $('#bootRetry');
+      if (s) s.textContent = 'الاتصال بطيء — ما زلنا نحمّل، لا تغلق التطبيق';
+      if (r) r.hidden = false;
+    }, 15000);
+  },
+  paint() {
+    const f = $('#bootFill'), bar = $('#bootBar');
+    if (!f) return this.done();   // the first screen replaced the launch screen
+    f.style.width = this.p.toFixed(1) + '%';
+    bar.setAttribute('aria-valuenow', Math.round(this.p));
+  },
+  done() { clearInterval(this.creep); clearTimeout(this.slow); this.creep = this.slow = null; },
+};
 
-  let loaded = 0;
+// resolves with undefined if `promise` has not settled after `ms` (it keeps running)
+const within = (promise, ms) => Promise.race([promise, new Promise((r) => setTimeout(r, ms))]);
+
+// The bank is ~2.5 MB on the wire, so a slow phone gets all the time it needs —
+// but a download that stops receiving bytes for `idleMs` is dead: drop it.
+async function fetchJson(url, idleMs = 20000) {
+  const ctl = new AbortController();
+  let timer;
+  const alive = () => { clearTimeout(timer); timer = setTimeout(() => ctl.abort(), idleMs); };
+  alive();
+  try {
+    const res = await fetch(url, { signal: ctl.signal });
+    if (!res.ok) throw new Error(`${url} → HTTP ${res.status}`);
+    if (!res.body) return await res.json();
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let text = '';
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      alive();
+      text += dec.decode(value, { stream: true });
+    }
+    return JSON.parse(text + dec.decode());
+  } catch (e) {
+    throw e.name === 'AbortError' ? new Error(`${url} → no answer`) : e;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+const fetchJsonRetry = (url) => fetchJson(url).catch(() => fetchJson(url));   // one silent second try
+
+async function loadData() {
+  Boot.step('جاري تحميل بنك الأسئلة…', 20, 26);
+  const secData = await fetchJsonRetry('data/sections.json');
+
+  // the bar follows the questions that have arrived (20% → 86%), not the file count
+  const total = secData.sections.reduce((n, s) => n + (s.count || 1), 0);
+  let loaded = 0, got = 0;
   const results = await Promise.all(secData.sections.map(async (s) => {
-    const res = await fetch(s.file);
-    if (!res.ok) throw new Error(`Could not load ${s.file}`);
-    const questions = await res.json();
-    loaded += 1;
-    const st = $('#bootStatus');
-    if (st) st.textContent = `Loaded ${loaded}/${secData.sections.length} sections…`;
+    const questions = await fetchJsonRetry(s.file);
+    loaded += 1; got += s.count || 1;
+    const at = 26 + 60 * (got / total);
+    Boot.step('', at, Math.min(86, at + 4), `تم تحميل ${loaded} من ${secData.sections.length} قسماً`);
     return { s, questions };
   }));
 
@@ -2571,6 +2630,7 @@ function renderAuth(mode = null, msg = null) {
     const box = $('#au-err');
     box.textContent = text; box.hidden = false;
     btn.disabled = false;
+    btn.textContent = login ? 'دخول' : 'ابدأ التجربة المجانية';
   };
   $('#au-switch').addEventListener('click', () => renderAuth(login ? 'signup' : 'login'));
   $$('.auth-card input').forEach((el) => el.addEventListener('keydown', (e) => { if (e.key === 'Enter') btn.click(); }));
@@ -2579,6 +2639,7 @@ function renderAuth(mode = null, msg = null) {
     const pass = $('#au-pass').value;
     if (!email || !pass) return fail('أدخل البريد وكلمة المرور');
     btn.disabled = true;
+    btn.textContent = login ? 'جاري الدخول…' : 'جاري إنشاء حسابك…';
     try {
       if (login) {
         await SB.login(email, pass);
@@ -2807,8 +2868,10 @@ function logout() {
   applyTheme(false);
   captureRef();   // remember ?ref= from an invite link before anything navigates
   if (window.SB && SB.configured) {
+    Boot.step('جاري التحقق من حسابك…', 6, 18);
     const authed = await SB.init().catch(() => false);
     if (!authed) {   // these screens keep the brand colour in the status bar
+      Boot.done();
       // a first-time visitor meets the idea before the form; a returning one goes straight to sign-in
       if (Guide.state.intro || localStorage.getItem(KNOWN_KEY)) renderAuth();
       else { await loadBlueprint(); renderIntro(() => renderAuth('signup'), () => renderAuth('login')); }
@@ -2824,31 +2887,41 @@ function logout() {
       const pay = SB.paymentSettings().then((row) => { PAY = row; }).catch(() => {});
       if (!hasFullAccess()) {
         // the trial counter is the progress the server holds: pull it (and the
-        // payment details) before the first screen so the count is right
-        await Promise.all([Sync.merge().catch(() => {}), pay]);
+        // payment details) before the first screen so the count is right —
+        // but a server that is slow to answer must not hold the doctor here:
+        // open on the local count and redraw Home when the answer lands
+        Boot.step('جاري مزامنة تقدّمك…', 88, 97, 'خطوة أخيرة');
+        let opened = false;
+        const merge = Sync.merge().then(() => { if (opened && (location.hash || '#/') === '#/') route(); }).catch(() => {});
+        await within(Promise.all([merge, pay]), 8000);
+        opened = true;
       }
       Sync.start(!hasFullAccess());
     }
+    Boot.done();
     if (!Guide.state.intro && !profileOrNull()) renderIntro(route);   // local mode: no sign-up screen to follow
     else route();
     loadRecalls();
   } catch (err) {
+    Boot.done();
     applyTheme();
     const served = location.protocol !== 'file:';
-    app.innerHTML = `
+    app.innerHTML = served ? `
+      <div class="error-overlay" dir="rtl" lang="ar"><div class="error-box">
+        <h2>تعذّر تحميل بنك الأسئلة</h2>
+        <p>تحقق من اتصالك بالإنترنت ثم أعد المحاولة. تقدّمك محفوظ.</p>
+        <button class="btn btn-primary btn-block" onclick="location.reload()">إعادة المحاولة</button>
+        <p dir="ltr" style="font-size:12px;margin:12px 0 0;opacity:.7">${esc(err.message)}</p>
+      </div></div>` : `
       <div class="error-overlay"><div class="error-box">
         <h2>Could not load the question bank</h2>
         <p>${esc(err.message)}</p>
-        ${!served ? `
-          <p>This app reads its JSON files with <code>fetch</code>, which browsers block when opened directly from disk. Serve the folder with any static server:</p>
-          <code>cd D:\\EXAM</code>
-          <code>python -m http.server 8000</code>
-          <p>Then open <strong>http://localhost:8000</strong></p>
-          <code>npx serve .</code>
-          <p>— or deploy the folder to Netlify / Vercel / GitHub Pages and it will work as-is.</p>
-        ` : `
-          <p>Check that <code>data/sections.json</code> and the question files listed in it exist and contain valid JSON.</p>
-        `}
+        <p>This app reads its JSON files with <code>fetch</code>, which browsers block when opened directly from disk. Serve the folder with any static server:</p>
+        <code>cd D:\\EXAM</code>
+        <code>python -m http.server 8000</code>
+        <p>Then open <strong>http://localhost:8000</strong></p>
+        <code>npx serve .</code>
+        <p>— or deploy the folder to Netlify / Vercel / GitHub Pages and it will work as-is.</p>
       </div></div>`;
   }
 })();

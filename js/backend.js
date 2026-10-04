@@ -19,23 +19,37 @@ window.SB = (function () {
     return h;
   }
 
+  // A phone on a connected-but-dead network never gets an answer, and fetch() would wait
+  // on it forever. Give up after TIMEOUT and report it as the TypeError fetch() throws
+  // when offline, so every caller's "no network" path covers it too.
+  const TIMEOUT = 12000;
   async function req(path, opts = {}) {
-    const res = await fetch(cfg.url + path, {
-      method: opts.method || 'GET',
-      headers: { ...hdr(opts.auth !== false, opts.json !== false), ...(opts.headers || {}) },
-      body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
-    });
-    if (!res.ok) {
-      let msg = 'HTTP ' + res.status;
-      try {
-        const j = await res.json();
-        msg = j.msg || j.message || j.error_description || j.error || msg;
-      } catch (e) { /* non-json */ }
-      throw new Error(msg);
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), opts.timeout || TIMEOUT);
+    try {
+      const res = await fetch(cfg.url + path, {
+        method: opts.method || 'GET',
+        headers: { ...hdr(opts.auth !== false, opts.json !== false), ...(opts.headers || {}) },
+        body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
+        signal: ctl.signal,
+      });
+      if (!res.ok) {
+        let msg = 'HTTP ' + res.status;
+        try {
+          const j = await res.json();
+          msg = j.msg || j.message || j.error_description || j.error || msg;
+        } catch (e) { if (e.name === 'AbortError') throw e; /* else non-json */ }
+        throw new Error(msg);
+      }
+      if (res.status === 204) return null;
+      const ct = res.headers.get('content-type') || '';
+      return await (ct.includes('json') ? res.json() : res.text());
+    } catch (e) {
+      if (e.name === 'AbortError') throw new TypeError('Failed to fetch (timed out)');
+      throw e;
+    } finally {
+      clearTimeout(timer);
     }
-    if (res.status === 204) return null;
-    const ct = res.headers.get('content-type') || '';
-    return ct.includes('json') ? res.json() : res.text();
   }
 
   const PKEY = KEY + '.profile';   // last profile the server gave us, so the installed app still opens offline
@@ -52,6 +66,7 @@ window.SB = (function () {
   }
 
   /* ---------- session lifecycle ---------- */
+  const BOOT_TIMEOUT = 8000;   // the launch screen waits on these two calls: keep them short
   async function init() {
     if (!configured) return false;
     load();
@@ -59,7 +74,7 @@ window.SB = (function () {
     if (session.expires_at && session.expires_at < Date.now() + 60000) {
       try {
         const r = await req('/auth/v1/token?grant_type=refresh_token', {
-          method: 'POST', auth: false,
+          method: 'POST', auth: false, timeout: BOOT_TIMEOUT,
           body: { refresh_token: session.refresh_token },
         });
         session = { access_token: r.access_token, refresh_token: r.refresh_token, expires_at: Date.now() + r.expires_in * 1000, user: r.user };
@@ -73,12 +88,12 @@ window.SB = (function () {
         }
       }
     }
-    return !!(await refreshProfile());
+    return !!(await refreshProfile(BOOT_TIMEOUT));
   }
 
-  async function refreshProfile() {
+  async function refreshProfile(timeout) {
     try {
-      profile = (await req('/rest/v1/profiles?id=eq.' + session.user.id + '&select=*'))[0] || null;
+      profile = (await req('/rest/v1/profiles?id=eq.' + session.user.id + '&select=*', { timeout }))[0] || null;
       save();
     } catch (e) { /* offline blip: keep what we have */ }
     return profile;
