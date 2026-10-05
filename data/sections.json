@@ -6,39 +6,7 @@
       "nameAr": "الباطنة العامة",
       "icon": "🩺",
       "file": "data/questions/Medicine.json",
-      "count": 1141
-    },
-    {
-      "id": "cardiology",
-      "name": "Cardiology",
-      "nameAr": "القلب",
-      "icon": "🫀",
-      "file": "data/questions/Cardiology.json",
-      "count": 247
-    },
-    {
-      "id": "pulmonology",
-      "name": "Pulmonology",
-      "nameAr": "الصدر والتنفس",
-      "icon": "🫁",
-      "file": "data/questions/Pulmonology.json",
-      "count": 134
-    },
-    {
-      "id": "neurology",
-      "name": "Neurology",
-      "nameAr": "الأعصاب",
-      "icon": "🧠",
-      "file": "data/questions/Neurology.json",
-      "count": 204
-    },
-    {
-      "id": "surgery",
-      "name": "Surgery",
-      "nameAr": "الجراحة",
-      "icon": "🩹",
-      "file": "data/questions/Surgery.json",
-      "count": 257
+      "count": 20
     },
     {
       "id": "pediatrics",
@@ -46,7 +14,15 @@
       "nameAr": "الأطفال",
       "icon": "🧒",
       "file": "data/questions/Pediatrics.json",
-      "count": 531
+      "count": 20
+    },
+    {
+      "id": "surgery",
+      "name": "Surgery",
+      "nameAr": "الجراحة",
+      "icon": "🩹",
+      "file": "data/questions/Surgery.json",
+      "count": 20
     },
     {
       "id": "obgyn",
@@ -54,95 +30,7 @@
       "nameAr": "النساء والتوليد",
       "icon": "🤰",
       "file": "data/questions/OBGYN.json",
-      "count": 432
-    },
-    {
-      "id": "psychiatry",
-      "name": "Psychiatry",
-      "nameAr": "الطب النفسي",
-      "icon": "🧩",
-      "file": "data/questions/Psychiatry.json",
-      "count": 452
-    },
-    {
-      "id": "infectious-diseases",
-      "name": "Infectious Diseases",
-      "nameAr": "الأمراض المعدية",
-      "icon": "🦠",
-      "file": "data/questions/infectious_diseases_questions.min.json",
-      "count": 167
-    },
-    {
-      "id": "endocrinology",
-      "name": "Endocrinology",
-      "nameAr": "الغدد الصماء",
-      "icon": "🧪",
-      "file": "data/questions/Endocrinology.json",
-      "count": 153
-    },
-    {
-      "id": "gastroenterology",
-      "name": "Gastroenterology",
-      "nameAr": "الجهاز الهضمي",
-      "icon": "🍽️",
-      "file": "data/questions/Gastroenterology.json",
-      "count": 151
-    },
-    {
-      "id": "nephrology",
-      "name": "Nephrology",
-      "nameAr": "الكلى",
-      "icon": "💧",
-      "file": "data/questions/Nephrology.json",
-      "count": 93
-    },
-    {
-      "id": "rheumatology",
-      "name": "Rheumatology",
-      "nameAr": "الروماتيزم",
-      "icon": "🦴",
-      "file": "data/questions/Rheumatology.json",
-      "count": 118
-    },
-    {
-      "id": "dermatology",
-      "name": "Dermatology",
-      "nameAr": "الجلدية",
-      "icon": "🧴",
-      "file": "data/questions/Dermatology.json",
-      "count": 129
-    },
-    {
-      "id": "oncology",
-      "name": "Oncology",
-      "nameAr": "الأورام",
-      "icon": "🎗️",
-      "file": "data/questions/Oncology.json",
-      "count": 139
-    },
-    {
-      "id": "ophthalmology",
-      "name": "Ophthalmology",
-      "nameAr": "العيون",
-      "icon": "👁️",
-      "file": "data/questions/Ophthalmology.json",
-      "count": 54
-    },
-    {
-      "id": "family-medicine",
-      "name": "Family Medicine",
-      "nameAr": "طب الأسرة",
-      "icon": "👨‍👩‍👧",
-      "file": "data/questions/family_medicine_questions.min.json",
-      "count": 402
-    },
-    {
-      "id": "pmch",
-      "name": "PMCH",
-      "nameAr": "المجتمع والوقاية",
-      "icon": "🛡️",
-      "file": "data/questions/PMCH.json",
-      "count": 289
+      "count": 20
     }
   ]
 }

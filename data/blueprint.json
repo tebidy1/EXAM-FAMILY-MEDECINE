@@ -1,53 +1,27 @@
 {
   "exam": {
-    "code": "OEEM",
-    "name": "OEEM Full Simulation",
-    "nameAr": "محاكاة الاختبار العماني لطب الطوارئ",
-    "authority": "Oman Medical Specialty Board (OMSB)",
-    "source": "OEEM Booklet, February 2024",
-    "questions": 100,
-    "minutes": 150,
-    "format": "100 single best answer MCQs · 2h30m · Pearson VUE",
-    "note": "Blueprint distributions may differ up to +/-5% in each category"
+    "code": "SIM",
+    "name": "Full Simulation",
+    "nameAr": "محاكاة الاختبار",
+    "authority": "",
+    "source": "sample",
+    "questions": 20,
+    "minutes": 30,
+    "format": "20 single best answer MCQs · 30m",
+    "note": "Sample blueprint — replaced with the real one"
   },
   "milestoneTests": [
-    { "id": 1,  "unlockAt": 500,  "size": 50, "minutes": 75, "mix": { "covered": 0.75, "fresh": 0.25 } },
-    { "id": 2,  "unlockAt": 800,  "size": 50, "minutes": 75, "mix": { "covered": 0.75, "fresh": 0.25 } },
-    { "id": 3,  "unlockAt": 1100, "size": 50, "minutes": 75, "mix": { "covered": 0.75, "fresh": 0.25 } },
-    { "id": 4,  "unlockAt": 1400, "size": 50, "minutes": 75, "mix": { "covered": 0.75, "fresh": 0.25 } },
-    { "id": 5,  "unlockAt": 1700, "size": 50, "minutes": 75, "mix": { "covered": 0.75, "fresh": 0.25 } },
-    { "id": 6,  "unlockAt": 2000, "size": 50, "minutes": 75, "mix": { "covered": 0.75, "fresh": 0.25 } },
-    { "id": 7,  "unlockAt": 2300, "size": 50, "minutes": 75, "mix": { "covered": 0.75, "fresh": 0.25 } },
-    { "id": 8,  "unlockAt": 2600, "size": 50, "minutes": 75, "mix": { "covered": 0.75, "fresh": 0.25 } },
-    { "id": 9,  "unlockAt": 2900, "size": 50, "minutes": 75, "mix": { "covered": 0.75, "fresh": 0.25 } },
-    { "id": 10, "unlockAt": 3200, "size": 50, "minutes": 75, "mix": { "covered": 0.75, "fresh": 0.25 } }
+    { "id": 1, "unlockAt": 20, "size": 10, "minutes": 15, "mix": { "covered": 0.75, "fresh": 0.25 } },
+    { "id": 2, "unlockAt": 40, "size": 10, "minutes": 15, "mix": { "covered": 0.75, "fresh": 0.25 } },
+    { "id": 3, "unlockAt": 60, "size": 10, "minutes": 15, "mix": { "covered": 0.75, "fresh": 0.25 } }
   ],
   "simulations": [
-    { "id": 1, "unlockAtCoverage": 0.80, "size": 100, "minutes": 150, "seed": "oeem-sim-1-v1" },
-    { "id": 2, "unlockAtCoverage": 0.90, "size": 100, "minutes": 150, "seed": "oeem-sim-2-v1" },
-    { "id": 3, "unlockAtCoverage": 0.98, "size": 100, "minutes": 150, "seed": "oeem-sim-3-v1" }
+    { "id": 1, "unlockAtCoverage": 0.80, "size": 20, "minutes": 30, "seed": "saudi-sim-1-v1" }
   ],
   "domains": [
-    { "name": "Pediatrics",                                   "weight": 10, "sections": ["pediatrics"] },
-    { "name": "Resuscitation",                                "weight": 10, "sections": ["cardiology", "medicine"] },
-    { "name": "Cardiology",                                   "weight": 8,  "sections": ["cardiology"] },
-    { "name": "Trauma",                                       "weight": 7,  "sections": ["surgery"] },
-    { "name": "Toxicology",                                   "weight": 6,  "sections": ["medicine"] },
-    { "name": "Endocrinology/metabolic",                      "weight": 4,  "sections": ["endocrinology"] },
-    { "name": "Environment",                                  "weight": 4,  "sections": ["medicine"] },
-    { "name": "Administration, ethics, practice & research",  "weight": 4,  "sections": ["pmch"] },
-    { "name": "Gynecology",                                   "weight": 4,  "sections": ["obgyn"] },
-    { "name": "Infectious disease",                           "weight": 4,  "sections": ["infectious-diseases"] },
-    { "name": "Neurology",                                    "weight": 4,  "sections": ["neurology"] },
-    { "name": "Orthopedics",                                  "weight": 4,  "sections": ["surgery", "rheumatology"] },
-    { "name": "Respiratory",                                  "weight": 4,  "sections": ["pulmonology"] },
-    { "name": "Special population",                           "weight": 4,  "sections": ["pediatrics", "obgyn"] },
-    { "name": "Gastrointestinal",                             "weight": 3,  "sections": ["gastroenterology"] },
-    { "name": "Hematopathology/oncology/immunology",          "weight": 3,  "sections": ["oncology", "medicine"] },
-    { "name": "Nephrology/urology",                           "weight": 3,  "sections": ["nephrology"] },
-    { "name": "Surgery/plastic",                              "weight": 3,  "sections": ["surgery"] },
-    { "name": "Dental/ENT/ophthalmology/dermatology",         "weight": 7,  "sections": ["dermatology", "ophthalmology"] },
-    { "name": "EMS, disaster",                                "weight": 2,  "sections": ["pmch"] },
-    { "name": "Psychiatry",                                   "weight": 2,  "sections": ["psychiatry"] }
+    { "name": "Medicine",   "weight": 25, "sections": ["medicine"] },
+    { "name": "Pediatrics", "weight": 25, "sections": ["pediatrics"] },
+    { "name": "Surgery",    "weight": 25, "sections": ["surgery"] },
+    { "name": "OBGYN",      "weight": 25, "sections": ["obgyn"] }
   ]
 }

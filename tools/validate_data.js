@@ -59,6 +59,8 @@ for (const s of sections) {
   }
   if (!Array.isArray(questions)) { fail(`${s.file}: expected an array of questions`); continue; }
   if (questions.length === 0) warnMsg(`${s.file}: section "${s.id}" has 0 questions`);
+  // the admin page and the practice list quote this number without opening the file
+  if (s.count !== questions.length) fail(`${s.file}: sections.json says ${s.count}, file has ${questions.length}`);
   let noAnswer = 0;
 
   questions.forEach((raw, i) => {
@@ -118,6 +120,24 @@ for (const s of sections) {
   });
 
   console.log(`  ${String(s.id).padEnd(22)} ${String(questions.length).padStart(4)} questions · ${questions.length - noAnswer} scored · ${noAnswer} self-scored`);
+}
+
+// ---- blueprint: the exam ladder must be buildable from this bank ----
+const bpPath = path.join(DATA_ROOT, 'blueprint.json');
+if (fs.existsSync(bpPath)) {
+  let bp = null;
+  try { bp = JSON.parse(fs.readFileSync(bpPath, 'utf8')); } catch (e) { fail(`data/blueprint.json: invalid JSON (${e.message})`); }
+  if (bp) {
+    (bp.domains || []).forEach((d) => (d.sections || []).forEach((id) => {
+      if (!sectionIds.has(id)) fail(`data/blueprint.json: domain "${d.name}" names section "${id}", which is not in sections.json`);
+    }));
+    const tooBig = (what, size) => { if (size > scored) fail(`data/blueprint.json: ${what} asks for ${size} questions, the bank has ${scored} scored`); };
+    if (bp.exam) tooBig('exam.questions', bp.exam.questions);
+    (bp.milestoneTests || []).forEach((m) => tooBig(`milestone ${m.id}`, m.size));
+    (bp.simulations || []).forEach((x) => tooBig(`simulation ${x.id}`, x.size));
+  }
+} else {
+  warnMsg('data/blueprint.json is missing — the Exams tab will have no simulations');
 }
 
 console.log(`\nSections: ${sections.length}   Questions: ${total}   Scored: ${scored}   Self-scored: ${selfScored}`);
