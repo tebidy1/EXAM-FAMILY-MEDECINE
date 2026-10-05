@@ -11,6 +11,6 @@
       (no accounts, current behavior).
    ============================================================ */
 window.SB_CONFIG = {
-  url: 'https://ddqvtbvvxlqjahdhmfup.supabase.co',
-  anonKey: 'sb_publishable_v5bgWod50z4mi3EHD43dfg_i3hOWN4m',
+  url: '',
+  anonKey: '',
 };

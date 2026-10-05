@@ -32,3 +32,6 @@ promo/
 
 # ---- deploy upload config: short-lived Hostinger auth keys, never committed ----
 tools/.deploy-upload.json
+
+# ---- plan-execution scratch ----
+.superpowers/
