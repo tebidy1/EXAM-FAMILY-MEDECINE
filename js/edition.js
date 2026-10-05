@@ -1,8 +1,8 @@
 /* ============================================================
    Edition — everything that names the country, in one place.
 
-   The engine (app.js, admin.js) is shared with the Oman repository and
-   merged from it; this file is what makes this copy the Saudi one.
+   The engine (app.js, admin.js) is shared with the upstream repository
+   and merged from it; this file is what makes this copy the Saudi one.
    Four static files cannot read it and repeat the name by hand:
    index.html, admin.html, manifest.json, get/index.html.
    tools/check_edition.js fails when they disagree with it.

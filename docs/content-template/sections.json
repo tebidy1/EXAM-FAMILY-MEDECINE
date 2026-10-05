@@ -1,0 +1,12 @@
+{
+  "sections": [
+    {
+      "id": "example-subject",
+      "name": "Example Subject",
+      "nameAr": "مادة مثال",
+      "icon": "📘",
+      "file": "data/questions/ExampleSubject.json",
+      "count": 2
+    }
+  ]
+}

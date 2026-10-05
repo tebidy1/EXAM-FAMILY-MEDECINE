@@ -1,0 +1,31 @@
+[
+  {
+    "id": 1001,
+    "subject": "Example Subject",
+    "topic": "First topic",
+    "question": "نص السؤال الأول يُكتب هنا كاملاً.",
+    "options": {
+      "A": "الخيار الأول",
+      "B": "الخيار الثاني",
+      "C": "الخيار الثالث",
+      "D": "الخيار الرابع"
+    },
+    "correct_answer": "B",
+    "explanation": "الشرح: لماذا الخيار B صحيح، ولماذا بقية الخيارات خاطئة."
+  },
+  {
+    "id": 1002,
+    "subject": "Example Subject",
+    "topic": "Second topic",
+    "question": "Question text can be in English too.\nA second line is written with \\n.",
+    "options": {
+      "A": "First option",
+      "B": "Second option",
+      "C": "Third option",
+      "D": "Fourth option",
+      "E": "Fifth option"
+    },
+    "correct_answer": "E",
+    "explanation": "The explanation shown right after the answer."
+  }
+]

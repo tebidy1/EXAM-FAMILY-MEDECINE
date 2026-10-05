@@ -1,0 +1,22 @@
+{
+  "exam": {
+    "code": "EXAM",
+    "name": "Full Simulation",
+    "nameAr": "محاكاة الاختبار",
+    "authority": "",
+    "source": "",
+    "questions": 2,
+    "minutes": 3,
+    "format": "2 single best answer MCQs · 3m",
+    "note": ""
+  },
+  "milestoneTests": [
+    { "id": 1, "unlockAt": 1, "size": 2, "minutes": 3, "mix": { "covered": 0.75, "fresh": 0.25 } }
+  ],
+  "simulations": [
+    { "id": 1, "unlockAtCoverage": 0.80, "size": 2, "minutes": 3, "seed": "example-sim-1-v1" }
+  ],
+  "domains": [
+    { "name": "Example domain", "weight": 100, "sections": ["example-subject"] }
+  ]
+}
