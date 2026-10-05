@@ -801,7 +801,8 @@ kbd {
 .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
 .stat-num { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 .stat-label { font-size: 13px; color: var(--text-2); }
-.bars { display: flex; align-items: flex-end; gap: 6px; height: 92px; }
+.bars { display: flex; align-items: flex-end; gap: 6px; height: 92px; overflow-x: auto; scrollbar-width: none; }
+.bars::-webkit-scrollbar { display: none; }
 .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; font-size: 11px; color: var(--text-3); }
 .bar { width: 100%; max-width: 22px; min-height: 2px; background: var(--primary); border-radius: 4px 4px 0 0; }
 .req-card { gap: 14px; margin-bottom: 10px; }
@@ -827,10 +828,33 @@ kbd {
 }
 .seg-btn.active { background: var(--primary); color: var(--on-primary); border-color: transparent; }
 .hbar-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
-.hbar-label { flex: none; width: 150px; font-size: 13.5px; color: var(--text-2); }
-.hbar-track { flex: 1; height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+/* phone first: the label takes what is left, the track is a fixed yardstick so
+   bars stay comparable between rows */
+/* the admin page is LTR (English tabs, numbers); Arabic sentences inside it need
+   their own direction or the punctuation jumps to the wrong end */
+.hbar-label, .stat-label, .legend span, .hist-meta, .bidi { unicode-bidi: plaintext; }
+.hbar-label { flex: 1; min-width: 0; font-size: 13.5px; color: var(--text-2); }
+.hbar-track { flex: none; width: 84px; height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
 .hbar-fill { height: 100%; border-radius: 99px; background: var(--primary); transition: width .4s ease; }
-.hbar-num { flex: none; width: 56px; text-align: end; font-size: 13.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.hbar-num { flex: none; width: 72px; text-align: end; font-size: 13.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.hbar-num small { font-weight: 400; color: var(--text-3); }
+/* a report you can walk: every figure opens the list behind it */
+.hbar-row.click { cursor: pointer; border-radius: 10px; padding: 8px; margin: 0 -8px; }
+.stat-card.click, .bar-col.click { cursor: pointer; }
+@media (hover: hover) {
+  .hbar-row.click:hover, .stat-card.click:hover { background: var(--surface-2); }
+  .bar-col.click:hover .bar { opacity: .75; }
+}
+.bar-pair { display: flex; align-items: flex-end; justify-content: center; gap: 2px; width: 100%; }
+.bar-pair .bar { width: 50%; max-width: 9px; }
+/* 30 days of paired bars have to fit a phone: tighten the gaps instead of scrolling */
+.bars.dense { gap: 2px; }
+.bars.dense .bar-pair { gap: 1px; }
+.bars.dense .bar-col { font-size: 10px; }
+.bar.alt { background: var(--correct); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--text-2); margin-top: 10px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; background: var(--primary); margin: 0 5px; }
+.legend i.alt { background: var(--correct); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
@@ -855,6 +879,8 @@ kbd {
   .auth-hero { padding: 8px 20px 44px; width: min(460px, 100%); }
   .auth-card { flex: none; width: min(460px, 100%); border-radius: 24px; padding: 28px; }
   .intro-copy { min-height: 200px; }   /* the card no longer fills the screen: keep the buttons from jumping between slides */
+  .hbar-label { flex: none; width: 170px; }
+  .hbar-track { flex: 1; width: auto; }
 }
 
 @media (min-width: 768px) {

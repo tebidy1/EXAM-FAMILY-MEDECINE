@@ -25,6 +25,8 @@ let promoRedCache = [];
 let rejectingId = null;            // request whose reject reasons are open
 const receiptUrls = new Map();     // receipt_path -> { url, type } once fetched from the private bucket
 let drillId = null;
+let anDrill = null;                // analytics: { kind, key } of the figure we drilled into
+let drillFrom = null;              // where a doctor card was opened from, so "back" returns there
 
 /* ---------------- boot ---------------- */
 (async function boot() {
@@ -137,7 +139,7 @@ function shell(inner) {
     </div>`;
 }
 
-function switchTab(t) { adminTab = t; drillId = null; rejectingId = null; render(); }
+function switchTab(t) { adminTab = t; drillId = null; rejectingId = null; anDrill = null; drillFrom = null; render(); }
 
 /* ---------------- overview ---------------- */
 function renderOverview() {
@@ -232,7 +234,11 @@ async function openDrill(id) {
 }
 let drillData = null;
 
-function closeDrill() { drillId = null; drillData = null; render(); }
+function closeDrill() {
+  drillId = null; drillData = null;
+  if (drillFrom) { adminTab = drillFrom.tab; anDrill = drillFrom.anDrill; drillFrom = null; }
+  render();
+}
 
 function renderDrill() {
   const u = usersCache.find((x) => x.id === drillId);
@@ -270,7 +276,7 @@ function renderDrill() {
     weak = '<div class="card"><div class="card-meta">…loading</div></div>';
   }
   return `
-    <button class="back-link" onclick="closeDrill()">← All doctors</button>
+    <button class="back-link" onclick="closeDrill()">${drillFrom ? '← رجوع إلى التقرير' : '← All doctors'}</button>
     <div class="sec-hero">
       <div class="card-icon big">👨‍⚕️</div>
       <div>
@@ -440,19 +446,52 @@ async function savePayment() {
   }
 }
 
-/* ---------------- analytics: paid vs bonus, coupons, referrals, revenue ---------------- */
-/* Answers "how is the app really being used": for every doctor, whether their
-   access is paid (receipt), free (code/manual), or still trial/pending/rejected;
-   how each coupon performs and whether its redeemers go on to pay; how referrals
-   convert; and where every bonus question ever granted came from (public.events
-   already logs code_redeemed / receipt_submitted / promo_redeemed / referral_*). */
+/* ---------------- analytics: who pays, who is free, and why ---------------- */
+/* Walkable three levels deep: every figure opens the list behind it (anOpen),
+   and every person in that list opens their doctor card (anDoctor, which comes
+   back here). Built from what the admin already loads — profiles, access_requests,
+   promo_codes/redemptions and public.events (code_redeemed / receipt_submitted /
+   promo_redeemed / referral_signup / referral_paid). */
 const AN_RANGES = [[7, '7 أيام'], [30, '30 يوماً'], [90, '90 يوماً'], [0, 'الكل']];
+const SOURCE_ORDER = ['trial', 'pending', 'paid_full', 'paid_part', 'code', 'manual', 'rejected'];
 const SOURCE_LABEL = {
   trial: 'تجربة مجانية', pending: 'بانتظار المراجعة',
   paid_full: 'مدفوع — اشتراك كامل', paid_part: 'مدفوع — بالأجزاء',
   code: 'رمز وصول مجاني', manual: 'تفعيل يدوي بلا إيصال', rejected: 'مرفوض',
 };
+const SOURCE_WHY = {
+  trial: 'ما زالوا داخل الأسئلة المجانية ولم يرسلوا إيصالاً',
+  pending: 'أرسلوا إيصالاً ينتظر مراجعتك الآن',
+  paid_full: 'إيصال اشتراك كامل مقبول — بيع حقيقي',
+  paid_part: 'إيصال جزء مقبول — بيع حقيقي لم يكتمل بعد',
+  code: 'دخلوا برمز من تبويب Codes — وصول مجاني، ليس بيعاً',
+  manual: 'فعّلتَ حسابهم يدوياً بلا إيصال ولا رمز',
+  rejected: 'رُفض إيصالهم ولم يرسلوا بديلاً',
+};
+const EVENT_LABEL = {
+  promo_redeemed: 'استخدم بروموكود',
+  referral_signup: 'مكافأة دعوة — انضم صديق',
+  referral_paid: 'مكافأة دعوة — اشترك صديق',
+  code_redeemed: 'استخدم رمز وصول',
+  receipt_submitted: 'أرسل إيصالاً',
+};
+const BONUS_KINDS = ['promo_redeemed', 'referral_signup', 'referral_paid'];
+const REALLY_PAID = new Set(['paid_full', 'paid_part']);   // a receipt was accepted; a free code is not a sale
 const priceNum = (s) => parseFloat(String(s || '').match(/[\d.]+/)?.[0] || 0) || 0;
+const dayStr = (ts) => new Date(ts).toLocaleDateString();
+const timeStr = (ts) => new Date(ts).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+// Arabic noun agreement after a written digit: only 3-10 (by the last two digits)
+// takes the plural — "2 إيصال", "7 أطباء", "500 سؤال"
+const arN = (n, one, few) => ((n % 100) >= 3 && (n % 100) <= 10 ? few : one);
+const arDoc = (n) => `${n} ${arN(n, 'طبيب', 'أطباء')}`;
+const arRec = (n) => `${n} ${arN(n, 'إيصال', 'إيصالات')}`;
+const arQ = (n) => `${n} ${arN(n, 'سؤال', 'أسئلة')}`;
+const arAcc = (n) => `${n} ${arN(n, 'حساب', 'حسابات')}`;
+const arInv = (n) => `${n} ${arN(n, 'دعوة', 'دعوات')}`;
+const anRangeLabel = () => {
+  const r = window._anRange ?? 30;
+  return r ? AN_RANGES.find(([v]) => v === r)[1] : 'كل الفترات';
+};
 
 // why a doctor currently has (or doesn't have) access: a real receipt, a free code,
 // an admin's manual override, or still trial/pending/rejected
@@ -467,101 +506,319 @@ function sourceOf(u, reqByUser) {
   return 'trial';
 }
 
-function setAnRange(n) { window._anRange = n; render(); }
-
-function hbar(label, n, max) {
-  const pct = max ? Math.round((n / max) * 100) : 0;
-  return `<div class="hbar-row"><span class="hbar-label">${esc(label)}</span>
-    <div class="hbar-track"><div class="hbar-fill" style="width:${pct}%"></div></div>
-    <span class="hbar-num">${n}</span></div>`;
-}
-
-function renderAnalytics() {
+// everything both the dashboard and its drill-downs read, computed once
+function anModel() {
   const range = window._anRange ?? 30;
   const cutoff = range ? Date.now() - range * 864e5 : 0;
+  const inRange = (ts) => new Date(ts).getTime() >= cutoff;
   const doctors = usersCache.filter((u) => u.role !== 'admin');
+  const allById = new Map(usersCache.map((u) => [u.id, u]));
 
   const reqByUser = new Map();
   requestsCache.forEach((r) => { const a = reqByUser.get(r.user_id) || []; a.push(r); reqByUser.set(r.user_id, a); });
   const srcByUser = new Map();
   const counts = {};
   doctors.forEach((u) => { const s = sourceOf(u, reqByUser); srcByUser.set(u.id, s); counts[s] = (counts[s] || 0) + 1; });
-  const total = doctors.length || 1;
 
-  const signupsInRange = doctors.filter((u) => new Date(u.created_at).getTime() >= cutoff).length;
-  const reqsInRange = requestsCache.filter((r) => new Date(r.created_at).getTime() >= cutoff);
-  const approvedInRange = reqsInRange.filter((r) => r.status === 'approved');
-  const rejectedInRange = reqsInRange.filter((r) => r.status === 'rejected');
-  const revenue = approvedInRange.reduce((a, r) => a + (r.plan === 'part' ? priceNum(payCache.part_price) : priceNum(payCache.price)), 0);
-  const reviewed = approvedInRange.length + rejectedInRange.length;
-  const approvalRate = reviewed ? Math.round((approvedInRange.length / reviewed) * 100) : 0;
-  const avgCoveredAtRequest = reqsInRange.length ? Math.round(reqsInRange.reduce((a, r) => a + (r.covered || 0), 0) / reqsInRange.length) : 0;
+  const amountOf = (r) => (r.plan === 'part' ? priceNum(payCache.part_price) : priceNum(payCache.price));
+  const reqs = requestsCache.filter((r) => inRange(r.created_at));
+  const approved = reqs.filter((r) => r.status === 'approved');
+  const rejected = reqs.filter((r) => r.status === 'rejected');
+  const pending = requestsCache.filter((r) => r.status === 'pending');   // they are waiting now, whatever the period
+  const revenue = approved.reduce((a, r) => a + amountOf(r), 0);
+  const cohort = doctors.filter((u) => inRange(u.created_at));
+  const cohortPaid = cohort.filter((u) => REALLY_PAID.has(srcByUser.get(u.id)));
+  const events = eventsCache.filter((e) => inRange(e.ts));
 
-  const PAID = new Set(['paid_full', 'paid_part', 'code', 'manual']);
+  const bonus = {};
+  events.forEach((e) => { if (BONUS_KINDS.includes(e.name)) bonus[e.name] = (bonus[e.name] || 0) + ((e.meta && e.meta.reward) || 0); });
+
+  // one bar per day for short periods, per week for long ones
+  const unitDays = range && range <= 30 ? 1 : 7;
+  const span = range === 7 ? 7 : range === 30 ? 30 : 13;
+  const midnight = new Date(); midnight.setHours(0, 0, 0, 0);
+  const series = [];
+  for (let i = span - 1; i >= 0; i--) {
+    const to = midnight.getTime() + 864e5 - i * unitDays * 864e5;
+    const from = to - unitDays * 864e5;
+    const hit = (ts) => { const t = new Date(ts).getTime(); return t > from && t <= to; };
+    const paidHere = approved.filter((r) => hit(r.reviewed_at || r.created_at));
+    const d = new Date(from);
+    series.push({
+      from, to,
+      signups: doctors.filter((u) => hit(u.created_at)).length,
+      paid: paidHere.length,
+      revenue: paidHere.reduce((a, r) => a + amountOf(r), 0),
+      // short labels only — a date string per column makes the chart wider than a phone;
+      // the full date is in the column's tooltip and in its drill-down
+      label: span <= 14 || i % 5 === 0 ? String(d.getDate()) : '',
+      title: unitDays === 1 ? dayStr(from) : 'أسبوع ' + dayStr(from),
+    });
+  }
+
+  return { range, inRange, doctors, allById, srcByUser, counts, amountOf, reqs, approved, rejected, pending, revenue, cohort, cohortPaid, events, bonus, series };
+}
+
+function setAnRange(n) { window._anRange = n; anDrill = null; render(); }
+function anOpen(kind, key) { anDrill = { kind, key: key === undefined ? null : String(key) }; render(); window.scrollTo(0, 0); }
+function anBack() { anDrill = null; render(); }
+// open a doctor's card and remember to come back to this exact report view
+function anDoctor(id) { drillFrom = { tab: 'analytics', anDrill }; adminTab = 'doctors'; openDrill(id); }
+
+function hbar(label, n, max, click) {
+  const pct = max ? Math.round((n / max) * 100) : 0;
+  return `<div class="hbar-row${click ? ' click' : ''}"${click ? ` onclick="${click}"` : ''}>
+    <span class="hbar-label">${esc(label)}</span>
+    <div class="hbar-track"><div class="hbar-fill" style="width:${pct}%"></div></div>
+    <span class="hbar-num">${n} <small>${pct}%</small></span></div>`;
+}
+
+const anCard = (num, label, click) => `<div class="stat-card${click ? ' click' : ''}"${click ? ` onclick="${click}"` : ''}>
+  <div class="stat-num">${num}</div><div class="stat-label">${label}</div></div>`;
+
+// one clickable person row; `meta` is already-escaped html
+const anDocRow = (u, meta) => (u
+  ? `<div class="hist-row" style="cursor:pointer" onclick="anDoctor('${u.id}')">
+      <span class="hist-title">${esc(u.name || u.email || '—')}${statusChip(u)}<br>
+        <span class="hist-meta" style="font-weight:400">${esc(u.email || '')}</span></span>
+      <span class="hist-meta">${meta}</span></div>`
+  : `<div class="hist-row"><span class="hist-title">حساب محذوف</span><span class="hist-meta">${meta}</span></div>`);
+
+const anEmpty = (t) => `<div class="card"><div class="card-meta bidi">${esc(t)}</div></div>`;
+
+function renderAnalytics() {
+  const m = anModel();
+  if (anDrill) return renderAnDrill(m);
+  const rl = anRangeLabel();
+  const total = m.doctors.length || 1;
+  const maxBar = Math.max(1, ...m.series.map((s) => Math.max(s.signups, s.paid)));
+  const reviewed = m.approved.length + m.rejected.length;
+  const approvalRate = reviewed ? Math.round((m.approved.length / reviewed) * 100) : 0;
+  const convRate = m.cohort.length ? Math.round((m.cohortPaid.length / m.cohort.length) * 100) : 0;
+  const avgCovered = m.reqs.length ? Math.round(m.reqs.reduce((a, r) => a + (r.covered || 0), 0) / m.reqs.length) : 0;
+  const grantedTotal = BONUS_KINDS.reduce((a, k) => a + (m.bonus[k] || 0), 0);
+  const heldNow = m.doctors.reduce((a, u) => a + (u.bonus_questions || 0), 0);
+
   const promoRows = promosCache.map((c) => {
     const reds = promoRedCache.filter((r) => r.promo_id === c.id);
     const granted = reds.length ? reds.reduce((a, r) => a + (r.reward || 0), 0) : c.uses * (c.reward_questions || 0);
-    const converted = reds.filter((r) => PAID.has(srcByUser.get(r.user_id))).length;
-    return `<div class="hist-row">
+    const paid = reds.filter((r) => REALLY_PAID.has(m.srcByUser.get(r.user_id))).length;
+    return `<div class="hist-row" style="cursor:pointer" onclick="anOpen('promo','${c.id}')">
       <span class="hist-title"><code style="font-size:14px;letter-spacing:.06em">${esc(c.code)}</code>
         ${c.label ? `<span class="hist-meta">${esc(c.label)}</span>` : ''}${c.active ? '' : ' · <b style="color:var(--wrong)">ملغى</b>'}</span>
-      <span class="hist-meta">${c.uses}/${c.max_uses} استخدام · ${granted} سؤال مُنح · ${converted}/${reds.length || c.uses} دفعوا بعدها</span>
+      <span class="hist-meta">${c.uses}/${c.max_uses} استخدام · ${arQ(granted)} مُنح · ${paid} دفعوا بعده</span>
     </div>`;
-  }).join('') || '<div class="card"><div class="card-meta">لا رموز دعائية بعد.</div></div>';
+  }).join('') || anEmpty('لا رموز دعائية بعد — أنشئ واحداً من تبويب Growth.');
 
-  const totalReferrals = doctors.reduce((a, u) => a + (u.referrals || 0), 0);
-  const totalReferralsPaid = doctors.reduce((a, u) => a + (u.referrals_paid || 0), 0);
-  const topReferrers = doctors.filter((u) => (u.referrals || 0) > 0)
+  const totalReferrals = m.doctors.reduce((a, u) => a + (u.referrals || 0), 0);
+  const totalReferralsPaid = m.doctors.reduce((a, u) => a + (u.referrals_paid || 0), 0);
+  const referrerRows = m.doctors.filter((u) => (u.referrals || 0) > 0)
     .sort((a, b) => (b.referrals_paid - a.referrals_paid) || (b.referrals - a.referrals)).slice(0, 8)
-    .map((u) => `<div class="hist-row">
+    .map((u) => `<div class="hist-row" style="cursor:pointer" onclick="anOpen('referrer','${u.id}')">
       <span class="hist-title">${esc(u.name || u.email)}</span>
-      <span class="hist-meta">${u.referrals} دعوة · ${u.referrals_paid} اشترك · رصيد ${u.bonus_questions || 0}</span>
-    </div>`).join('') || '<div class="card"><div class="card-meta">لا دعوات بعد.</div></div>';
+      <span class="hist-meta">${arInv(u.referrals)} · ${u.referrals_paid} اشترك · رصيده ${arQ(u.bonus_questions || 0)}</span>
+    </div>`).join('') || anEmpty('لا دعوات بعد.');
 
-  const bonusBySource = {};
-  eventsCache.forEach((e) => {
-    if (['promo_redeemed', 'referral_signup', 'referral_paid'].includes(e.name)) {
-      bonusBySource[e.name] = (bonusBySource[e.name] || 0) + ((e.meta && e.meta.reward) || 0);
-    }
-  });
-  const grantedEver = Object.values(bonusBySource).reduce((a, b) => a + b, 0);
-  const heldNow = doctors.reduce((a, u) => a + (u.bonus_questions || 0), 0);
+  const eventRows = m.events.slice(0, 10).map((e) => anDocRow(m.allById.get(e.user_id), anEventMeta(e)))
+    .join('') || anEmpty('لا أحداث في هذه الفترة.');
 
   return `
-    <div class="seg">${AN_RANGES.map(([v, l]) => `<button class="seg-btn ${range === v ? 'active' : ''}" onclick="setAnRange(${v})">${l}</button>`).join('')}</div>
+    <div class="seg">${AN_RANGES.map(([v, l]) => `<button class="seg-btn ${m.range === v ? 'active' : ''}" onclick="setAnRange(${v})">${l}</button>`).join('')}</div>
+    <div class="card-meta bidi" style="margin:-6px 0 12px">اضغط أي رقم أو سطر لرؤية مَن وراءه، ثم اضغط اسم الطبيب لفتح بطاقته.</div>
+
     <div class="overall" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
-      <div class="stat-card"><div class="stat-num">${signupsInRange}</div><div class="stat-label">تسجيلات جديدة</div></div>
-      <div class="stat-card"><div class="stat-num">${approvedInRange.length}</div><div class="stat-label">تحويلات مدفوعة</div></div>
-      <div class="stat-card"><div class="stat-num">${revenue}</div><div class="stat-label">عائد تقديري (ر.ع)</div></div>
-      <div class="stat-card"><div class="stat-num">${approvalRate}%</div><div class="stat-label">نسبة قبول الإيصالات</div></div>
-      <div class="stat-card"><div class="stat-num">${avgCoveredAtRequest}</div><div class="stat-label">متوسط الأسئلة عند الطلب</div></div>
+      ${anCard(m.cohort.length, 'تسجيلات جديدة', "anOpen('signups')")}
+      ${anCard(m.approved.length, 'اشتراكات مدفوعة', "anOpen('requests','approved')")}
+      ${anCard(m.revenue, 'عائد تقديري (ر.ع)', "anOpen('revenue')")}
+      ${anCard(convRate + '%', 'سجّلوا ثم دفعوا', "anOpen('cohort_paid')")}
+      ${anCard(approvalRate + '%', 'نسبة قبول الإيصالات', "anOpen('reviewed')")}
+      ${anCard(avgCovered, 'متوسط الأسئلة قبل الطلب', "anOpen('requests','all')")}
     </div>
 
     <div class="card">
-      <div class="section-heading" style="margin:0 0 6px"><h2>نوع دخول الأطباء الآن</h2><span>${doctors.length} طبيب · كل الفترات</span></div>
-      ${['trial', 'pending', 'paid_full', 'paid_part', 'code', 'manual', 'rejected'].map((k) => hbar(SOURCE_LABEL[k], counts[k] || 0, total)).join('')}
+      <div class="section-heading" style="margin:0 0 10px"><h2>الحركة</h2><span>${rl} · اضغط أي عمود</span></div>
+      <div class="bars${m.series.length > 7 ? ' dense' : ''}">${m.series.map((s, i) => `
+        <div class="bar-col click" title="${esc(s.title)}: ${s.signups} تسجيل، ${s.paid} اشتراك" onclick="anOpen('span',${i})">
+          <div class="bar-pair">
+            <div class="bar" style="height:${Math.round((s.signups / maxBar) * 64)}px"></div>
+            <div class="bar alt" style="height:${Math.round((s.paid / maxBar) * 64)}px"></div>
+          </div>
+          <span>${esc(s.label)}</span>
+        </div>`).join('')}</div>
+      <div class="legend"><span><i></i>تسجيلات جديدة</span><span><i class="alt"></i>اشتراكات مدفوعة</span></div>
     </div>
 
-    <div class="section-heading"><h2>الطلبات خلال الفترة</h2><span>${reqsInRange.length} طلب</span></div>
+    <div class="card">
+      <div class="section-heading" style="margin:0 0 6px"><h2>نوع دخول الأطباء الآن</h2><span>${arDoc(m.doctors.length)} · كل الفترات</span></div>
+      ${SOURCE_ORDER.map((k) => hbar(SOURCE_LABEL[k], m.counts[k] || 0, total, `anOpen('source','${k}')`)).join('')}
+    </div>
+
+    <div class="section-heading"><h2>الإيصالات</h2><span>${rl}</span></div>
     <div class="hist-list">
-      <div class="hist-row"><span class="hist-title">مقبولة <span class="status-chip approved">approved</span></span><span class="hist-meta">${approvedInRange.length} طلب</span></div>
-      <div class="hist-row"><span class="hist-title">مرفوضة <span class="status-chip rejected">rejected</span></span><span class="hist-meta">${rejectedInRange.length} طلب</span></div>
-      <div class="hist-row"><span class="hist-title">بانتظار المراجعة <span class="status-chip pending">pending</span></span><span class="hist-meta">${pendingRequests().length} طلب (كل الوقت)</span></div>
+      <div class="hist-row" style="cursor:pointer" onclick="anOpen('requests','approved')">
+        <span class="hist-title">مقبولة <span class="status-chip approved">approved</span></span>
+        <span class="hist-meta">${arRec(m.approved.length)} · ${m.revenue} ر.ع</span></div>
+      <div class="hist-row" style="cursor:pointer" onclick="anOpen('requests','rejected')">
+        <span class="hist-title">مرفوضة <span class="status-chip rejected">rejected</span></span>
+        <span class="hist-meta">${arRec(m.rejected.length)}</span></div>
+      <div class="hist-row" style="cursor:pointer" onclick="anOpen('requests','pending')">
+        <span class="hist-title">بانتظار المراجعة <span class="status-chip pending">pending</span></span>
+        <span class="hist-meta">${arRec(m.pending.length)} · كل الوقت</span></div>
     </div>
 
     <div class="section-heading"><h2>أداء أكواد البروموكود</h2><span>${promosCache.length} كود · كل الفترات</span></div>
     <div class="hist-list">${promoRows}</div>
 
-    <div class="section-heading"><h2>أداء الدعوات (الريفيرال)</h2><span>${totalReferrals} دعوة · ${totalReferralsPaid} اشترك</span></div>
-    <div class="hist-list">${topReferrers}</div>
+    <div class="section-heading"><h2>أداء الدعوات (الريفيرال)</h2><span>${arInv(totalReferrals)} · ${totalReferralsPaid} اشترك</span></div>
+    <div class="hist-list">${referrerRows}</div>
 
     <div class="card">
-      <div class="section-heading" style="margin:0 0 6px"><h2>مصدر الأسئلة الإضافية الممنوحة</h2><span>إجمالي ${grantedEver} سؤال</span></div>
-      ${hbar('عبر بروموكود', bonusBySource.promo_redeemed || 0, grantedEver || 1)}
-      ${hbar('دعوة صديق — عند التسجيل', bonusBySource.referral_signup || 0, grantedEver || 1)}
-      ${hbar('دعوة صديق — عند اشتراكه', bonusBySource.referral_paid || 0, grantedEver || 1)}
-      <div class="card-meta" style="margin-top:8px">الرصيد الحالي المجمّع لدى الأطباء: ${heldNow}${heldNow !== grantedEver ? ' (الفرق عن الإجمالي الممنوح يعود لتعديلات يدوية أو بيانات أقدم من سجل الأحداث)' : ''}</div>
-    </div>`;
+      <div class="section-heading" style="margin:0 0 6px"><h2>مصدر الأسئلة الإضافية الممنوحة</h2><span>${arQ(grantedTotal)} · ${rl}</span></div>
+      ${BONUS_KINDS.map((k) => hbar(EVENT_LABEL[k], m.bonus[k] || 0, grantedTotal || 1, `anOpen('bonus','${k}')`)).join('')}
+      <div class="card-meta bidi" style="margin-top:8px">الرصيد المجمّع لدى كل الأطباء الآن: ${arQ(heldNow)}.</div>
+    </div>
+
+    <div class="section-heading"><h2>آخر الأحداث</h2><span style="cursor:pointer;color:var(--primary)" onclick="anOpen('events')">عرض الكل ←</span></div>
+    <div class="hist-list">${eventRows}</div>`;
+}
+
+const anEventMeta = (e) => `${esc(EVENT_LABEL[e.name] || e.name)}`
+  + (e.meta && e.meta.reward ? ` · +${arQ(e.meta.reward)}` : '')
+  + (e.meta && e.meta.code ? ` · ${esc(e.meta.code)}` : '')
+  + (e.meta && e.meta.plan ? ` · ${e.meta.plan === 'part' ? 'جزء' : 'اشتراك كامل'}` : '')
+  + ` · ${dayStr(e.ts)}`;
+
+/* ---- level 2: the list behind one figure ---- */
+function renderAnDrill(m) {
+  const { kind, key } = anDrill;
+  const reqMeta = (r) => `${planLabel(r)} · ${m.amountOf(r)} ر.ع · ${arQ(r.covered || 0)} وقت الطلب · ${dayStr(r.reviewed_at || r.created_at)}`
+    + (r.reject_reason ? ` · ${esc(r.reject_reason)}` : '');
+  const newest = (a, b) => new Date(b.created_at) - new Date(a.created_at);
+  let title = '', sub = '', extra = '', rows = [];
+
+  if (kind === 'source') {
+    const list = m.doctors.filter((u) => m.srcByUser.get(u.id) === key)
+      .sort((a, b) => new Date(b.last_seen) - new Date(a.last_seen));
+    title = SOURCE_LABEL[key] || '—';
+    sub = arDoc(list.length);
+    extra = anEmpty(SOURCE_WHY[key] || '')
+      + (key === 'pending' ? `<div class="card"><button class="btn btn-primary" onclick="switchTab('requests')">مراجعة الإيصالات الآن</button></div>` : '');
+    rows = list.map((u) => anDocRow(u, `${arQ(u.covered || 0)} · آخر ظهور ${relTime(u.last_seen)}`));
+
+  } else if (kind === 'signups') {
+    const c = {};
+    m.cohort.forEach((u) => { const s = m.srcByUser.get(u.id); c[s] = (c[s] || 0) + 1; });
+    title = 'تسجيلات جديدة';
+    sub = `${arAcc(m.cohort.length)} · ${anRangeLabel()}`;
+    extra = `<div class="card"><div class="section-heading" style="margin:0 0 6px"><h2>وضعهم الآن</h2></div>
+      ${SOURCE_ORDER.filter((k) => c[k]).map((k) => hbar(SOURCE_LABEL[k], c[k], m.cohort.length, `anOpen('source','${k}')`)).join('')}</div>`;
+    rows = [...m.cohort].sort(newest).map((u) => anDocRow(u, `سجّل ${dayStr(u.created_at)} · ${arQ(u.covered || 0)}`));
+
+  } else if (kind === 'cohort_paid') {
+    title = 'سجّلوا ثم دفعوا';
+    sub = `${m.cohortPaid.length} من ${arAcc(m.cohort.length)} جديد · ${anRangeLabel()}`;
+    rows = [...m.cohortPaid].sort(newest)
+      .map((u) => anDocRow(u, `سجّل ${dayStr(u.created_at)} · ${SOURCE_LABEL[m.srcByUser.get(u.id)]}`));
+
+  } else if (kind === 'requests') {
+    const list = key === 'pending' ? m.pending : key === 'all' ? m.reqs : m.reqs.filter((r) => r.status === key);
+    title = key === 'approved' ? 'إيصالات مقبولة' : key === 'rejected' ? 'إيصالات مرفوضة'
+      : key === 'pending' ? 'إيصالات بانتظار المراجعة' : 'كل الإيصالات';
+    sub = `${arRec(list.length)} · ${key === 'pending' ? 'كل الوقت' : anRangeLabel()}`;
+    const sorted = key === 'all'
+      ? [...list].sort((a, b) => (b.covered || 0) - (a.covered || 0))
+      : [...list].sort(newest);
+    if (key === 'all') extra = anEmpty('مرتّبة بعدد الأسئلة التي حلّها الطبيب قبل إرسال الإيصال — يوضح متى يقتنع الأطباء بالدفع.');
+    rows = sorted.map((r) => anDocRow(m.allById.get(r.user_id), reqMeta(r)));
+
+  } else if (kind === 'reviewed') {
+    const list = [...m.approved, ...m.rejected].sort((a, b) => new Date(b.reviewed_at || b.created_at) - new Date(a.reviewed_at || a.created_at));
+    title = 'الإيصالات المُراجَعة';
+    sub = `${m.approved.length} مقبول · ${m.rejected.length} مرفوض · ${anRangeLabel()}`;
+    rows = list.map((r) => anDocRow(m.allById.get(r.user_id), `<span class="status-chip ${r.status}">${r.status}</span> ${reqMeta(r)}`));
+
+  } else if (kind === 'revenue') {
+    title = 'العائد التقديري';
+    sub = `${m.revenue} ر.ع من ${arRec(m.approved.length)} · ${anRangeLabel()}`;
+    extra = anEmpty(`السعر المستخدم في الحساب: اشتراك كامل ${payCache.price || '—'} · جزء ${payCache.part_price || '—'} — من تبويب Payment، فالرقم تقديري إن كان السعر مختلفاً وقت البيع.`);
+    rows = [...m.approved].sort((a, b) => new Date(b.reviewed_at || b.created_at) - new Date(a.reviewed_at || a.created_at))
+      .map((r) => anDocRow(m.allById.get(r.user_id), reqMeta(r)));
+
+  } else if (kind === 'promo') {
+    const c = promosCache.find((x) => x.id === key);
+    if (!c) { title = 'كود غير موجود'; } else {
+      const reds = promoRedCache.filter((r) => r.promo_id === c.id);
+      const inP = reds.filter((r) => !r.redeemed_at || m.inRange(r.redeemed_at));
+      const paidUsers = reds.filter((r) => REALLY_PAID.has(m.srcByUser.get(r.user_id)));
+      const granted = reds.length ? reds.reduce((a, r) => a + (r.reward || 0), 0) : c.uses * (c.reward_questions || 0);
+      const earned = paidUsers.reduce((sum, r) => sum + requestsCache
+        .filter((q) => q.user_id === r.user_id && q.status === 'approved')
+        .reduce((a, q) => a + m.amountOf(q), 0), 0);
+      title = esc(c.code) + (c.label ? ` — ${esc(c.label)}` : '');
+      sub = `${c.uses}/${c.max_uses} استخدام · ${arQ(c.reward_questions)} لكل استخدام`;
+      extra = `<div class="overall" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
+          ${anCard(inP.length, 'استخدامات خلال ' + anRangeLabel())}
+          ${anCard(granted, 'أسئلة مُنحت')}
+          ${anCard(paidUsers.length, 'دفعوا بعده')}
+          ${anCard(earned, 'عائد منهم (ر.ع)')}
+        </div>
+        ${anEmpty(`${c.active ? 'الكود نشط' : 'الكود ملغى'}${c.expires_at ? ' · ينتهي ' + dayStr(c.expires_at) : ' · بلا تاريخ انتهاء'} · أُنشئ ${dayStr(c.created_at)}`)}`;
+      rows = [...reds].sort((a, b) => new Date(b.redeemed_at || 0) - new Date(a.redeemed_at || 0))
+        .map((r) => anDocRow(m.allById.get(r.user_id),
+          `+${arQ(r.reward || c.reward_questions || 0)} · ${r.redeemed_at ? dayStr(r.redeemed_at) : 'تاريخ غير مسجل'}`));
+      if (!reds.length && c.uses) extra += anEmpty('الاستخدامات مسجّلة على الكود لكن تفاصيل من استخدمه غير متاحة.');
+    }
+
+  } else if (kind === 'referrer') {
+    const u = m.allById.get(key);
+    const invitees = usersCache.filter((x) => x.referred_by === key);
+    title = 'دعوات ' + esc(u ? (u.name || u.email) : '—');
+    sub = `${arInv((u && u.referrals) || invitees.length)} · ${(u && u.referrals_paid) || 0} اشترك`;
+    extra = `<div class="overall" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
+        ${anCard((u && u.referrals) || 0, 'دعوات انضمّت')}
+        ${anCard((u && u.referrals_paid) || 0, 'منهم اشترك')}
+        ${anCard((u && u.bonus_questions) || 0, 'رصيده من الأسئلة')}
+      </div>
+      <div class="card"><button class="btn" onclick="anDoctor('${key}')">فتح بطاقة الداعي</button></div>`;
+    rows = [...invitees].sort(newest).map((x) => anDocRow(x,
+      `${REALLY_PAID.has(m.srcByUser.get(x.id)) ? 'اشترك ✓' : 'لم يشترك بعد'} · انضم ${dayStr(x.created_at)}`));
+
+  } else if (kind === 'bonus') {
+    const list = m.events.filter((e) => e.name === key);
+    title = EVENT_LABEL[key] || 'أسئلة إضافية';
+    sub = `${arQ(m.bonus[key] || 0)} في ${list.length} مرة · ${anRangeLabel()}`;
+    rows = list.map((e) => anDocRow(m.allById.get(e.user_id), anEventMeta(e)));
+
+  } else if (kind === 'events') {
+    title = 'سجل الأحداث';
+    sub = `${m.events.length} حدث · ${anRangeLabel()}`;
+    rows = m.events.slice(0, 200).map((e) => anDocRow(m.allById.get(e.user_id), anEventMeta(e)));
+
+  } else if (kind === 'span') {
+    const s = m.series[+key];
+    if (!s) { title = '—'; } else {
+      const hit = (ts) => { const t = new Date(ts).getTime(); return t > s.from && t <= s.to; };
+      const items = [];
+      m.doctors.filter((u) => hit(u.created_at)).forEach((u) => items.push({ ts: u.created_at, uid: u.id, text: 'تسجيل جديد' }));
+      requestsCache.forEach((r) => {
+        if (hit(r.created_at)) items.push({ ts: r.created_at, uid: r.user_id, text: 'أرسل إيصال ' + planLabel(r) });
+        if (r.reviewed_at && hit(r.reviewed_at)) items.push({ ts: r.reviewed_at, uid: r.user_id, text: (r.status === 'approved' ? 'قُبل إيصاله' : 'رُفض إيصاله') + ' — ' + planLabel(r) });
+      });
+      eventsCache.forEach((e) => {
+        if (hit(e.ts) && BONUS_KINDS.includes(e.name)) items.push({ ts: e.ts, uid: e.user_id, text: EVENT_LABEL[e.name] + ' +' + ((e.meta && e.meta.reward) || 0) });
+      });
+      items.sort((a, b) => new Date(b.ts) - new Date(a.ts));
+      title = s.title;
+      sub = `${s.signups} تسجيل · ${s.paid} اشتراك مدفوع · ${s.revenue} ر.ع`;
+      rows = items.map((it) => anDocRow(m.allById.get(it.uid), `${esc(it.text)} · ${timeStr(it.ts)}`));
+    }
+  }
+
+  return `
+    <button class="back-link" onclick="anBack()">← رجوع إلى التقرير</button>
+    <div class="section-heading"><h2>${title}</h2><span>${esc(sub)}</span></div>
+    ${extra}
+    <div class="hist-list">${rows.join('') || anEmpty('لا بيانات في هذه الفئة.')}</div>`;
 }
 
 /* ---------------- codes ---------------- */
@@ -779,5 +1036,6 @@ function relTime(ts) {
 /* expose handlers */
 Object.assign(window, {
   switchTab, openDrill, closeDrill, toggleCode, togglePromo, SB,
-  setAccess, addPart, approveRequest, rejectRequest, openReject, openReceipt, setAnRange,
+  setAccess, addPart, approveRequest, rejectRequest, openReject, openReceipt,
+  setAnRange, anOpen, anBack, anDoctor,
 });
