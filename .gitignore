@@ -29,3 +29,6 @@ Desktop.ini
 
 # ---- promo video workspace (sources + renders; never part of the deployed site) ----
 promo/
+
+# ---- deploy upload config: short-lived Hostinger auth keys, never committed ----
+tools/.deploy-upload.json
