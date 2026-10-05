@@ -339,6 +339,13 @@ div.row { cursor: default; }
 .perks { list-style: none; text-align: start; margin: 16px 0; display: grid; gap: 10px; font-size: 14.5px; color: var(--text); }
 .perks li { display: flex; align-items: flex-start; gap: 10px; }
 .perks .ic { width: 20px; height: 20px; color: var(--correct); margin-top: 1px; }
+/* the one thing the doctor must know before the steps (a second sign-in on iPhone) */
+.sheet-note {
+  font-size: 14px; line-height: 1.6; text-align: start; color: var(--text);
+  background: var(--surface-2); border-radius: var(--radius-sm);
+  padding: 11px 13px; margin: 0 0 14px;
+}
+.sheet-note b { font-weight: 600; }
 .steps { list-style: none; text-align: start; margin: 16px 0; display: grid; gap: 8px; }
 .steps li {
   display: flex; align-items: center; gap: 12px; font-size: 14.5px;

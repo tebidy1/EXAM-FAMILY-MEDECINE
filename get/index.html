@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Oman EM Prep — 5,000+ explained cases for the OEEM</title>
-  <meta name="description" content="More than 5,000 explained cases, exam recalls and timed simulations for the Oman Emergency Medicine exam. Install the app on your iPhone or Android in under a minute.">
+  <meta name="description" content="More than 5,000 explained cases, exam recalls and timed simulations for the Oman Emergency Medicine exam. Start free in your browser, then install it on your iPhone or Android in under a minute.">
   <meta property="og:title" content="Oman EM Prep — study with focus, pass with calm">
   <meta property="og:description" content="More than 5,000 explained cases for the Oman Emergency Medicine exam. Free to start.">
   <meta property="og:image" content="../icons/icon-512.png">
@@ -228,8 +228,8 @@ section.last { text-align: center; padding-bottom: 30px; }
       <p class="kicker">How to start</p>
       <h2>Three steps, a couple of minutes.</h2>
       <ol class="how">
-        <li><span class="num">1</span><div><b>Install the app</b><span>Straight from your browser. No app store, almost no space.</span></div></li>
-        <li><span class="num">2</span><div><b>Create your free account</b><span>Name, email, WhatsApp number and a password.</span></div></li>
+        <li><span class="num">1</span><div><b>Create your free account</b><span>Name, email, WhatsApp number and a password. No card.</span></div></li>
+        <li><span class="num">2</span><div><b>Put it on your home screen</b><span>One step once you are in. No app store, almost no space.</span></div></li>
         <li><span class="num">3</span><div><b>Answer your first cases</b><span>Free, with the full explanation for each one.</span></div></li>
       </ol>
     </section>
@@ -246,10 +246,11 @@ section.last { text-align: center; padding-bottom: 30px; }
 
     <section class="wrap">
       <p class="kicker">Questions</p>
-      <h2>Before you install</h2>
+      <h2>Before you start</h2>
       <div class="faq">
         <details><summary>Is this a real app?</summary><p>Yes. It installs from your browser onto your home screen, opens full screen like any app, and keeps working offline after the first time you open it.</p></details>
-        <details><summary>Does it work on iPhone and Android?</summary><p>Both. Choose your phone and we show you the exact steps, with pictures.</p></details>
+        <details><summary>Do I have to install it?</summary><p>No. You can start in the browser right away, and we offer the home-screen install once you are in. It opens faster and keeps your questions on the phone, so most doctors take it.</p></details>
+        <details><summary>Does it work on iPhone and Android?</summary><p>Both. We show you the exact steps for your phone, with pictures.</p></details>
         <details><summary>Do I pay anything to try it?</summary><p>No. You create an account and answer free cases first. You only pay if you decide to open more of the bank.</p></details>
         <details><summary>Is it an official OMSB product?</summary><p>No. It is an independent study tool. The sections are weighted by the published OEEM blueprint, and it is not affiliated with OMSB.</p></details>
       </div>
@@ -257,7 +258,7 @@ section.last { text-align: center; padding-bottom: 30px; }
 
     <section class="wrap last">
       <h2>Ready when you are.</h2>
-      <p class="say">Install it now and answer your first cases today.</p>
+      <p class="say">Create your account now and answer your first cases today.</p>
       <div class="getapp" id="lastCta"></div>
     </section>
     <p class="foot">An independent study tool. Not affiliated with OMSB.</p>
@@ -295,18 +296,30 @@ section.last { text-align: center; padding-bottom: 30px; }
   const $ = (id) => document.getElementById(id);
   const DOWN = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg>';
   const SHARE = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3"/><path d="m8 7 4-4 4 4"/><path d="M8 11H5v10h14V11h-3"/></svg>';
+  const GO = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13"/><path d="m12 6 6 6-6 6"/></svg>';
+  // an invite code reaching the landing page must survive the hop to the app
+  const ref = (new URLSearchParams(location.search || '').get('ref') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12);
+  const START = '../?start=signup' + (ref ? '&ref=' + ref : '');
 
   /* ---------- the landing's install buttons: one obvious button for the visitor's own phone ---------- */
   const mine = isIOS ? 'iphone' : isAndroid ? 'android' : null;
-  const NAME = { iphone: 'iPhone', android: 'Android' };
-  const getApp = () => mine
-    ? `<a class="cta" href="#${mine}">${DOWN}Install on ${NAME[mine]} — free</a>
-       <p class="under">Takes under a minute. <a href="#${mine === 'iphone' ? 'android' : 'iphone'}">I have ${mine === 'iphone' ? 'an Android' : 'an iPhone'}</a></p>`
-    : `<div class="pair"><a class="cta" href="#iphone">${DOWN}iPhone</a><a class="cta" href="#android">${DOWN}Android</a></div>
-       <p class="under">Open this page on your phone to install. <a href="../">Or use it in the browser</a></p>`;
+  // The account comes first and the install second: a form is a cheaper step
+  // than a trip through the browser's own menus, and once the trial has started
+  // the doctor has a reason to finish. A built-in browser is the exception —
+  // it can neither install nor hand the session on, so there the guide leads.
+  const getApp = () => inApp
+    ? `<a class="cta" href="#${mine || 'iphone'}">${DOWN}Get the app — free</a>
+       <p class="under">Opens in ${isIOS ? 'Safari' : 'your browser'} — this built-in browser cannot install apps.</p>`
+    : mine
+      ? `<a class="cta" href="${START}">${GO}Start free — no card</a>
+         <p class="under">Takes under a minute, then we put it on your home screen. <a href="#${mine}">Rather install it first?</a></p>`
+      : `<a class="cta" href="${START}">${GO}Start free — no card</a>
+         <p class="under">Installing on a phone? <a href="#iphone">iPhone</a> · <a href="#android">Android</a></p>`;
   $('heroCta').innerHTML = getApp();
   $('lastCta').innerHTML = getApp();
-  $('dock').innerHTML = mine ? `<a class="cta" href="#${mine}">${DOWN}Install on ${NAME[mine]} — free</a>` : `<a class="cta" href="#iphone" id="dockPick">${DOWN}Get the app — free</a>`;
+  $('dock').innerHTML = inApp
+    ? `<a class="cta" href="#${mine || 'iphone'}">${DOWN}Get the app — free</a>`
+    : `<a class="cta" href="${START}">${GO}Start free — no card</a>`;
   // the bar appears once the first button has scrolled away, and steps aside for the last one
   if ('IntersectionObserver' in window) {
     const seen = new Set();
@@ -429,8 +442,6 @@ section.last { text-align: center; padding-bottom: 30px; }
   }
   addEventListener('hashchange', render);
   document.addEventListener('click', async (e) => {
-    // on a computer the bar cannot know the phone: it leads to the two choices at the end of the page
-    if (e.target.closest('#dockPick')) { e.preventDefault(); $('lastCta').scrollIntoView({ block: 'center' }); return; }
     const play = e.target.closest('#playPromo');
     if (play) { const v = $('promo'); play.hidden = true; v.controls = true; v.play().catch(() => {}); return; }
     const copy = e.target.closest('#copyLink');

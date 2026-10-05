@@ -1083,6 +1083,10 @@ function chrome(content, bar = {}) {
    button. Safari on iPhone has none, so there the sheet shows the three taps. */
 const INSTALL_KEY = 'oman-em-prep.install';
 const INSTALL_SNOOZE = 14 * 864e5;
+// set the moment an account is created in a browser tab, read once after the
+// reload: the doctor came from the landing page and the app is not on their
+// home screen yet
+const SIGNUP_INSTALL_KEY = 'oman-em-prep.install-after-signup';
 const Install = {
   prompt: null,
   state: (() => { try { return JSON.parse(localStorage.getItem(INSTALL_KEY)) || {}; } catch (e) { return {}; } })(),
@@ -1091,6 +1095,28 @@ const Install = {
   get ios() { return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); },
   get android() { return /Android/i.test(navigator.userAgent); },
   get device() { return this.ios || this.android ? 'جوالك' : 'جهازك'; },
+
+  // the account was just created in a browser tab: ask for the install now,
+  // while the doctor has something to lose, instead of waiting for the nudge
+  arm() { if (!this.standalone) { try { localStorage.setItem(SIGNUP_INSTALL_KEY, '1'); } catch (e) { /* private mode */ } } },
+  disarm() { try { localStorage.removeItem(SIGNUP_INSTALL_KEY); } catch (e) { /* ignore */ } },
+
+  // true when the sheet has the screen, or is about to: Home can be drawn again
+  // the moment the server's count lands, and the tour must not slip in between
+  handing: false,
+  afterSignup() {
+    if (this.handing) return true;
+    let armed = false;
+    try { armed = !!localStorage.getItem(SIGNUP_INSTALL_KEY); } catch (e) { return false; }
+    if (!armed) return false;
+    this.disarm();                 // one chance, whatever the doctor answers
+    if (!this.available()) return false;
+    this.state.nudged = true;      // this takes the place of the later nudge
+    this.save();
+    this.handing = true;           // Home has just been built: let it paint first
+    setTimeout(() => { this.handing = false; if (!$('#sheetRoot')) this.open(true); }, 500);
+    return true;
+  },
 
   // not already the installed app, and this device has a way to install it
   available() { return !this.standalone && !this.state.installed && (!!this.prompt || this.ios || this.android); },
@@ -1110,7 +1136,7 @@ const Install = {
       </div>`;
   },
 
-  open() {
+  open(fromSignup = false) {
     const step = (n, text, ic) => `<li><span class="step-n">${n}</span><span>${text}</span>${ic ? icon(ic) : ''}</li>`;
     const how = this.prompt
       ? `<button class="btn btn-primary btn-lg btn-block" onclick="Install.run()">${icon('download')} تثبيت التطبيق</button>`
@@ -1127,18 +1153,26 @@ const Install = {
             ${step(3, 'أكّد التثبيت — وستجد التطبيق بين تطبيقاتك')}
           </ol>
           <p class="sheet-sub">لا تجد الخيار؟ افتح هذه الصفحة في Chrome ثم أعد المحاولة.</p>`;
+    // on iPhone the installed app has its own storage, separate from the
+    // browser's: the session does not travel with it. Say so before the steps,
+    // so a second sign-in reads as the plan and not as a lost account.
+    const handoff = !fromSignup ? ''
+      : this.prompt || !this.ios
+        ? `<p class="sheet-note">حسابك جاهز — وينتقل معك إلى التطبيق كما هو.</p>`
+        : `<p class="sheet-note">التطبيق على الآيفون له ذاكرته المستقلة عن المتصفح، فيفتح أول مرة على شاشة البداية: اختر <b>«لديك حساب؟ تسجيل الدخول»</b> وادخل بالبريد وكلمة المرور اللذين أدخلتهما الآن — تجربتك وحسابك بانتظارك كما هما.</p>`;
     openSheet(`
       <div class="install-sheet" dir="rtl">
         <img src="icons/icon-192.png" alt="">
-        <h2>ثبّت Oman EM Prep على ${this.device}</h2>
-        <p class="sheet-sub">تطبيق كامل على شاشتك الرئيسية — بلا متجر تطبيقات.</p>
+        <h2>${fromSignup ? `خطوة أخيرة: ثبّته على ${this.device}` : `ثبّت Oman EM Prep على ${this.device}`}</h2>
+        <p class="sheet-sub">${fromSignup ? 'أنشأنا حسابك. ضَعه على شاشتك الرئيسية ليكون بلمسة واحدة في كل مرة.' : 'تطبيق كامل على شاشتك الرئيسية — بلا متجر تطبيقات.'}</p>
         <ul class="perks">
           <li>${icon('check')}<span>يفتح بلمسة واحدة وبملء الشاشة</span></li>
           <li>${icon('check')}<span>أسرع في كل مرة: الأسئلة محفوظة على جهازك</span></li>
           <li>${icon('check')}<span>تقدّمك محفوظ ويكمل معك حتى مع اتصال ضعيف</span></li>
         </ul>
+        ${handoff}
         ${how}
-        <button class="btn btn-ghost btn-block" onclick="Install.dismiss()">ليس الآن</button>
+        <button class="btn btn-ghost btn-block" onclick="Install.dismiss()">${fromSignup ? 'لاحقاً — أكمل في المتصفح' : 'ليس الآن'}</button>
       </div>`);
   },
 
@@ -1379,7 +1413,7 @@ const Guide = {
 
   // true when the tour took the screen
   startTour() {
-    if (this.state.tour || this.place || !$('.monitor')) return false;
+    if (this.state.tour || this.place || $('#sheetRoot') || !$('.monitor')) return false;
     const steps = this.tourSteps();
     if (!steps.length) return false;
     const root = document.createElement('div');
@@ -1641,7 +1675,9 @@ function renderHome() {
     ${RECALLS?.length ? recallsHomeCard() : ''}`;
   app.innerHTML = chrome(content);
   traceDrawn = true;
-  if (!Guide.startTour()) Install.nudge();   // one thing at a time on a first visit
+  // one thing at a time on a first visit, and the install hand-off comes first:
+  // the doctor is still in a browser tab and has the most to lose by leaving
+  if (!Install.afterSignup() && !Guide.startTour()) Install.nudge();
 }
 
 /* ---------------- recalls: read-only archive ---------------- */
@@ -2570,6 +2606,19 @@ function captureRef() {
     }
   } catch (e) { /* private mode / bad URL: invites just won't track */ }
 }
+// the landing page sends the doctor straight to the form: ...?start=signup
+// (or =login). Read it once, then tidy the address bar.
+function captureStart() {
+  try {
+    const params = new URLSearchParams(location.search || '');
+    const want = params.get('start');
+    if (!want) return null;
+    params.delete('start');
+    const qs = params.toString();
+    history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
+    return want === 'login' ? 'login' : want === 'signup' ? 'signup' : null;
+  } catch (e) { return null; }
+}
 const pendingRef = () => { try { return localStorage.getItem(REF_KEY) || ''; } catch (e) { return ''; } };
 const clearRef = () => { try { localStorage.removeItem(REF_KEY); } catch (e) { /* ignore */ } };
 
@@ -2607,6 +2656,7 @@ function renderAuth(mode = null, msg = null) {
       </ul>`}
     ${msg ? `<div class="auth-ok">${esc(msg)}</div>` : ''}
     <div class="auth-err" id="au-err" hidden></div>
+    <form id="au-form" novalidate>
     ${login ? '' : `
       <label class="auth-label">الاسم
         <input id="au-name" type="text" autocomplete="name" placeholder="د. ...">
@@ -2621,9 +2671,10 @@ function renderAuth(mode = null, msg = null) {
     <label class="auth-label">كلمة المرور
       <input id="au-pass" type="password" dir="ltr" autocomplete="${login ? 'current' : 'new'}-password" placeholder="6+ أحرف">
     </label>
-    <button class="btn btn-primary btn-lg btn-block" id="au-go">${login ? 'دخول' : 'ابدأ التجربة المجانية'}</button>
-    <button class="btn btn-ghost btn-block" id="au-switch">${login ? 'جديد هنا؟ ابدأ تجربتك المجانية' : 'لديك حساب؟ تسجيل الدخول'}</button>
-    <button class="btn btn-ghost btn-block" id="authInstall" onclick="Install.open()" ${Install.available() ? '' : 'hidden'}>${icon('download')} ثبّت التطبيق على ${Install.device}</button>
+    <button class="btn btn-primary btn-lg btn-block" type="submit" id="au-go">${login ? 'دخول' : 'ابدأ التجربة المجانية'}</button>
+    </form>
+    <button class="btn btn-ghost btn-block" type="button" id="au-switch">${login ? 'جديد هنا؟ ابدأ تجربتك المجانية' : 'لديك حساب؟ تسجيل الدخول'}</button>
+    <button class="btn btn-ghost btn-block" type="button" id="authInstall" onclick="Install.open()" ${Install.available() ? '' : 'hidden'}>${icon('download')} ثبّت التطبيق على ${Install.device}</button>
   `);
   const btn = $('#au-go');
   const fail = (text) => {   // inline, so the doctor never retypes the form
@@ -2633,8 +2684,8 @@ function renderAuth(mode = null, msg = null) {
     btn.textContent = login ? 'دخول' : 'ابدأ التجربة المجانية';
   };
   $('#au-switch').addEventListener('click', () => renderAuth(login ? 'signup' : 'login'));
-  $$('.auth-card input').forEach((el) => el.addEventListener('keydown', (e) => { if (e.key === 'Enter') btn.click(); }));
-  btn.addEventListener('click', async () => {
+  $('#au-form').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
     const email = $('#au-email').value.trim();
     const pass = $('#au-pass').value;
     if (!email || !pass) return fail('أدخل البريد وكلمة المرور');
@@ -2654,6 +2705,7 @@ function renderAuth(mode = null, msg = null) {
         localStorage.setItem(KNOWN_KEY, '1');
         if (r.needsConfirm) { renderAuth('login', 'أرسلنا رابط تأكيد إلى بريدك — افتحه ثم سجّل الدخول هنا'); return; }
         localStorage.removeItem(STORE_KEY);   // a new account starts from zero
+        Install.arm();   // ask for the install on the other side of the reload
       }
       localStorage.setItem(KNOWN_KEY, '1');
       history.replaceState(null, '', location.pathname);   // land on Home (no hashchange before the reload)
@@ -2867,11 +2919,19 @@ function logout() {
 (async function boot() {
   applyTheme(false);
   captureRef();   // remember ?ref= from an invite link before anything navigates
+  const start = captureStart();   // the landing page asked for a specific screen
   if (window.SB && SB.configured) {
     Boot.step('جاري التحقق من حسابك…', 6, 18);
     const authed = await SB.init().catch(() => false);
     if (!authed) {   // these screens keep the brand colour in the status bar
       Boot.done();
+      // the landing page already told the whole story: skip the slides and open
+      // the form it promised (sign-in if this browser already knows an account)
+      if (start) {
+        Guide.mark('intro');
+        renderAuth(start === 'signup' && localStorage.getItem(KNOWN_KEY) ? 'login' : start);
+        return;
+      }
       // a first-time visitor meets the idea before the form; a returning one goes straight to sign-in
       if (Guide.state.intro || localStorage.getItem(KNOWN_KEY)) renderAuth();
       else { await loadBlueprint(); renderIntro(() => renderAuth('signup'), () => renderAuth('login')); }
