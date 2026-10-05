@@ -22,6 +22,9 @@ let promosCache = [];
 let payCache = {};
 let eventsCache = [];
 let promoRedCache = [];
+let funnelCache = [];              // v_admin_funnel: the way in, before any account exists
+let failuresCache = [];            // v_admin_signup_errors: why a sign-up was refused
+let sourcesCache = [];             // v_admin_visit_sources: which browser or site sent them
 let rejectingId = null;            // request whose reject reasons are open
 const receiptUrls = new Map();     // receipt_path -> { url, type } once fetched from the private bucket
 let drillId = null;
@@ -43,7 +46,7 @@ let drillFrom = null;              // where a doctor card was opened from, so "b
 })();
 
 async function loadAll() {
-  const [users, codes, sessions, requests, promos, pay, events, promoRed] = await Promise.all([
+  const [users, codes, sessions, requests, promos, pay, events, promoRed, funnel, failures, sources] = await Promise.all([
     SB.req('/rest/v1/v_admin_users?select=*&order=last_seen.desc'),
     SB.req('/rest/v1/v_admin_codes?select=*&order=created_at.desc'),
     SB.req('/rest/v1/v_admin_sessions?select=*&order=ts.desc&limit=1000'),
@@ -54,6 +57,10 @@ async function loadAll() {
     // funnel history for Analytics: who got how many bonus questions, from what, and when
     SB.req('/rest/v1/events?select=*&order=ts.desc&limit=5000').catch(() => []),
     SB.req('/rest/v1/promo_redemptions?select=*').catch(() => []),
+    // the visitor funnel (supabase/006_visits.sql); empty until that is run
+    SB.req('/rest/v1/v_admin_funnel?select=*').catch(() => []),
+    SB.req('/rest/v1/v_admin_signup_errors?select=*').catch(() => []),
+    SB.req('/rest/v1/v_admin_visit_sources?select=*').catch(() => []),
   ]);
   usersCache = users || [];
   codesCache = codes || [];
@@ -63,6 +70,9 @@ async function loadAll() {
   payCache = pay || {};
   eventsCache = events || [];
   promoRedCache = promoRed || [];
+  funnelCache = funnel || [];
+  failuresCache = failures || [];
+  sourcesCache = sources || [];
 }
 
 const pendingRequests = () => requestsCache.filter((r) => r.status === 'pending');
@@ -586,6 +596,138 @@ const anDocRow = (u, meta) => (u
 
 const anEmpty = (t) => `<div class="card"><div class="card-meta bidi">${esc(t)}</div></div>`;
 
+/* ---------------- the visitors who never became doctors ---------------- */
+/* public.events starts at the account; this starts at the first screen. The
+   rows are aggregates by design — the visitor is anonymous, so no figure here
+   opens on a name. Counting is by browser per day: a doctor who comes back
+   tomorrow is a second visit, not a second person. */
+const STEP_ORDER = [
+  ['landing', 'فتحوا صفحة الهبوط', null],
+  ['landing_cta', 'ضغطوا زر البدء', 'landing'],
+  ['app_open', 'وصلوا إلى التطبيق', null],      // a second door: some open the app's address itself
+  ['auth_view', 'رأوا نموذج التسجيل', 'app_open'],
+  ['auth_try', 'حاولوا إنشاء الحساب', 'auth_view'],
+  ['auth_ok', 'أنشأوا الحساب', 'auth_try'],
+  ['first_question', 'أجابوا أول سؤال', 'auth_ok'],
+];
+const FAIL_LABEL = {
+  email_taken: 'بريد مسجّل من قبل', wrong_password: 'كلمة مرور خاطئة',
+  short_password: 'كلمة المرور قصيرة', bad_phone: 'رقم واتساب غير مقبول',
+  no_name: 'لم يُدخل الاسم', empty: 'ترك حقلاً فارغاً',
+  needs_confirm: 'ينتظر تأكيد البريد', rate_limit: 'محاولات كثيرة',
+  network: 'انقطع الاتصال', other: 'سبب آخر',
+};
+const DEVICE_LABEL = { iphone: 'آيفون', android: 'أندرويد', desktop: 'حاسوب', other: 'غير معروف' };
+const arVisit = (n) => `${n} ${arN(n, 'زيارة', 'زيارات')}`;
+
+function visitModel() {
+  const range = window._anRange ?? 30;
+  const cutoff = range ? new Date(Date.now() - range * 864e5).toISOString().slice(0, 10) : '';
+  const inR = (r) => !cutoff || String(r.day) >= cutoff;
+  const rows = funnelCache.filter(inR);
+
+  const sum = (pick) => rows.reduce((a, r) => (pick(r) ? a + (r.visitors || 0) : a), 0);
+  const steps = STEP_ORDER.map(([key, label, base]) => ({ key, label, base, n: sum((r) => r.step === key) }));
+
+  // the same funnel per device, and for a visit that arrived inside a social app
+  const cut = (pick) => ({
+    landing: sum((r) => pick(r) && (r.step === 'landing' || r.step === 'app_open')),
+    account: sum((r) => pick(r) && r.step === 'auth_ok'),
+  });
+  const devices = ['iphone', 'android', 'desktop'].map((d) => ({ key: d, label: DEVICE_LABEL[d], ...cut((r) => r.device === d) }));
+  const inApp = cut((r) => r.in_app);
+  const plain = cut((r) => !r.in_app);
+
+  const install = {
+    sheet: sum((r) => r.step === 'install_sheet'),
+    ok: sum((r) => r.step === 'install_ok'),
+    skip: sum((r) => r.step === 'install_skip'),
+  };
+
+  const fails = new Map();
+  failuresCache.filter(inR).forEach((r) => fails.set(r.reason, (fails.get(r.reason) || 0) + (r.visitors || 0)));
+  const failRows = [...fails.entries()].sort((a, b) => b[1] - a[1]);
+  const failTotal = failRows.reduce((a, [, n]) => a + n, 0);
+
+  const src = new Map();
+  sourcesCache.filter(inR).forEach((r) => {
+    const key = r.source !== 'browser' ? r.source : (r.came_from || 'مباشرة');
+    src.set(key, (src.get(key) || 0) + (r.visitors || 0));
+  });
+  const srcRows = [...src.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
+
+  return { steps, devices, inApp, plain, install, failRows, failTotal, srcRows, any: rows.length > 0 };
+}
+
+function renderVisitors() {
+  const v = visitModel();
+  const rl = anRangeLabel();
+  if (!v.any) {
+    return `
+      <div class="section-heading"><h2>الزوار قبل التسجيل</h2><span>${rl}</span></div>
+      ${anEmpty('لا بيانات زوار بعد. تصل أول الأرقام بعد نشر نسخة فيها js/track.js — وتأكد أن supabase/006_visits.sql شُغّل على المشروع.')}`;
+  }
+
+  const byKey = Object.fromEntries(v.steps.map((st) => [st.key, st.n]));
+  const top = Math.max(1, ...v.steps.map((st) => st.n));
+  const rows = v.steps.map((st) => {
+    const base = st.base ? byKey[st.base] || 0 : 0;
+    const pass = base ? Math.round((st.n / base) * 100) : null;
+    const lost = Math.max(0, base - st.n);
+    const note = pass === null ? '<small>مدخل</small>' : `<small>${pass}% · فقدنا ${lost}</small>`;
+    return `<div class="hbar-row">
+      <span class="hbar-label">${esc(st.label)}</span>
+      <div class="hbar-track"><div class="hbar-fill" style="width:${Math.round((st.n / top) * 100)}%"></div></div>
+      <span class="hbar-num">${st.n} ${note}</span>
+    </div>`;
+  }).join('');
+
+  const rate = (c) => (c.landing ? Math.round((c.account / c.landing) * 100) : 0);
+  const deviceRows = v.devices.map((d) => hbar(`${d.label} — ${d.account} من ${d.landing}`, rate(d), 100)).join('');
+
+  const failRows = v.failRows.map(([reason, n]) => `
+    <div class="hist-row">
+      <span class="hist-title">${esc(FAIL_LABEL[reason] || reason)}</span>
+      <span class="hist-meta">${arVisit(n)} · ${v.failTotal ? Math.round((n / v.failTotal) * 100) : 0}%</span>
+    </div>`).join('') || anEmpty('لا محاولة تسجيل فاشلة في هذه الفترة — وهذا خبر جيد.');
+
+  const srcRows = v.srcRows.map(([name, n]) => `
+    <div class="hist-row"><span class="hist-title">${esc(name)}</span><span class="hist-meta">${arVisit(n)}</span></div>`).join('')
+    || anEmpty('لا مصادر مسجّلة بعد.');
+
+  const inAppNote = v.inApp.landing
+    ? `جاء ${arVisit(v.inApp.landing)} من داخل متصفح فيسبوك/إنستغرام/تيك توك، أنشأ منها ${v.inApp.account} حساباً (${rate(v.inApp)}%) — مقابل ${rate(v.plain)}% من المتصفح العادي.`
+    : 'لم تصل زيارات من داخل تطبيقات التواصل في هذه الفترة.';
+
+  return `
+    <div class="section-heading"><h2>الزوار قبل التسجيل</h2><span>${rl} · أرقام مجهولة، لا تُفتح على أسماء</span></div>
+
+    <div class="card">
+      <div class="section-heading" style="margin:0 0 6px"><h2>مسار الدخول</h2><span>كل سطر: كم وصل، وكم عبر من السطر الذي قبله</span></div>
+      ${rows}
+      <div class="card-meta bidi" style="margin-top:8px">للدخول بابان، وكلٌّ منهما «مدخل» لا نسبة له: صفحة الهبوط، وعنوان التطبيق نفسه لمن يفتحه مباشرة أو من رابط دعوة. كل سطر بعدهما نسبة من السطر الذي يسبقه مباشرة. والعدّ بالمتصفح في اليوم: من عاد غداً يُحسب زيارة أخرى، لا شخصاً آخر.</div>
+    </div>
+
+    <div class="card">
+      <div class="section-heading" style="margin:0 0 6px"><h2>نسبة من أنشأ حساباً، بحسب الجهاز</h2><span>${rl}</span></div>
+      ${deviceRows}
+      <div class="card-meta bidi" style="margin-top:8px">${inAppNote}</div>
+    </div>
+
+    <div class="card">
+      <div class="section-heading" style="margin:0 0 6px"><h2>التثبيت</h2><span>${rl}</span></div>
+      ${hbar('ثبّتوا التطبيق', v.install.ok, v.install.sheet || 1)}
+      ${hbar('أجّلوا التثبيت', v.install.skip, v.install.sheet || 1)}
+      <div class="card-meta bidi" style="margin-top:8px">عُرضت ورقة التثبيت ${arVisit(v.install.sheet)}.</div>
+    </div>
+
+    <div class="section-heading"><h2>لماذا فشل التسجيل</h2><span>${arVisit(v.failTotal)} · ${rl}</span></div>
+    <div class="hist-list">${failRows}</div>
+
+    <div class="section-heading"><h2>من أين جاء الزوار</h2><span>${rl}</span></div>
+    <div class="hist-list">${srcRows}</div>`;
+}
+
 function renderAnalytics() {
   const m = anModel();
   if (anDrill) return renderAnDrill(m);
@@ -634,6 +776,8 @@ function renderAnalytics() {
       ${anCard(approvalRate + '%', 'نسبة قبول الإيصالات', "anOpen('reviewed')")}
       ${anCard(avgCovered, 'متوسط الأسئلة قبل الطلب', "anOpen('requests','all')")}
     </div>
+
+    ${renderVisitors()}
 
     <div class="card">
       <div class="section-heading" style="margin:0 0 10px"><h2>الحركة</h2><span>${rl} · اضغط أي عمود</span></div>

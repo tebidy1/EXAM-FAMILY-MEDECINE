@@ -21,6 +21,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- counts the steps on the way in, so the place visitors stop can be seen -->
+  <script src="../js/config.js?v=17"></script>
+  <script src="../js/track.js?v=1"></script>
 <style>
 :root { --ink:#0c2a34; --deep:#071b22; --card:#113540; --line:#1f4b57; --teal:#62d3d9; --amber:#f4b740; --green:#35c98a; --text:#f2f7f8; --soft:#b5ccd2; --mute:#86a7b0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -294,6 +298,8 @@ section.last { text-align: center; padding-bottom: 30px; }
   const samsung = /SamsungBrowser/i.test(ua);
 
   const $ = (id) => document.getElementById(id);
+  const track = (step, meta) => { try { window.Track && Track.step(step, meta, step === 'landing'); } catch (e) { /* never block the page */ } };
+  track('landing');
   const DOWN = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg>';
   const SHARE = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3"/><path d="m8 7 4-4 4 4"/><path d="M8 11H5v10h14V11h-3"/></svg>';
   const GO = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13"/><path d="m12 6 6 6-6 6"/></svg>';
@@ -435,6 +441,7 @@ section.last { text-align: center; padding-bottom: 30px; }
     $('home').hidden = !!g;
     $('guide').hidden = !g;
     if (!g) return;
+    track('guide', { which: key });
     $('guideTitle').textContent = g.title;
     $('guideBody').innerHTML = g.html + `<p class="under" style="margin-top:18px">Prefer not to install? <a href="../">Use it in the browser</a></p><a class="switch" href="#${g.other[0]}">${g.other[1]}</a>`;
     scrollTo(0, 0);
@@ -442,6 +449,8 @@ section.last { text-align: center; padding-bottom: 30px; }
   }
   addEventListener('hashchange', render);
   document.addEventListener('click', async (e) => {
+    const go = e.target.closest('a.cta[href^="../?start="]');
+    if (go) track('landing_cta', { where: go.closest('.dock') ? 'dock' : 'page' });
     const play = e.target.closest('#playPromo');
     if (play) { const v = $('promo'); play.hidden = true; v.controls = true; v.play().catch(() => {}); return; }
     const copy = e.target.closest('#copyLink');

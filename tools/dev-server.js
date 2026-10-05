@@ -40,11 +40,27 @@ const db = {
   promos: [{ id: crypto.randomUUID(), code: 'NOOR130', label: 'عرض الانطلاق', reward_questions: 45, max_uses: 130, uses: 0, expires_at: null, active: true, created_at: new Date().toISOString() }],         // { id, code, label, reward_questions, max_uses, uses, expires_at, active, created_at }
   redemptions: [],    // { user_id, promo_id, reward, redeemed_at }
   events: [],         // { id, user_id, name, meta, ts } — mirrors public.events, read by the admin Analytics tab
+  visits: [],         // { vid, step, device, in_app, standalone, user_id, meta, ts } — mirrors public.visits (006)
   files: new Map(),   // receipt path -> { type, buf }
   tokens: new Map(),  // access token -> user id
   // referral_* mirror supabase/004 + 005 (the launch offer)
   pay: { id: 1, price: '25 ر.ع', part_price: '10 ر.ع', beneficiary: 'Test Beneficiary', bank: 'Bank Muscat', account: 'OM00 0000 0000 0000 0000 000', pay_link: null, whatsapp: '+96890000000', note: null, referral_reward_signup: 30, referral_reward_paid: 350, referral_signup_bonus: 0 },
 };
+
+const day = (ts) => String(ts).slice(0, 10);
+// group rows the way the SQL views do: distinct visitors and raw hits per key
+function rollup(rows, keyOf, shape) {
+  const groups = new Map();
+  rows.forEach((r) => {
+    const key = keyOf(r);
+    const k = JSON.stringify(key);
+    if (!groups.has(k)) groups.set(k, { key, vids: new Set(), hits: 0 });
+    const g = groups.get(k);
+    g.vids.add(r.vid);
+    g.hits += 1;
+  });
+  return [...groups.values()].map((g) => ({ ...shape(g.key), visitors: g.vids.size, hits: g.hits }));
+}
 
 const logEvent = (user_id, name, meta) => db.events.push({ id: db.events.length + 1, user_id, name, meta: meta || {}, ts: new Date().toISOString() });
 
@@ -141,6 +157,14 @@ function api(req, res, url, raw) {
     return u ? send(res, 200, sessionFor(u.id)) : send(res, 400, { error_description: 'Invalid login credentials' });
   }
   if (p === '/auth/v1/logout') return send(res, 204, null);
+
+  /* ---- the visitor funnel (006): anyone may write, only an admin may read ---- */
+  if (p === '/rest/v1/visits' && req.method === 'POST') {
+    const b = body();
+    (Array.isArray(b) ? b : [b]).forEach((v) => db.visits.push({ ...v, ts: new Date().toISOString() }));
+    return send(res, 204, null);
+  }
+
   if (!me) return deny();
 
   /* ---- tables ---- */
@@ -207,6 +231,20 @@ function api(req, res, url, raw) {
   if (p === '/rest/v1/v_admin_codes') return send(res, 200, db.codes.map((c) => ({ ...c, redeemed_by: db.profiles.filter((x) => x.code_id === c.id).length })));
   if (p === '/rest/v1/v_admin_promos') return send(res, 200, db.promos.map((c) => ({ ...c, redeemed_by: db.redemptions.filter((r) => r.promo_id === c.id).length })));
   if (p === '/rest/v1/v_admin_sessions') return send(res, 200, db.sessions.map((s) => ({ ...s, ...(({ email, name }) => ({ email, name }))(profileOf(s.user_id) || {}) })));
+  if (p === '/rest/v1/v_admin_funnel') {
+    return send(res, 200, rollup(db.visits, (v) => [day(v.ts), v.step, v.device, !!v.in_app, !!v.standalone],
+      ([day, step, device, in_app, standalone]) => ({ day, step, device, in_app, standalone })));
+  }
+  if (p === '/rest/v1/v_admin_signup_errors') {
+    return send(res, 200, rollup(db.visits.filter((v) => v.step === 'auth_fail'),
+      (v) => [day(v.ts), v.device, (v.meta && v.meta.reason) || 'other'],
+      ([day, device, reason]) => ({ day, device, reason })));
+  }
+  if (p === '/rest/v1/v_admin_visit_sources') {
+    return send(res, 200, rollup(db.visits.filter((v) => v.step === 'landing' || v.step === 'app_open'),
+      (v) => [day(v.ts), v.in_app || 'browser', (v.meta && v.meta.from) || ''],
+      ([day, source, came_from]) => ({ day, source, came_from })));
+  }
   if (p === '/rest/v1/v_admin_requests') {
     return send(res, 200, [...db.requests].reverse().map((r) => {
       const o = profileOf(r.user_id) || {};

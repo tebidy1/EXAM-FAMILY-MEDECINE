@@ -15,6 +15,10 @@
 'use strict';
 
 /* ---------------- helpers ---------------- */
+// js/track.js counts the way in. If it did not load, the app carries on in
+// silence rather than failing on a missing name.
+window.Track = window.Track || { step() {} };
+
 const $ = (sel, el = document) => el.querySelector(sel);
 const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
 const esc = (s) => String(s ?? '')
@@ -136,6 +140,7 @@ function adoptStoreFor(uid) {
 }
 
 function recordAttempt(qid, correct) {
+  Track.step('first_question', null, true);   // once per page: the funnel's last step
   const rec = store.q[qid] || { s: 0, c: 0, streak: 0, lastCorrect: null, lastSeen: 0 };
   rec.s += 1;
   if (correct) { rec.c += 1; rec.streak = (rec.streak || 0) + 1; }
@@ -1174,6 +1179,7 @@ const Install = {
         ${how}
         <button class="btn btn-ghost btn-block" onclick="Install.dismiss()">${fromSignup ? 'لاحقاً — أكمل في المتصفح' : 'ليس الآن'}</button>
       </div>`);
+    Track.step('install_sheet', { from: fromSignup ? 'signup' : 'self', how: this.prompt ? 'prompt' : this.ios ? 'ios_steps' : 'menu_steps' });
   },
 
   async run() {
@@ -1187,6 +1193,7 @@ const Install = {
   },
 
   dismiss() {
+    Track.step('install_skip');
     this.state.dismissedAt = Date.now();
     this.save();
     closeSheet();
@@ -1216,6 +1223,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
   Install.refresh();
 });
 window.addEventListener('appinstalled', () => {
+  Track.step('install_ok');
   Install.prompt = null;
   Install.state.installed = true;
   Install.save();
@@ -2676,6 +2684,7 @@ function renderAuth(mode = null, msg = null) {
     <button class="btn btn-ghost btn-block" type="button" id="au-switch">${login ? 'جديد هنا؟ ابدأ تجربتك المجانية' : 'لديك حساب؟ تسجيل الدخول'}</button>
     <button class="btn btn-ghost btn-block" type="button" id="authInstall" onclick="Install.open()" ${Install.available() ? '' : 'hidden'}>${icon('download')} ثبّت التطبيق على ${Install.device}</button>
   `);
+  Track.step('auth_view', { mode });
   const btn = $('#au-go');
   const fail = (text) => {   // inline, so the doctor never retypes the form
     const box = $('#au-err');
@@ -2684,11 +2693,15 @@ function renderAuth(mode = null, msg = null) {
     btn.textContent = login ? 'دخول' : 'ابدأ التجربة المجانية';
   };
   $('#au-switch').addEventListener('click', () => renderAuth(login ? 'signup' : 'login'));
+  // every refusal is counted by its reason: the gap between auth_try and
+  // auth_ok is the doctors who wanted in and could not get in
+  const refuse = (reason, text) => { Track.step('auth_fail', { mode, reason }); return fail(text); };
   $('#au-form').addEventListener('submit', async (ev) => {
     ev.preventDefault();
+    Track.step('auth_try', { mode });
     const email = $('#au-email').value.trim();
     const pass = $('#au-pass').value;
-    if (!email || !pass) return fail('أدخل البريد وكلمة المرور');
+    if (!email || !pass) return refuse('empty', 'أدخل البريد وكلمة المرور');
     btn.disabled = true;
     btn.textContent = login ? 'جاري الدخول…' : 'جاري إنشاء حسابك…';
     try {
@@ -2697,21 +2710,22 @@ function renderAuth(mode = null, msg = null) {
       } else {
         const name = $('#au-name').value.trim();
         const phone = $('#au-phone').value.trim();
-        if (!name) return fail('أدخل اسمك');
-        if (phone.replace(/\D/g, '').length < 8) return fail('أدخل رقم واتساب صحيحاً');
-        if (pass.length < 6) return fail('كلمة المرور قصيرة — 6 أحرف على الأقل');
+        if (!name) return refuse('no_name', 'أدخل اسمك');
+        if (phone.replace(/\D/g, '').length < 8) return refuse('bad_phone', 'أدخل رقم واتساب صحيحاً');
+        if (pass.length < 6) return refuse('short_password', 'كلمة المرور قصيرة — 6 أحرف على الأقل');
         const r = await SB.signup(email, pass, name, phone, pendingRef());
         clearRef();   // the invite is consumed; the inviter's reward is granted server-side
         localStorage.setItem(KNOWN_KEY, '1');
-        if (r.needsConfirm) { renderAuth('login', 'أرسلنا رابط تأكيد إلى بريدك — افتحه ثم سجّل الدخول هنا'); return; }
+        if (r.needsConfirm) { Track.step('auth_fail', { mode, reason: 'needs_confirm' }); renderAuth('login', 'أرسلنا رابط تأكيد إلى بريدك — افتحه ثم سجّل الدخول هنا'); return; }
         localStorage.removeItem(STORE_KEY);   // a new account starts from zero
         Install.arm();   // ask for the install on the other side of the reload
       }
       localStorage.setItem(KNOWN_KEY, '1');
+      Track.step('auth_ok', { mode });
       history.replaceState(null, '', location.pathname);   // land on Home (no hashchange before the reload)
       location.reload();
     } catch (e) {
-      fail(humanAuthError(e.message));
+      refuse(errorReason(e.message), humanAuthError(e.message));
     }
   });
 }
@@ -2899,6 +2913,18 @@ function previewReceipt(file) {
   });
 }
 
+// the admin report groups by these, not by the Arabic sentence
+function errorReason(msg) {
+  const m = String(msg || '');
+  if (m.includes('Invalid login')) return 'wrong_password';
+  if (m.includes('already registered')) return 'email_taken';
+  if (m.includes('not confirmed')) return 'needs_confirm';
+  if (m.includes('Password') && m.includes('bytes')) return 'short_password';
+  if (m.includes('rate limit') || m.includes('Rate')) return 'rate_limit';
+  if (m.includes('Failed to fetch')) return 'network';
+  return 'other';
+}
+
 function humanAuthError(msg) {
   const m = String(msg || '');
   if (m.includes('Invalid login')) return 'بريد أو كلمة مرور غير صحيحة';
@@ -2920,6 +2946,7 @@ function logout() {
   applyTheme(false);
   captureRef();   // remember ?ref= from an invite link before anything navigates
   const start = captureStart();   // the landing page asked for a specific screen
+  Track.step('app_open', start ? { start } : null, true);
   if (window.SB && SB.configured) {
     Boot.step('جاري التحقق من حسابك…', 6, 18);
     const authed = await SB.init().catch(() => false);
