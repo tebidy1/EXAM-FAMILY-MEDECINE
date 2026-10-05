@@ -19,7 +19,7 @@ const { execSync } = require('child_process');
 const ROOT = path.join(__dirname, '..');
 // storage keys ('oman-em-prep.v1', '.theme', …) stay: invisible, scoped to the
 // origin, and renaming them only makes merges from the Oman repository conflict
-const BANNED = /oman(?!-em-prep\.[a-z-]+\d?['"`])|عُ?مان|OEEM|OMSB|ر\.ع|\+?968|Muscat|NOOR130|5,000|5093|ddqvtbvvxlqjahdhmfup|oman-em-prep\.sootnote/i;
+const BANNED = /oman(?!-em-prep\.[a-z-]+\d?['"`])|عُ?مان|OEEM|OMSB|ر\.ع|\+?968|Muscat|NOOR130|5,0\d\d|5093|ddqvtbvvxlqjahdhmfup|oman-em-prep\.sootnote/i;
 const SKIP = [/^docs\/superpowers\//, /^data\//, /^tools\/check_edition\.js$/];
 const BINARY = /\.(png|jpe?g|gif|webp|ico|mp4|webm|woff2?|ttf|zip|pdf)$/i;
 
