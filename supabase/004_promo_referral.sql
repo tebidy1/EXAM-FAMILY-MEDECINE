@@ -1,5 +1,5 @@
 -- ============================================================
--- Oman EM Prep — 004: promo codes + referrals (bonus free questions)
+-- Saudi Prep — 004: promo codes + referrals (bonus free questions)
 -- Run ONCE in the SQL Editor, AFTER 003_plans.sql.
 -- ADDITIVE: drops no data, safe to re-run.
 --

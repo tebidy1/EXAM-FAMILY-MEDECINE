@@ -1,4 +1,4 @@
-# Oman EM Prep — cache rules for the host (Hostinger / LiteSpeed)
+# Saudi Prep — cache rules for the host (Hostinger / LiteSpeed)
 #
 # Pages, the service worker, the manifest and the question data carry no version
 # in their URL, so the browser must ask the server before reusing its copy (the

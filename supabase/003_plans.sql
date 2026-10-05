@@ -1,5 +1,5 @@
 -- ============================================================
--- Oman EM Prep — 003: two ways to pay — full, or the bank in 3 parts
+-- Saudi Prep — 003: two ways to pay — full, or the bank in 3 parts
 -- Run ONCE in the SQL Editor, AFTER 002_trial_paywall.sql.
 -- ADDITIVE: drops no data, safe to re-run.
 --
@@ -35,8 +35,8 @@ end $$;
 -- ---------- 2) prices: one for the full plan, one per part ----------
 alter table public.payment_settings add column if not exists part_price text;
 update public.payment_settings
-   set price = coalesce(nullif(trim(price), ''), '25 ر.ع'),
-       part_price = coalesce(nullif(trim(part_price), ''), '10 ر.ع')
+   set price = coalesce(nullif(trim(price), ''), '199 ر.س'),
+       part_price = coalesce(nullif(trim(part_price), ''), '79 ر.س')
  where id = 1;
 
 -- ---------- 3) each receipt says what it pays for ----------

@@ -1,5 +1,5 @@
 -- ============================================================
--- Oman EM Prep — 002: free trial → payment receipt → admin approval
+-- Saudi Prep — 002: free trial → payment receipt → admin approval
 -- Run ONCE in the SQL Editor, AFTER schema.sql.
 -- ADDITIVE: drops nothing, keeps all data, safe to re-run.
 -- Access codes keep working; this adds a second way in.

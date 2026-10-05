@@ -1,5 +1,5 @@
 -- ============================================================
--- Oman EM Prep — 006: the visitor funnel
+-- Saudi Prep — 006: the visitor funnel
 -- Run in the SQL Editor AFTER 005_launch_offer.sql.
 -- ADDITIVE: drops no data.
 --

@@ -12,13 +12,13 @@
    Seeded test accounts (local only):
      admin   admin@test.local    / admin-test-1
    Seeded access code: TEST-CODE (5 uses)
-   Referral rewards and the NOOR130 promo mirror supabase/005_launch_offer.sql
+   Referral rewards and the START100 promo mirror supabase/005_launch_offer.sql
    (30 on signup / 350 on paid / no welcome bonus); more promo codes are created
    from the admin Growth tab.
    Suggested signup values for test doctors:
-     doctor1@test.local / doctor-test-1 / +968 9000 0001
-     doctor2@test.local / doctor-test-2 / +968 9000 0002
-     doctor3@test.local / doctor-test-3 / +968 9000 0003
+     doctor1@test.local / doctor-test-1 / +966 5000 0001
+     doctor2@test.local / doctor-test-2 / +966 5000 0002
+     doctor3@test.local / doctor-test-3 / +966 5000 0003
    ============================================================ */
 'use strict';
 const http = require('http');
@@ -37,14 +37,14 @@ const db = {
   codes: [{ id: crypto.randomUUID(), code: 'TEST-CODE', label: 'dev', max_uses: 5, uses: 0, expires_at: null, active: true, created_at: new Date().toISOString() }],
   requests: [],
   sessions: [],
-  promos: [{ id: crypto.randomUUID(), code: 'NOOR130', label: 'عرض الانطلاق', reward_questions: 45, max_uses: 130, uses: 0, expires_at: null, active: true, created_at: new Date().toISOString() }],         // { id, code, label, reward_questions, max_uses, uses, expires_at, active, created_at }
+  promos: [{ id: crypto.randomUUID(), code: 'START100', label: 'عرض الانطلاق', reward_questions: 45, max_uses: 100, uses: 0, expires_at: null, active: true, created_at: new Date().toISOString() }],         // { id, code, label, reward_questions, max_uses, uses, expires_at, active, created_at }
   redemptions: [],    // { user_id, promo_id, reward, redeemed_at }
   events: [],         // { id, user_id, name, meta, ts } — mirrors public.events, read by the admin Analytics tab
   visits: [],         // { vid, step, device, in_app, standalone, user_id, meta, ts } — mirrors public.visits (006)
   files: new Map(),   // receipt path -> { type, buf }
   tokens: new Map(),  // access token -> user id
   // referral_* mirror supabase/004 + 005 (the launch offer)
-  pay: { id: 1, price: '25 ر.ع', part_price: '10 ر.ع', beneficiary: 'Test Beneficiary', bank: 'Bank Muscat', account: 'OM00 0000 0000 0000 0000 000', pay_link: null, whatsapp: '+96890000000', note: null, referral_reward_signup: 30, referral_reward_paid: 350, referral_signup_bonus: 0 },
+  pay: { id: 1, price: '199 ر.س', part_price: '79 ر.س', beneficiary: 'Test Beneficiary', bank: 'Test Bank', account: 'SA00 0000 0000 0000 0000 0000', pay_link: null, whatsapp: '+966500000000', note: null, referral_reward_signup: 30, referral_reward_paid: 350, referral_signup_bonus: 0 },
 };
 
 const day = (ts) => String(ts).slice(0, 10);
@@ -356,4 +356,4 @@ http.createServer((req, res) => {
       send(res, 500, { message: e.message });
     }
   });
-}).listen(PORT, () => console.log(`Oman EM Prep dev server → http://localhost:${PORT}  (admin: /admin.html)`));
+}).listen(PORT, () => console.log(`Saudi Prep dev server → http://localhost:${PORT}  (admin: /admin.html)`));

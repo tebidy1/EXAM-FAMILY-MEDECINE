@@ -1,5 +1,5 @@
 -- ============================================================
--- Oman EM Prep — Supabase schema (v2 — correct creation order)
+-- Saudi Prep — Supabase schema (v2 — correct creation order)
 -- Run ONCE in the SQL Editor.
 -- ⚠ Re-running after real usage DROPS ALL DATA (guards at top).
 -- The FIRST user to sign up becomes admin (bootstrap).

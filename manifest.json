@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Oman EM Prep",
-  "short_name": "EM Prep",
-  "description": "Practice questions, explanations and timed simulations for the Oman Emergency Medicine exam.",
+  "name": "Saudi Prep",
+  "short_name": "Saudi Prep",
+  "description": "Practice questions, explanations and timed simulations for your exam.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

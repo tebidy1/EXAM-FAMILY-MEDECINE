@@ -1,12 +1,12 @@
 /* ============================================================
-   Oman EM Prep — vanilla JS single-page app (no dependencies)
+   Saudi Prep — vanilla JS single-page app (no dependencies)
    Data: data/sections.json + data/questions/*.json + data/blueprint.json
    (bank schema unchanged — all intelligence lives here)
 
    Architecture: 3 tabs (Home / Practice / Exams)
    - Home: "what should I do today?" — resume + 3-item smart queue
-   - Practice: 18 sections -> section page with coverage checkpoints
-   - Exams: OEEM full simulation (unlock credits) + attempt history
+   - Practice: the sections -> section page with coverage checkpoints
+   - Exams: full simulation (unlock credits) + attempt history
    - First run: intro slides (why / how it works), then a tour of Home
 
    Scoring model (per question): unseen 0 · streak 1 = 50 · 2 = 75 ·
@@ -246,6 +246,8 @@ function toggleTheme() {
 let DB = { sections: [], byId: {} };
 let ALL_QUESTIONS = [];
 let BLUEPRINT = null;
+// the exam's short name on labels, from data/blueprint.json
+const examCode = () => BLUEPRINT?.exam?.code || 'Exam';
 let RECALLS = null;   // read-only exam-recall archive (data/recalls.json)
 
 const OPT_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
@@ -414,8 +416,8 @@ function coverageRatio() { return ALL_QUESTIONS.length ? uniqueCovered() / ALL_Q
 const TRIAL_LIMIT = 25;
 const PARTS = 3;
 const PART_WARN = 100;             // a paid part is not nagged about until this few questions are left
-const PRICE_FULL = '25 ر.ع';       // shown until prices are saved in admin.html
-const PRICE_PART = '10 ر.ع';
+const PRICE_FULL = EDITION.priceFull;   // shown until prices are saved in admin.html
+const PRICE_PART = EDITION.pricePart;
 let PAY = {};                      // payment_settings row, managed in admin.html
 
 const partSize = () => Math.ceil(ALL_QUESTIONS.length / PARTS);
@@ -604,7 +606,7 @@ function startSimulation(id) {
   if (!qs.length) { renderExams(); return; }
   const total = s.minutes * 60;
   session = {
-    sectionId: 'oeem', mode: 'mock', mockKind: 'simulation', simId: s.id,
+    sectionId: 'sim', mode: 'mock', mockKind: 'simulation', simId: s.id,
     title: `${BLUEPRINT.exam.code} Simulation ${s.id}`,
     questions: qs, idx: 0,
     picked: qs.map(() => null), submitted: qs.map(() => false), selfGrades: qs.map(() => null),
@@ -673,7 +675,7 @@ function nextGoal() {
   const readyM = ms.find((m) => cov >= m.unlockAt && store.milestoneBest?.[m.id] == null);
   if (readyM) return { title: `Milestone ${readyM.id} is ready`, sub: `${readyM.size} questions · ${readyM.minutes} min — 75% مما غطّيته + 25% جديد`, href: `#/quiz/milestone-${readyM.id}/mock`, cta: 'Take it', pct: 100 };
   const readyS = sims.find((s) => ratio >= s.unlockAtCoverage - 1e-9 && store.simBest?.[s.id] == null);
-  if (readyS) return { title: `OEEM Simulation ${readyS.id} is ready`, sub: `${readyS.size} questions · ${readyS.minutes} min — الورقة الرسمية نفسها`, href: `#/quiz/sim-${readyS.id}/mock`, cta: 'Take it', pct: 100 };
+  if (readyS) return { title: `${examCode()} Simulation ${readyS.id} is ready`, sub: `${readyS.size} questions · ${readyS.minutes} min — الورقة الرسمية نفسها`, href: `#/quiz/sim-${readyS.id}/mock`, cta: 'Take it', pct: 100 };
   const lockM = ms.find((m) => cov < m.unlockAt);
   if (lockM) return { title: `${lockM.unlockAt - cov} أسئلة تفتح Milestone ${lockM.id}`, sub: `${cov}/${lockM.unlockAt} سؤالاً مغطى`, href: '#/exams', cta: 'Ladder', pct: cov / lockM.unlockAt };
   const lockS = sims.find((s) => ratio < s.unlockAtCoverage);
@@ -906,7 +908,7 @@ function appBar(o = {}) {
   const p = profileOrNull();
   const lead = o.lead || (o.back
     ? `<div class="bar-lead"><a class="icon-btn" href="${o.back}" aria-label="Back">${icon('back')}</a><div class="bar-title">${esc(o.title || '')}</div></div>`
-    : `<a class="brand" href="#/"><div class="brand-logo">${LOGO}</div><div class="brand-name">Oman EM Prep</div></a>`);
+    : `<a class="brand" href="#/"><div class="brand-logo">${LOGO}</div><div class="brand-name">${esc(EDITION.appName)}</div></a>`);
   const right = o.right ?? `<button class="avatar-btn" onclick="openAccount()" aria-label="Account and settings">${p && initialOf(p) ? esc(initialOf(p)) : icon('user')}</button>`;
   return `<header class="topbar"><div class="topbar-inner">${lead}<div class="bar-actions">${right}</div></div>${o.below || ''}</header>`;
 }
@@ -1032,7 +1034,7 @@ function openReferral() {
       </div>
     </div>`, 'sheet-sm');
 
-  const shareText = 'جرّب Oman EM Prep — بنك أسئلة اختبار الطوارئ العُماني مع شرح كل إجابة. '
+  const shareText = EDITION.copy.shareText
     + (welcome ? `سجّل عبر رابطي وابدأ بـ ${TRIAL_LIMIT + welcome} سؤالاً مجاناً:` : `سجّل عبر رابطي وجرّب ${TRIAL_LIMIT} سؤالاً مجاناً:`);
   $('#ref-copy').addEventListener('click', async () => {
     try {
@@ -1042,7 +1044,7 @@ function openReferral() {
   });
   $('#ref-share').addEventListener('click', async () => {
     if (navigator.share) {
-      try { await navigator.share({ title: 'Oman EM Prep', text: shareText, url: link }); return; } catch (e) { /* cancelled */ }
+      try { await navigator.share({ title: EDITION.appName, text: shareText, url: link }); return; } catch (e) { /* cancelled */ }
     }
     try {
       await navigator.clipboard.writeText(`${shareText} ${link}`);
@@ -1168,7 +1170,7 @@ const Install = {
     openSheet(`
       <div class="install-sheet" dir="rtl">
         <img src="icons/icon-192.png" alt="">
-        <h2>${fromSignup ? `خطوة أخيرة: ثبّته على ${this.device}` : `ثبّت Oman EM Prep على ${this.device}`}</h2>
+        <h2>${fromSignup ? `خطوة أخيرة: ثبّته على ${this.device}` : `ثبّت ${EDITION.appName} على ${this.device}`}</h2>
         <p class="sheet-sub">${fromSignup ? 'أنشأنا حسابك. ضَعه على شاشتك الرئيسية ليكون بلمسة واحدة في كل مرة.' : 'تطبيق كامل على شاشتك الرئيسية — بلا متجر تطبيقات.'}</p>
         <ul class="perks">
           <li>${icon('check')}<span>يفتح بلمسة واحدة وبملء الشاشة</span></li>
@@ -1267,18 +1269,18 @@ function introSlides() {
   const slides = [
     {
       title: 'تعلّم لتعرف، لا لتجتاز فقط',
-      text: 'ما تدرسه بنيّة الفهم يبقى معك في قسم الطوارئ بعد سنوات، وما تحفظه لأجل ورقة الاختبار يتبخّر بعدها. لذلك يظهر شرح كل إجابة فور اختيارك، سواء أصبت أم أخطأت.',
+      text: EDITION.copy.guideLearnText,
       art: `<div class="sp">
         ${row('<span class="sp-key">B</span>', 'IM adrenaline 0.5 mg', icon('check'), 'ok')}
         <p class="sp-note"><b>Why</b>First-line in anaphylaxis. Give it in the outer thigh and repeat after 5 minutes if there is no response.</p>
       </div>`,
     },
     {
-      title: 'أكثر من 5,000 حالة تضعك أمام 80% من أقرانك',
-      text: '18 قسماً مرتبة بأوزان المخطط الرسمي للاختبار. كل حالة تحلّها بفهم تقرّبك من مقدمة دفعتك، ومؤشر الجاهزية في الصفحة الرئيسية يريك أين وصلت.',
+      title: EDITION.copy.guideBankTitle,
+      text: EDITION.copy.guideBankText,
       art: `<div class="sp sp-people">
         ${Array.from({ length: 10 }, (_, k) => icon('user', k === 8 ? 'you' : '')).join('')}
-        <span class="sp-span">80% of your peers</span><span class="sp-span you">You</span>
+        <span class="sp-span">${EDITION.copy.guidePeers}</span><span class="sp-span you">You</span>
       </div>`,
     },
     {
@@ -1659,7 +1661,7 @@ function renderHome() {
 
   const hist = store.history.slice(0, 3);
   const histHtml = hist.length
-    ? `<div class="hist-list">${histRows(hist, (h) => h.mode === 'mock' ? 'OEEM' : h.mode === 'exam' ? 'Test' : 'Study')}</div>`
+    ? `<div class="hist-list">${histRows(hist, (h) => h.mode === 'mock' ? examCode() : h.mode === 'exam' ? 'Test' : 'Study')}</div>`
     : `<div class="card"><div class="card-meta">Finish a session and your scores will collect here.</div></div>`;
 
   const content = `
@@ -1921,17 +1923,17 @@ function renderExams() {
 
   const hist = store.history.filter((h) => h.mode === 'mock' || h.mode === 'exam').slice(0, 20);
   const histHtml = hist.length
-    ? `<div class="hist-list">${histRows(hist, (h) => h.kind === 'simulation' ? 'OEEM' : h.kind === 'milestone' ? 'Milestone' : h.kind === 'checkpoint' ? 'Checkpoint' : 'Test')}</div>`
+    ? `<div class="hist-list">${histRows(hist, (h) => h.kind === 'simulation' ? examCode() : h.kind === 'milestone' ? 'Milestone' : h.kind === 'checkpoint' ? 'Checkpoint' : 'Test')}</div>`
     : `<div class="card"><div class="card-meta">Your exam attempts will collect here.</div></div>`;
 
   const content = `
     <div class="page-head">
       <h1>Exam ladder</h1>
-      <p>Milestone tests open as your coverage grows. The OEEM simulations are one fixed paper, the same for every doctor.</p>
+      <p>Milestone tests open as your coverage grows. The ${examCode()} simulations are one fixed paper, the same for every doctor.</p>
     </div>
     <div class="section-heading"><h2>Milestone tests</h2><span>75% مما درسته + 25% جديد</span></div>
     <div class="list">${msCards}</div>
-    <div class="section-heading"><h2>OEEM simulations</h2><span>ورقة ثابتة للجميع، تفتح بالتغطية</span></div>
+    <div class="section-heading"><h2>${examCode()} simulations</h2><span>ورقة ثابتة للجميع، تفتح بالتغطية</span></div>
     <div class="list">${simCards}</div>
     <div class="section-heading"><h2>Attempt history</h2><span>سجل المحاولات</span></div>
     ${histHtml}`;
@@ -2635,8 +2637,8 @@ function cardShell(inner) {
     <div class="auth-wrap">
       <div class="auth-hero">
         <div class="brand-logo">${LOGO}</div>
-        <div class="auth-app">Oman EM Prep</div>
-        <div class="auth-tag" dir="rtl">استعد لاختبار طب الطوارئ العُماني</div>
+        <div class="auth-app">${esc(EDITION.appName)}</div>
+        <div class="auth-tag" dir="rtl">${EDITION.copy.authTag}</div>
       </div>
       <div class="auth-card" dir="rtl">${inner}</div>
     </div>`;
@@ -2658,8 +2660,8 @@ function renderAuth(mode = null, msg = null) {
     ${invited ? `<div class="auth-ok">🎁 وصلتَ بدعوة من زميل — أهلاً بك</div>` : ''}
     ${login ? '' : `
       <ul class="perks">
-        ${perk('أكثر من 5,000 سؤال لاختبار الطوارئ مع شرح كل إجابة')}
-        ${perk('18 قسماً واختبارات محاكاة بالتوقيت الحقيقي')}
+        ${perk(EDITION.copy.perkBank)}
+        ${perk(EDITION.copy.perkSections)}
         ${perk('تقدّمك محفوظ ويتبعك على كل أجهزتك')}
       </ul>`}
     ${msg ? `<div class="auth-ok">${esc(msg)}</div>` : ''}
@@ -2674,7 +2676,7 @@ function renderAuth(mode = null, msg = null) {
     </label>
     ${login ? '' : `
       <label class="auth-label">رقم الواتساب
-        <input id="au-phone" type="tel" dir="ltr" autocomplete="tel" placeholder="+968 9xxx xxxx">
+        <input id="au-phone" type="tel" dir="ltr" autocomplete="tel" placeholder="${EDITION.phonePlaceholder}">
       </label>`}
     <label class="auth-label">كلمة المرور
       <input id="au-pass" type="password" dir="ltr" autocomplete="${login ? 'current' : 'new'}-password" placeholder="6+ أحرف">
@@ -2789,7 +2791,7 @@ function renderPaywall(err = null) {
       <div class="pay-state">${icon('check')}</div>
       <h1>استلمنا إيصالك</h1>
       <p class="auth-sub">نراجعه في أقرب وقت، وسيُفتح حسابك هنا تلقائياً. لا حاجة لأي خطوة أخرى.</p>
-      ${wa ? `<a class="btn btn-primary btn-lg btn-block" target="_blank" rel="noopener" href="${waLink(`مرحباً، أرسلت إيصال الدفع لتفعيل حسابي في Oman EM Prep — ${p.email || ''}`)}">نبّهنا عبر واتساب لتفعيل أسرع</a>` : ''}
+      ${wa ? `<a class="btn btn-primary btn-lg btn-block" target="_blank" rel="noopener" href="${waLink(`مرحباً، أرسلت إيصال الدفع لتفعيل حسابي في ${EDITION.appName} — ${p.email || ''}`)}">نبّهنا عبر واتساب لتفعيل أسرع</a>` : ''}
       ${foot}`);
     payPoll = setInterval(async () => {
       await SB.refreshProfile();
@@ -2860,7 +2862,7 @@ function renderPaywall(err = null) {
     </details>
     ${promoReady() ? `<button class="btn btn-ghost btn-block" onclick="openPromo()">${icon('plus')} لديك رمز دعائي؟ افتح أسئلة إضافية</button>` : ''}
     ${referralEnabled() ? `<button class="btn btn-ghost btn-block" onclick="openReferral()">${icon('share')} ادعُ زملاءك واربح أسئلة مجانية</button>` : ''}
-    ${wa ? `<a class="btn btn-ghost btn-block" target="_blank" rel="noopener" href="${waLink('مرحباً، لدي استفسار عن تفعيل حسابي في Oman EM Prep')}">💬 تواصل معنا عبر واتساب</a>` : ''}
+    ${wa ? `<a class="btn btn-ghost btn-block" target="_blank" rel="noopener" href="${waLink(`مرحباً، لدي استفسار عن تفعيل حسابي في ${EDITION.appName}`)}">💬 تواصل معنا عبر واتساب</a>` : ''}
     ${foot}`);
 
   $$('.pay-copy').forEach((b) => b.addEventListener('click', async () => {

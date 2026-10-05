@@ -45,7 +45,14 @@ let drillFrom = null;              // where a doctor card was opened from, so "b
   startAutoRefresh();
 })();
 
+// the bank's size, for coverage percentages: summed from the file the app itself reads
+let BANK_SIZE = 0;
+
 async function loadAll() {
+  if (!BANK_SIZE) {
+    BANK_SIZE = await fetch('data/sections.json').then((r) => r.json())
+      .then((d) => d.sections.reduce((a, x) => a + (x.count || 0), 0)).catch(() => 0);
+  }
   const [users, codes, sessions, requests, promos, pay, events, promoRed, funnel, failures, sources] = await Promise.all([
     SB.req('/rest/v1/v_admin_users?select=*&order=last_seen.desc'),
     SB.req('/rest/v1/v_admin_codes?select=*&order=created_at.desc'),
@@ -122,7 +129,7 @@ function renderDenied() {
 
 function shell(inner) {
   const waiting = pendingRequests().length;
-  document.title = (waiting ? `(${waiting}) ` : '') + 'Oman EM Prep — Admin';
+  document.title = (waiting ? `(${waiting}) ` : '') + EDITION.appName + ' — Admin';
   const tabs = [
     ['overview', '📊', 'Overview'],
     ['requests', '🧾', 'Requests' + (waiting ? `<span class="tab-badge">${waiting}</span>` : '')],
@@ -157,7 +164,7 @@ function renderOverview() {
   const weekAgo = Date.now() - 7 * 864e5;
   const active7 = doctors.filter((u) => new Date(u.last_seen).getTime() > weekAgo).length;
   const totalCovered = doctors.reduce((a, u) => a + (u.covered || 0), 0);
-  const avgCoverage = doctors.length ? Math.round((totalCovered / doctors.length / 5093) * 100) : 0;
+  const avgCoverage = doctors.length ? Math.round((totalCovered / doctors.length / (BANK_SIZE || 1)) * 100) : 0;
   const codesLeft = codesCache.filter((c) => c.active).reduce((a, c) => a + Math.max(0, c.max_uses - c.uses), 0);
 
   // activity: sessions per day, last 14 days
@@ -214,7 +221,7 @@ function renderDoctors() {
   const rows = usersCache
     .filter((u) => !q || (u.name || '').toLowerCase().includes(q) || (u.email || '').toLowerCase().includes(q))
     .map((u) => {
-      const covPct = 5093 ? Math.round(((u.covered || 0) / 5093) * 100) : 0;
+      const covPct = BANK_SIZE ? Math.round(((u.covered || 0) / BANK_SIZE) * 100) : 0;
       const rel = relTime(u.last_seen);
       return `
         <div class="hist-row" style="cursor:pointer" onclick="openDrill('${u.id}')">
@@ -292,7 +299,7 @@ function renderDrill() {
       <div>
         <h1>${esc(u.name || u.email)}</h1>
         <div class="card-meta">${esc(u.email || '')} · member since ${new Date(u.created_at).toLocaleDateString()} · last seen ${relTime(u.last_seen)}</div>
-        <div class="card-meta">coverage ${u.covered || 0}/5093 · attempts ${u.attempts || 0} · mastered ${u.mastered || 0}</div>
+        <div class="card-meta">coverage ${u.covered || 0}/${BANK_SIZE} · attempts ${u.attempts || 0} · mastered ${u.mastered || 0}</div>
         ${(u.bonus_questions || u.referrals || u.referral_code) ? `<div class="card-meta">🎁 bonus ${u.bonus_questions || 0} · referred ${u.referrals || 0} (${u.referrals_paid || 0} paid)${u.referral_code ? ' · code ' + esc(u.referral_code) : ''}</div>` : ''}
         ${u.role === 'admin' ? '' : `
           <div class="req-actions">
@@ -414,13 +421,13 @@ async function rejectRequest(id, reason) {
 
 /* ---------------- payment details shown to doctors ---------------- */
 const PAY_FIELDS = [
-  ['price', 'سعر الاشتراك الكامل', '25 ر.ع'],
-  ['part_price', 'سعر الجزء الواحد (البنك 3 أجزاء)', '10 ر.ع'],
+  ['price', 'سعر الاشتراك الكامل', EDITION.priceFull],
+  ['part_price', 'سعر الجزء الواحد (البنك 3 أجزاء)', EDITION.pricePart],
   ['beneficiary', 'اسم المستفيد', ''],
-  ['bank', 'البنك', 'Bank Muscat'],
+  ['bank', 'البنك', EDITION.bankPlaceholder],
   ['account', 'رقم الحساب / IBAN', ''],
   ['pay_link', 'رابط دفع (اختياري)', 'https://…'],
-  ['whatsapp', 'واتساب الدعم (بمفتاح الدولة)', '+968…'],
+  ['whatsapp', 'واتساب الدعم (بمفتاح الدولة)', EDITION.whatsappPlaceholder],
 ];
 
 function renderPayment() {
@@ -771,7 +778,7 @@ function renderAnalytics() {
     <div class="overall" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
       ${anCard(m.cohort.length, 'تسجيلات جديدة', "anOpen('signups')")}
       ${anCard(m.approved.length, 'اشتراكات مدفوعة', "anOpen('requests','approved')")}
-      ${anCard(m.revenue, 'عائد تقديري (ر.ع)', "anOpen('revenue')")}
+      ${anCard(m.revenue, `عائد تقديري (${EDITION.currency})`, "anOpen('revenue')")}
       ${anCard(convRate + '%', 'سجّلوا ثم دفعوا', "anOpen('cohort_paid')")}
       ${anCard(approvalRate + '%', 'نسبة قبول الإيصالات', "anOpen('reviewed')")}
       ${anCard(avgCovered, 'متوسط الأسئلة قبل الطلب', "anOpen('requests','all')")}
@@ -801,7 +808,7 @@ function renderAnalytics() {
     <div class="hist-list">
       <div class="hist-row" style="cursor:pointer" onclick="anOpen('requests','approved')">
         <span class="hist-title">مقبولة <span class="status-chip approved">approved</span></span>
-        <span class="hist-meta">${arRec(m.approved.length)} · ${m.revenue} ر.ع</span></div>
+        <span class="hist-meta">${arRec(m.approved.length)} · ${m.revenue} ${EDITION.currency}</span></div>
       <div class="hist-row" style="cursor:pointer" onclick="anOpen('requests','rejected')">
         <span class="hist-title">مرفوضة <span class="status-chip rejected">rejected</span></span>
         <span class="hist-meta">${arRec(m.rejected.length)}</span></div>
@@ -835,7 +842,7 @@ const anEventMeta = (e) => `${esc(EVENT_LABEL[e.name] || e.name)}`
 /* ---- level 2: the list behind one figure ---- */
 function renderAnDrill(m) {
   const { kind, key } = anDrill;
-  const reqMeta = (r) => `${planLabel(r)} · ${m.amountOf(r)} ر.ع · ${arQ(r.covered || 0)} وقت الطلب · ${dayStr(r.reviewed_at || r.created_at)}`
+  const reqMeta = (r) => `${planLabel(r)} · ${m.amountOf(r)} ${EDITION.currency} · ${arQ(r.covered || 0)} وقت الطلب · ${dayStr(r.reviewed_at || r.created_at)}`
     + (r.reject_reason ? ` · ${esc(r.reject_reason)}` : '');
   const newest = (a, b) => new Date(b.created_at) - new Date(a.created_at);
   let title = '', sub = '', extra = '', rows = [];
@@ -883,7 +890,7 @@ function renderAnDrill(m) {
 
   } else if (kind === 'revenue') {
     title = 'العائد التقديري';
-    sub = `${m.revenue} ر.ع من ${arRec(m.approved.length)} · ${anRangeLabel()}`;
+    sub = `${m.revenue} ${EDITION.currency} من ${arRec(m.approved.length)} · ${anRangeLabel()}`;
     extra = anEmpty(`السعر المستخدم في الحساب: اشتراك كامل ${payCache.price || '—'} · جزء ${payCache.part_price || '—'} — من تبويب Payment، فالرقم تقديري إن كان السعر مختلفاً وقت البيع.`);
     rows = [...m.approved].sort((a, b) => new Date(b.reviewed_at || b.created_at) - new Date(a.reviewed_at || a.created_at))
       .map((r) => anDocRow(m.allById.get(r.user_id), reqMeta(r)));
@@ -904,7 +911,7 @@ function renderAnDrill(m) {
           ${anCard(inP.length, 'استخدامات خلال ' + anRangeLabel())}
           ${anCard(granted, 'أسئلة مُنحت')}
           ${anCard(paidUsers.length, 'دفعوا بعده')}
-          ${anCard(earned, 'عائد منهم (ر.ع)')}
+          ${anCard(earned, `عائد منهم (${EDITION.currency})`)}
         </div>
         ${anEmpty(`${c.active ? 'الكود نشط' : 'الكود ملغى'}${c.expires_at ? ' · ينتهي ' + dayStr(c.expires_at) : ' · بلا تاريخ انتهاء'} · أُنشئ ${dayStr(c.created_at)}`)}`;
       rows = [...reds].sort((a, b) => new Date(b.redeemed_at || 0) - new Date(a.redeemed_at || 0))
@@ -953,7 +960,7 @@ function renderAnDrill(m) {
       });
       items.sort((a, b) => new Date(b.ts) - new Date(a.ts));
       title = s.title;
-      sub = `${s.signups} تسجيل · ${s.paid} اشتراك مدفوع · ${s.revenue} ر.ع`;
+      sub = `${s.signups} تسجيل · ${s.paid} اشتراك مدفوع · ${s.revenue} ${EDITION.currency}`;
       rows = items.map((it) => anDocRow(m.allById.get(it.uid), `${esc(it.text)} · ${timeStr(it.ts)}`));
     }
   }
@@ -1165,7 +1172,7 @@ function doctorsListHtml() {
       <div class="hist-row" style="cursor:pointer" onclick="openDrill('${u.id}')">
         <span class="hist-title">${esc(u.name || u.email)}${statusChip(u)}<br>
           <span class="hist-meta" style="font-weight:400">${esc(u.email || '')}</span></span>
-        <span class="hist-meta">coverage ${Math.round(((u.covered || 0) / 5093) * 100)}% · ${u.attempts || 0} attempts · mastered ${u.mastered || 0} · ${relTime(u.last_seen)}</span>
+        <span class="hist-meta">coverage ${Math.round(((u.covered || 0) / (BANK_SIZE || 1)) * 100)}% · ${u.attempts || 0} attempts · mastered ${u.mastered || 0} · ${relTime(u.last_seen)}</span>
       </div>`).join('');
   return rows || '<div class="card"><div class="card-meta">لا نتائج.</div></div>';
 }
