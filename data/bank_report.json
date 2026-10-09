@@ -1,0 +1,108 @@
+{
+  "source": "D:\\PREP\\telegram_monitor\\_extraction_v54\\questions_v54.jsonl",
+  "in_bank": 10129,
+  "from_exam": 1654,
+  "recalls_archive": 537,
+  "left_out": {
+    "near_duplicate_merged": 486,
+    "twin_sightings_added": 115,
+    "needs_image": 525,
+    "needs_review": 567,
+    "no_answer": 5544,
+    "answer_disputed_no_reference": 36,
+    "no_reference_moved_to_recalls": 537,
+    "refers_to_a_case_it_does_not_carry": 87,
+    "incomplete_options": 1675,
+    "letters_dropped_by_pdf_font": 34,
+    "same_question_two_keys": 11,
+    "reference_disagrees_with_key": 6,
+    "question_itself_is_broken": 9
+  },
+  "weak_section_calls": 1638,
+  "sections": [
+    {
+      "id": "family-medicine",
+      "count": 870,
+      "share_pct": 8.6,
+      "from_exam": 114,
+      "blueprint_pct": 19
+    },
+    {
+      "id": "internal-medicine",
+      "count": 2070,
+      "share_pct": 20.4,
+      "from_exam": 379,
+      "blueprint_pct": 11
+    },
+    {
+      "id": "pediatrics",
+      "count": 1347,
+      "share_pct": 13.3,
+      "from_exam": 192,
+      "blueprint_pct": 10
+    },
+    {
+      "id": "obgyn",
+      "count": 1616,
+      "share_pct": 16.0,
+      "from_exam": 157,
+      "blueprint_pct": 10
+    },
+    {
+      "id": "emergency",
+      "count": 785,
+      "share_pct": 7.8,
+      "from_exam": 69,
+      "blueprint_pct": 10
+    },
+    {
+      "id": "psychiatry",
+      "count": 1234,
+      "share_pct": 12.2,
+      "from_exam": 273,
+      "blueprint_pct": 9
+    },
+    {
+      "id": "surgery",
+      "count": 473,
+      "share_pct": 4.7,
+      "from_exam": 50,
+      "blueprint_pct": 6
+    },
+    {
+      "id": "dermatology",
+      "count": 350,
+      "share_pct": 3.5,
+      "from_exam": 37,
+      "blueprint_pct": 5
+    },
+    {
+      "id": "orthopedics",
+      "count": 611,
+      "share_pct": 6.0,
+      "from_exam": 132,
+      "blueprint_pct": 5
+    },
+    {
+      "id": "ophthalmology",
+      "count": 335,
+      "share_pct": 3.3,
+      "from_exam": 165,
+      "blueprint_pct": 5
+    },
+    {
+      "id": "ent",
+      "count": 278,
+      "share_pct": 2.7,
+      "from_exam": 36,
+      "blueprint_pct": 5
+    },
+    {
+      "id": "radiology",
+      "count": 160,
+      "share_pct": 1.6,
+      "from_exam": 50,
+      "blueprint_pct": 5
+    }
+  ]
+}

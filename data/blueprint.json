@@ -1,27 +1,258 @@
 {
   "exam": {
-    "code": "SIM",
-    "name": "Full Simulation",
-    "nameAr": "محاكاة الاختبار",
-    "authority": "",
-    "source": "sample",
-    "questions": 20,
-    "minutes": 30,
-    "format": "20 single best answer MCQs · 30m",
-    "note": "Sample blueprint — replaced with the real one"
+    "code": "SBFM",
+    "name": "Saudi Board Family Medicine",
+    "nameAr": "البورد السعودي لطب الأسرة",
+    "authority": "SCFHS",
+    "source": "SCFHS Family Medicine blueprint (Promotion / Part One / Final)",
+    "questions": 100,
+    "minutes": 150,
+    "format": "100 single best answer MCQs",
+    "note": "Section weights are the official ones. The 150-minute length is provisional."
   },
   "milestoneTests": [
-    { "id": 1, "unlockAt": 20, "size": 10, "minutes": 15, "mix": { "covered": 0.75, "fresh": 0.25 } },
-    { "id": 2, "unlockAt": 40, "size": 10, "minutes": 15, "mix": { "covered": 0.75, "fresh": 0.25 } },
-    { "id": 3, "unlockAt": 60, "size": 10, "minutes": 15, "mix": { "covered": 0.75, "fresh": 0.25 } }
+    {
+      "id": 1,
+      "unlockAt": 150,
+      "size": 40,
+      "minutes": 60,
+      "mix": {
+        "covered": 0.75,
+        "fresh": 0.25
+      }
+    },
+    {
+      "id": 2,
+      "unlockAt": 500,
+      "size": 50,
+      "minutes": 75,
+      "mix": {
+        "covered": 0.75,
+        "fresh": 0.25
+      }
+    },
+    {
+      "id": 3,
+      "unlockAt": 1200,
+      "size": 50,
+      "minutes": 75,
+      "mix": {
+        "covered": 0.75,
+        "fresh": 0.25
+      }
+    }
   ],
   "simulations": [
-    { "id": 1, "unlockAtCoverage": 0.80, "size": 20, "minutes": 30, "seed": "saudi-sim-1-v1" }
+    {
+      "id": 1,
+      "unlockAtCoverage": 0.05,
+      "size": 100,
+      "minutes": 150,
+      "seed": "sbfm-sim-1-v1"
+    }
+  ],
+  "tracks": [
+    {
+      "id": "r1",
+      "label": "R1",
+      "exam": "promotion",
+      "code": "PROMO",
+      "examName": "Promotion Exam",
+      "format": "100 سؤال",
+      "questions": 100,
+      "minutes": 150,
+      "pass": 60,
+      "simulations": [
+        {
+          "id": 11,
+          "name": "Promotion Simulation 1",
+          "unlockAtCoverage": 0.03,
+          "size": 100,
+          "minutes": 150,
+          "seed": "sbfm-promo-a"
+        },
+        {
+          "id": 12,
+          "name": "Promotion Simulation 2",
+          "unlockAtCoverage": 0.08,
+          "size": 100,
+          "minutes": 150,
+          "seed": "sbfm-promo-b"
+        }
+      ]
+    },
+    {
+      "id": "r2",
+      "label": "R2",
+      "exam": "part1",
+      "code": "PART 1",
+      "examName": "Part One",
+      "format": "150 سؤالاً",
+      "questions": 150,
+      "minutes": 225,
+      "pass": 65,
+      "simulations": [
+        {
+          "id": 21,
+          "name": "Part One Simulation 1",
+          "unlockAtCoverage": 0.05,
+          "size": 150,
+          "minutes": 225,
+          "seed": "sbfm-part1-a"
+        },
+        {
+          "id": 22,
+          "name": "Part One Simulation 2",
+          "unlockAtCoverage": 0.1,
+          "size": 150,
+          "minutes": 225,
+          "seed": "sbfm-part1-b"
+        }
+      ]
+    },
+    {
+      "id": "r3",
+      "label": "R3",
+      "exam": "promotion",
+      "code": "PROMO",
+      "examName": "Promotion Exam",
+      "format": "100 سؤال",
+      "questions": 100,
+      "minutes": 150,
+      "pass": 60,
+      "simulations": [
+        {
+          "id": 31,
+          "name": "Promotion Simulation 1",
+          "unlockAtCoverage": 0.03,
+          "size": 100,
+          "minutes": 150,
+          "seed": "sbfm-promo-c"
+        },
+        {
+          "id": 32,
+          "name": "Promotion Simulation 2",
+          "unlockAtCoverage": 0.08,
+          "size": 100,
+          "minutes": 150,
+          "seed": "sbfm-promo-d"
+        }
+      ]
+    },
+    {
+      "id": "r4",
+      "label": "R4",
+      "exam": "final",
+      "code": "FINAL",
+      "examName": "Final Written Exam",
+      "format": "ورقتان × 100 سؤال",
+      "questions": 200,
+      "minutes": 300,
+      "pass": 70,
+      "simulations": [
+        {
+          "id": 41,
+          "name": "Final — Paper 1",
+          "unlockAtCoverage": 0.05,
+          "size": 100,
+          "minutes": 150,
+          "seed": "sbfm-final-p1"
+        },
+        {
+          "id": 42,
+          "name": "Final — Paper 2",
+          "unlockAtCoverage": 0.05,
+          "size": 100,
+          "minutes": 150,
+          "seed": "sbfm-final-p2"
+        }
+      ]
+    }
   ],
   "domains": [
-    { "name": "Medicine",   "weight": 25, "sections": ["medicine"] },
-    { "name": "Pediatrics", "weight": 25, "sections": ["pediatrics"] },
-    { "name": "Surgery",    "weight": 25, "sections": ["surgery"] },
-    { "name": "OBGYN",      "weight": 25, "sections": ["obgyn"] }
+    {
+      "name": "Family Medicine",
+      "weight": 19,
+      "sections": [
+        "family-medicine"
+      ]
+    },
+    {
+      "name": "Internal Medicine",
+      "weight": 11,
+      "sections": [
+        "internal-medicine"
+      ]
+    },
+    {
+      "name": "Pediatrics",
+      "weight": 10,
+      "sections": [
+        "pediatrics"
+      ]
+    },
+    {
+      "name": "Obstetrics & Gynecology",
+      "weight": 10,
+      "sections": [
+        "obgyn"
+      ]
+    },
+    {
+      "name": "Emergency Medicine",
+      "weight": 10,
+      "sections": [
+        "emergency"
+      ]
+    },
+    {
+      "name": "Psychiatry",
+      "weight": 9,
+      "sections": [
+        "psychiatry"
+      ]
+    },
+    {
+      "name": "General Surgery",
+      "weight": 6,
+      "sections": [
+        "surgery"
+      ]
+    },
+    {
+      "name": "Dermatology",
+      "weight": 5,
+      "sections": [
+        "dermatology"
+      ]
+    },
+    {
+      "name": "Orthopedics & MSK",
+      "weight": 5,
+      "sections": [
+        "orthopedics"
+      ]
+    },
+    {
+      "name": "Ophthalmology",
+      "weight": 5,
+      "sections": [
+        "ophthalmology"
+      ]
+    },
+    {
+      "name": "Otolaryngology",
+      "weight": 5,
+      "sections": [
+        "ent"
+      ]
+    },
+    {
+      "name": "Radiology",
+      "weight": 5,
+      "sections": [
+        "radiology"
+      ]
+    }
   ]
 }

@@ -1,12 +1,22 @@
 {
   "sections": [
     {
-      "id": "medicine",
-      "name": "Medicine",
-      "nameAr": "الباطنة العامة",
+      "id": "family-medicine",
+      "name": "Family Medicine",
+      "nameAr": "طب الأسرة",
+      "icon": "👨‍👩‍👧",
+      "file": "data/questions/FamilyMedicine.json",
+      "count": 870,
+      "fromExam": 114
+    },
+    {
+      "id": "internal-medicine",
+      "name": "Internal Medicine",
+      "nameAr": "الباطنة",
       "icon": "🩺",
-      "file": "data/questions/Medicine.json",
-      "count": 20
+      "file": "data/questions/InternalMedicine.json",
+      "count": 2070,
+      "fromExam": 379
     },
     {
       "id": "pediatrics",
@@ -14,23 +24,89 @@
       "nameAr": "الأطفال",
       "icon": "🧒",
       "file": "data/questions/Pediatrics.json",
-      "count": 20
-    },
-    {
-      "id": "surgery",
-      "name": "Surgery",
-      "nameAr": "الجراحة",
-      "icon": "🩹",
-      "file": "data/questions/Surgery.json",
-      "count": 20
+      "count": 1347,
+      "fromExam": 192
     },
     {
       "id": "obgyn",
-      "name": "OBGYN",
-      "nameAr": "النساء والتوليد",
+      "name": "Obstetrics & Gynecology",
+      "nameAr": "النساء والولادة",
       "icon": "🤰",
       "file": "data/questions/OBGYN.json",
-      "count": 20
+      "count": 1616,
+      "fromExam": 157
+    },
+    {
+      "id": "emergency",
+      "name": "Emergency Medicine",
+      "nameAr": "الطوارئ",
+      "icon": "🚑",
+      "file": "data/questions/Emergency.json",
+      "count": 785,
+      "fromExam": 69
+    },
+    {
+      "id": "psychiatry",
+      "name": "Psychiatry",
+      "nameAr": "الطب النفسي",
+      "icon": "🧠",
+      "file": "data/questions/Psychiatry.json",
+      "count": 1234,
+      "fromExam": 273
+    },
+    {
+      "id": "surgery",
+      "name": "General Surgery",
+      "nameAr": "الجراحة العامة",
+      "icon": "🩹",
+      "file": "data/questions/Surgery.json",
+      "count": 473,
+      "fromExam": 50
+    },
+    {
+      "id": "dermatology",
+      "name": "Dermatology",
+      "nameAr": "الجلدية",
+      "icon": "🧴",
+      "file": "data/questions/Dermatology.json",
+      "count": 350,
+      "fromExam": 37
+    },
+    {
+      "id": "orthopedics",
+      "name": "Orthopedics & MSK",
+      "nameAr": "العظام والعضلات",
+      "icon": "🦴",
+      "file": "data/questions/Orthopedics.json",
+      "count": 611,
+      "fromExam": 132
+    },
+    {
+      "id": "ophthalmology",
+      "name": "Ophthalmology",
+      "nameAr": "العيون",
+      "icon": "👁️",
+      "file": "data/questions/Ophthalmology.json",
+      "count": 335,
+      "fromExam": 165
+    },
+    {
+      "id": "ent",
+      "name": "Otolaryngology",
+      "nameAr": "الأنف والأذن والحنجرة",
+      "icon": "👂",
+      "file": "data/questions/ENT.json",
+      "count": 278,
+      "fromExam": 36
+    },
+    {
+      "id": "radiology",
+      "name": "Radiology",
+      "nameAr": "الأشعة",
+      "icon": "🩻",
+      "file": "data/questions/Radiology.json",
+      "count": 160,
+      "fromExam": 50
     }
   ]
 }

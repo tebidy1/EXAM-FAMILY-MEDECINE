@@ -1,0 +1,3932 @@
+{
+ "fm_00c193c7a5ee195c": {
+  "verdict": "supported",
+  "quote": "Treatment includes parental massaging of the affected duct two to three times per day.",
+  "source": "brattons 2018 .pdf",
+  "source_kind": "book",
+  "pos": 852120,
+  "disputed": false
+ },
+ "fm_0166a7c4f60cef4f": {
+  "verdict": "supported",
+  "quote": "Toxic megacolon is more common in ulcerative colitis; look for markedly distended colon on abdominal radiograph.",
+  "source": "USMLE step 2 secrets Essay questions_.pdf",
+  "source_kind": "book",
+  "pos": 268520,
+  "disputed": false
+ },
+ "fm_01ae7bbdc6e85fda": {
+  "verdict": "supported",
+  "quote": "L2 L3 L4 LS Sl Dr Assem L2 CD L3 m L4 flD LS CD Sl CD LS lesion features = loss of foot dorsiflexion + sensory loss dorsum of the foot Impo…",
+  "source": "Passmedicine MRCP Part I 2019.pdf",
+  "source_kind": "book",
+  "pos": 2753420,
+  "disputed": false
+ },
+ "fm_024ef017ad98131b": {
+  "verdict": "supported",
+  "quote": "…Etiology ₋ Parainfluenza viruses 1,2,3 cause 75% ₋ Adenovirus ₋ Respiratory syncytial virus (RSV) ₋ Mycoplasma pneumoniae • Symptoms: URI symptoms, “barky” cough, hoarseness,…",
+  "source": "Pediatric lectures 2018.pdf",
+  "source_kind": "lecture",
+  "pos": 97900,
+  "disputed": false
+ },
+ "fm_026c7a4957f1d4fa": {
+  "verdict": "supported",
+  "quote": "All patients with primary acute angle closure should undergo prophylactic laser peripheral iridotomy to the unaffected eye, or early cataract extraction should be con- sidered, unless that eye has already undergone cataract or glaucoma surgery.",
+  "source": "CURRENT Medical Diagnosis & Treatment 2023.pdf",
+  "source_kind": "book",
+  "pos": 974840,
+  "disputed": false
+ },
+ "fm_02814ffb2efdee0a": {
+  "verdict": "broken",
+  "note": "options of two questions merged"
+ },
+ "fm_02fe4caa0daeb2f9": {
+  "verdict": "supported",
+  "quote": "emature if onset <40 yrs age Preceded by the climacteric Elevated FSH and LH Low oestradiol Symptoms can persist for years Climacteric: Irregular menses (short or long cycles) Menorrhagia Hot flushes Night sweats Palpitations Vaginal dryness Urinary frequency Stress incontinence Low mood or anxiety Insomnia Reduced libido Menopause: As above plus: S",
+  "source": "BMJ Differential Diagnosis in Primary Care.pdf",
+  "source_kind": "book",
+  "pos": 195060,
+  "disputed": false
+ },
+ "fm_0312427e48307855": {
+  "verdict": "partial",
+  "quote": "…Incubation 3–5 days Risk factors: New sexual partner, unprotected sex, perinatal transmission Associated with PID and infertility in females Up to 10% are asymptomatic Purulent urethral discharge Dysuria Urinary frequency Meata…",
+  "source": "BMJ Differential Diagnosis in Primary Care.pdf",
+  "source_kind": "book",
+  "pos": 262760,
+  "disputed": false
+ },
+ "fm_04462e4af8700911": {
+  "verdict": "supported",
+  "quote": "Positivity of LAC, anticardiolipin antibody, and anti–β2-GPI antibodies are associated with the highest risk for thrombosis and pregnancy loss.",
+  "source": "MKSAP board basics short version_.pdf",
+  "source_kind": "book",
+  "pos": 597540,
+  "disputed": false
+ },
+ "fm_04f5aaccf57fba68": {
+  "verdict": "disagrees",
+  "quote": "sal to vaccinate form be signed by patients or parents who refuse a recommended vaccine.",
+  "source": "ABFM 2015-2016-2017-2018 Q A.pdf",
+  "source_kind": "abfm",
+  "pos": 837760,
+  "disputed": false,
+  "source_supports": "D"
+ },
+ "fm_055be3cfde51db6e": {
+  "verdict": "partial",
+  "quote": "…Amnesia before impact >30 min (i.e.",
+  "source": "Toronto 2021.pdf",
+  "source_kind": "book",
+  "pos": 916420,
+  "disputed": false
+ },
+ "fm_05a1fbee40c52cc0": {
+  "verdict": "supported",
+  "quote": "…Short acting insulin Regular Infusion of 0.1 U/kg/h (goal = lower BG…",
+  "source": "Ottawa handbook of Emergency Medicine 2021.pdf",
+  "source_kind": "book",
+  "pos": 61900,
+  "disputed": false
+ },
+ "fm_07d0413bdbeba859": {
+  "verdict": "partial",
+  "quote": "Of children younger than 15 years, toddlers seem to be the most vulnerable for foreign body aspiration (77% of deaths).",
+  "source": "Canada Q bank MCQs.pdf",
+  "source_kind": "book",
+  "pos": 4078800,
+  "disputed": false
+ },
+ "fm_091a6f1da24c422b": {
+  "verdict": "partial",
+  "quote": "Upon funduscopic examination, the fundus appears diffusely white with a reddish hue within the macula (cherry-red spot) (see Fig.",
+  "source": "Graber and Wilbur’s 5 edition.pdf",
+  "source_kind": "book",
+  "pos": 2870440,
+  "disputed": false
+ },
+ "fm_0afa40ef10d890dc": {
+  "verdict": "broken",
+  "note": "refers to a case it does not carry"
+ },
+ "fm_0beb8d1c683843aa": {
+  "verdict": "partial",
+  "quote": "…Susceptible pregnant women, newborns whose mothers had chickenpox within 5 days before delivery to 48 hours after delivery: VZIG Hepatitis Hepatitis B: Ig plus vaccine; given at birth, 1…",
+  "source": "USMLE master the board topics step 3.pdf",
+  "source_kind": "book",
+  "pos": 736140,
+  "disputed": false
+ },
+ "fm_0c1780d86586bec8": {
+  "verdict": "supported",
+  "quote": "Threatened abortion is defined by vaginal bleeding with or without mild suprapubic cramping or pain.",
+  "source": "Emergency Medicine-Clinical Essentials 2nd edition.pdf",
+  "source_kind": "book",
+  "pos": 4908260,
+  "disputed": false
+ },
+ "fm_0c3fc2b5f89ea0a1": {
+  "verdict": "supported",
+  "quote": "…Index and middle finger Ring and little finger Reflex Bi…",
+  "source": "Toronto 2021.pdf",
+  "source_kind": "book",
+  "pos": 4200040,
+  "disputed": false
+ },
+ "fm_0c635397685a96b4": {
+  "verdict": "partial",
+  "quote": "…Copper Anemia, ataxia, fatigue, musc…",
+  "source": "Postoperative Management After Metabolic Surgery_ Role of the Family Physician.pdf",
+  "source_kind": "aafp",
+  "pos": 20520,
+  "disputed": false
+ },
+ "fm_0cc9c1d137432087": {
+  "verdict": "supported",
+  "quote": "lid retraction) Graves’ disease (unilateral or bilateral, most common cause i…",
+  "source": "Toronto 2021.pdf",
+  "source_kind": "book",
+  "pos": 3989320,
+  "disputed": false
+ },
+ "fm_0e23639f6237752d": {
+  "verdict": "supported",
+  "quote": "…symptoms like persistent hoarseness, dy…",
+  "source": "Pretest family medicine 4th ed.pdf",
+  "source_kind": "book",
+  "pos": 682000,
+  "disputed": false
+ },
+ "fm_0e4eca9ccb389390": {
+  "verdict": "supported",
+  "quote": "Endometriosis is usually a deep aching pain that begins several days prior to menses, may last throughout the cycle, and may be associated wit…",
+  "source": "Family Medicine Ambulatory care and prevention.pdf",
+  "source_kind": "book",
+  "pos": 473000,
+  "disputed": false
+ },
+ "fm_0ede2203a8827fc7": {
+  "verdict": "partial",
+  "quote": "Patients with POAG present with bilateral peripheral visual loss that occurs gradually and painlessly.",
+  "source": "MKSAP 17 MCQs.pdf",
+  "source_kind": "book",
+  "pos": 548900,
+  "disputed": false
+ },
+ "fm_0f9fb7d67120753b": {
+  "verdict": "supported",
+  "quote": "…Associated with systemic disease: Ankylosing spondylitis, Reiter’s disease, IBD, psoriasis, Behcet’s disease, sarcoidosis Acute onset symptoms Unilateral eye pain Watery eye Blurred vision Photophobia Circumcorneal injection Irregular p…",
+  "source": "BMJ Differential Diagnosis in Primary Care.pdf",
+  "source_kind": "book",
+  "pos": 40440,
+  "disputed": false
+ },
+ "fm_1184d1a493fb433f": {
+  "verdict": "partial",
+  "quote": "In prescribing methylphenidate or atomoxetine for ADHD, it is important t…",
+  "source": "Mastering Psychiatry textbook 2016.pdf",
+  "source_kind": "book",
+  "pos": 816740,
+  "disputed": false
+ },
+ "fm_14fccfc16d2be5b7": {
+  "verdict": "supported",
+  "quote": "…Immune due to a natural infection anti-HBc Positive anti-HBs Positi…",
+  "source": "brattons 2018 .pdf",
+  "source_kind": "book",
+  "pos": 407480,
+  "disputed": false
+ },
+ "fm_17218984c0dc6d9b": {
+  "verdict": "supported",
+  "quote": "…Magnesium sulphate is used to both prevent seizures in patient…",
+  "source": "Pass Medicine 2013_.pdf",
+  "source_kind": "book",
+  "pos": 2571420,
+  "disputed": false
+ },
+ "fm_1a6c4a373f9ea7a4": {
+  "verdict": "partial",
+  "quote": "Patients receiving long-term systemic corticosteroids are at increased risk for several ocular complications, including glaucoma, cataract, and cent…",
+  "source": "CURRENT Medical Diagnosis & Treatment 2023.pdf",
+  "source_kind": "book",
+  "pos": 1070100,
+  "disputed": false
+ },
+ "fm_1bb85ddf613c1f64": {
+  "verdict": "partial",
+  "quote": "…most common causes in adults are cerumen impaction > otosclerosis & otitis…",
+  "source": "Pocket Primary Care 2018.pdf",
+  "source_kind": "book",
+  "pos": 985960,
+  "disputed": false
+ },
+ "fm_1bc5bdcf3996880e": {
+  "verdict": "supported",
+  "quote": "Review of the slide demonstrates adult worms and ova of Enterobius vermicularis (pin- worms) (Figure 214-1).",
+  "source": "Color Atlas of Family Medicine.pdf",
+  "source_kind": "book",
+  "pos": 3516020,
+  "disputed": false
+ },
+ "fm_1c1fa4e042da9487": {
+  "verdict": "supported",
+  "quote": "Pain associated with plantar fasciitis may be throbbing, searing, or piercing, especially with the first few steps in the morning or after periods of inactivity.",
+  "source": "Canada Q bank MCQs.pdf",
+  "source_kind": "book",
+  "pos": 2051680,
+  "disputed": false
+ },
+ "fm_1c3c5b5aa3c5a354": {
+  "verdict": "supported",
+  "quote": "dor DEFINITIONS HEIMLICH MANEUVER: Performed in children greater than 1 year of age and in adults by standing or sitting behind the person who is choking and placing the thumb side of one fist between the navel and the xiphoid process.",
+  "source": "Case Files 5th edition 2021.pdf",
+  "source_kind": "book",
+  "pos": 1047740,
+  "disputed": false
+ },
+ "fm_1c5c0ca0fdf65a1c": {
+  "verdict": "partial",
+  "quote": "Otherwise managed according to standard NICE hypertension guidelines avoid the routine use of beta-blockers in uncomplicated hypertension, particularly when…",
+  "source": "MRCP part I Pass medicine 2014.pdf",
+  "source_kind": "book",
+  "pos": 326560,
+  "disputed": false
+ },
+ "fm_1d32bfd670da2cf9": {
+  "verdict": "supported",
+  "quote": "The rash fades in a few days but a lacy, reticular rash develops on the extremities.",
+  "source": "ABFM 2015-2016-2017-2018 Q A.pdf",
+  "source_kind": "abfm",
+  "pos": 167260,
+  "disputed": false
+ },
+ "fm_1fb30679e183a133": {
+  "verdict": "partial",
+  "quote": "…Pain usually lasts seconds;​ pain is sharp or stinging or feels like an electric shock;​ episodic;​ possible trigger (eg, cool breeze on face, chewing, brushing ha…",
+  "source": "Ear Pain_ Diagnosing Common and Uncommon Causes.pdf",
+  "source_kind": "aafp",
+  "pos": 20900,
+  "disputed": false
+ },
+ "fm_20f34b614e8ccb27": {
+  "verdict": "supported",
+  "quote": "ic stenosis is nonbilious vomit- ing immediately after feeding, followed by a demand to feed again soon after (much the same as a teenager … the demand of feeding, not the vomiting).",
+  "source": "Graber and Wilbur’s 5 edition.pdf",
+  "source_kind": "book",
+  "pos": 2031320,
+  "disputed": false
+ },
+ "fm_2169f19a9878d960": {
+  "verdict": "supported",
+  "quote": "…Rusty coloured sputum Acute onset fever ± Herpes labia…",
+  "source": "BMJ Differential Diagnosis in Primary Care.pdf",
+  "source_kind": "book",
+  "pos": 98560,
+  "disputed": false
+ },
+ "fm_217c048d582c3be0": {
+  "verdict": "supported",
+  "quote": "Vitamin E ANSWER: B About half of pregnant women experience nausea and vomiting during pregnancy, which increases the risk of dehydration, poor weight gain, and impaired fetal growth.",
+  "source": "ABFM 2021 Q & A.pdf",
+  "source_kind": "abfm",
+  "pos": 78340,
+  "disputed": false
+ },
+ "fm_2351e924028e8b37": {
+  "verdict": "partial",
+  "quote": "…Low back pain Progressively worse over months Gradually involves thoracic spine Early morning back stiffness Relieved by activity Reduced spinal movements Lumbar lord…",
+  "source": "BMJ Differential Diagnosis in Primary Care.pdf",
+  "source_kind": "book",
+  "pos": 271880,
+  "disputed": false
+ },
+ "fm_23c4116e3c96db7e": {
+  "verdict": "supported",
+  "quote": "…hands, wrists, axillae, buttocks, groin; facial/scalp (infants) Linear vesicles, erythematous papules Licheniﬁed, excoriated Lice Scalp, pelvic, pubic Nits on hairs 1/4′′ from skin (capitis/pubis) Excoriation (body lice) Lichen simplex chronicus Back of neck…",
+  "source": "Family Medicine Ambulatory care and prevention.pdf",
+  "source_kind": "book",
+  "pos": 373440,
+  "disputed": false
+ },
+ "fm_2408ac4c976a9b55": {
+  "verdict": "supported",
+  "quote": "…Meralgia paresthetica Abdominal obesity, middle-aged men, pregnancy Anterolateral thigh pain, paresthesia Reproduced by pressing lateral femoral cut.",
+  "source": "Family Medicine Ambulatory care and prevention.pdf",
+  "source_kind": "book",
+  "pos": 1000620,
+  "disputed": false
+ },
+ "fm_25582f0044ebd1d2": {
+  "verdict": "partial",
+  "quote": "In addition, they have an increased long-term risk o endometrial cancer secondary to chronic exposure to unopposed estrogen.",
+  "source": "CURRENT Medical Diagnosis & Treatment 2023.pdf",
+  "source_kind": "book",
+  "pos": 4094260,
+  "disputed": false
+ },
+ "fm_262de78f419dbf4a": {
+  "verdict": "supported",
+  "quote": "…urinary incontinence, and dementia are typical signs and symptoms of normal p…",
+  "source": "Psychiatry Bratton MCQs.pdf",
+  "source_kind": "book",
+  "pos": 509660,
+  "disputed": false
+ },
+ "fm_27e3406ecf8cf120": {
+  "verdict": "supported",
+  "quote": "…it is possible to consider stopping AED gradually if you are fit-free for 2 years or more -if female on OCP start antiepileptic drugs should change contraception 'IUD or barrier' method as it decreases efficac…",
+  "source": "Neurology review.pdf",
+  "source_kind": "lecture",
+  "pos": 4260,
+  "disputed": true
+ },
+ "fm_292a790f99467062": {
+  "verdict": "partial",
+  "quote": "- Reduction methods for anterior dislocations: - Hanging weight Stimson technique, scapular manipulation, external rotation, forward elevation (Cooper and Milch), Figure 1: Normal Shoulder Xray Figure 2: Anterior shoulder dislocation with a small Hill-…",
+  "source": "Family Medicine the Essential MOH & SCFHS.pdf",
+  "source_kind": "book",
+  "pos": 2442840,
+  "disputed": false
+ },
+ "fm_29416e54fd0469f7": {
+  "verdict": "supported",
+  "quote": "Diagnosis is usually based on ultrasound.",
+  "source": "Canada Q bank MCQs.pdf",
+  "source_kind": "book",
+  "pos": 365980,
+  "disputed": false
+ },
+ "fm_298feab89d25916f": {
+  "verdict": "supported",
+  "quote": "…The answer is D: Repetitive late decelerations of the FHR may signal…",
+  "source": "brattons 2018 .pdf",
+  "source_kind": "book",
+  "pos": 1201200,
+  "disputed": false
+ },
+ "fm_29dbbba2f29c82e3": {
+  "verdict": "supported",
+  "quote": "Morton neuroma usually presents with a feeling as if the patient is standing on a pebble in their shoe, with a burning sensation in the ball of your foot that may radiate into the toes.",
+  "source": "brattons 2018 .pdf",
+  "source_kind": "book",
+  "pos": 262580,
+  "disputed": false
+ },
+ "fm_2bb02700263a2ebe": {
+  "verdict": "supported",
+  "quote": "Besides age, FEV1 is the best predictor of mortality.",
+  "source": "Family Medicine Ambulatory care and prevention.pdf",
+  "source_kind": "book",
+  "pos": 1710680,
+  "disputed": false
+ },
+ "fm_2bc267cfb464a05b": {
+  "verdict": "supported",
+  "quote": "…A varicocele can cause testicular atrophy in ad…",
+  "source": "BMJ Differential Diagnosis in Primary Care.pdf",
+  "source_kind": "book",
+  "pos": 260260,
+  "disputed": false
+ },
+ "fm_2c24e16c6fb653ff": {
+  "verdict": "supported",
+  "quote": "raining ± Localised pain On standing: Visible groin swelling Below and lateral to pubic tubercle Mobile swelling Unable to palpate above mass ± Palpable cough impulse On lying down: ± Reducible Controlled by pressure over the femoral canal Consider referral for hernia repair High risk of strangulation Chapter 5: Abdomen 51 Diagnosis Background Key symptoms Key signs Add",
+  "source": "BMJ Differential Diagnosis in Primary Care.pdf",
+  "source_kind": "book",
+  "pos": 156920,
+  "disputed": false
+ },
+ "fm_2d42e57b2596648d": {
+  "verdict": "supported",
+  "quote": "…Reflexes usually exaggerated (UMN signs) in the presence of muscle wasting and fasciculation (LMN signs).",
+  "source": "The MRCP PACES Handbook 2ed.pdf",
+  "source_kind": "book",
+  "pos": 207580,
+  "disputed": false
+ },
+ "fm_2d6bb485f06f3183": {
+  "verdict": "supported",
+  "quote": "Early identification with a high index of suspicion and urgent referral for fasciotomy is necessary to prevent tragic results.",
+  "source": "ABFM answers 2014.pdf",
+  "source_kind": "abfm",
+  "pos": 49980,
+  "disputed": false
+ },
+ "fm_2e1d6d9d7b79c27c": {
+  "verdict": "supported",
+  "quote": "MPTOMS The initial signs and symptoms of pilonidal disease are usually pain and swelling in the sacrococcygeal region with inability to sit on one side of the buttocks or perhaps an inability to tolerate a sitting position at all.",
+  "source": "Emergency Medicine-Clinical Essentials 2nd edition.pdf",
+  "source_kind": "book",
+  "pos": 1717940,
+  "disputed": false
+ },
+ "fm_2e7e667c8a8d2426": {
+  "verdict": "partial",
+  "quote": "hard exudates and retinal oedema affect the macular area, the fovea may become involved, which may threaten central vision.",
+  "source": "2024 Atlas of Diabetes Mellitus.pdf",
+  "source_kind": "guideline",
+  "pos": 192180,
+  "disputed": false
+ },
+ "fm_2fee78bfa7c32116": {
+  "verdict": "supported",
+  "quote": "Keratoconjunctivitis sicca is usually bilateral and associated more with dryness, burning and itch Rheumatoid arthritis: ocular manifestations…",
+  "source": "MRCP part I Pass medicine 2014.pdf",
+  "source_kind": "book",
+  "pos": 3952660,
+  "disputed": false
+ },
+ "fm_313e0b72d1ca0bff": {
+  "verdict": "supported",
+  "quote": "…it is likely that the D-dimer will be abnormal.",
+  "source": "Pretest Clinical Vignettes.pdf",
+  "source_kind": "book",
+  "pos": 497380,
+  "disputed": false
+ },
+ "fm_331197a5704d75c6": {
+  "verdict": "supported",
+  "quote": "vagal maneuvers (Valsalva, cough, carotid massage), adenosine, verapamil, or diltiazem.",
+  "source": "brattons 2018 .pdf",
+  "source_kind": "book",
+  "pos": 1970340,
+  "disputed": false
+ },
+ "fm_350834b6a563ff43": {
+  "verdict": "partial",
+  "quote": "Upper respiratory tract symptoms, sore throat, preauricular lymphadenopathy, and fever.",
+  "source": "Family Medicine Ambulatory care and prevention.pdf",
+  "source_kind": "book",
+  "pos": 1278200,
+  "disputed": false
+ },
+ "fm_3565df695a3c5c85": {
+  "verdict": "supported",
+  "quote": "A Key Point Men with low or low-normal testosterone levels should have confirmatory morning serum total testosterone testing before initiating testosterone therapy, and further evaluation of the cause of hypogonadism should be pursued before treatment is started.",
+  "source": "MKSAP 17 MCQs.pdf",
+  "source_kind": "book",
+  "pos": 183760,
+  "disputed": true
+ },
+ "fm_357c2ca6fe675d84": {
+  "verdict": "supported",
+  "quote": "The pivot-shift, Lachman, and anterior drawer tests are used to detect injuries to the anterior cruciate ligament, not meniscal injuries.",
+  "source": "ABFM 2016 Q A.pdf",
+  "source_kind": "abfm",
+  "pos": 100340,
+  "disputed": false
+ },
+ "fm_392db634be2ec07f": {
+  "verdict": "supported",
+  "quote": "…Leukonychia represents benign, single or multiple, white spots or lines in the nails.",
+  "source": "Color Atlas of Family Medicine.pdf",
+  "source_kind": "book",
+  "pos": 3196840,
+  "disputed": false
+ },
+ "fm_393b2873593b5337": {
+  "verdict": "supported",
+  "quote": "…most commonly as postoperative complication; risk following cataract surgery is <0.1% • also due to penetrating injury to eye (risk is 3-7%), endogenous spread, and intravitreal injections • etiology usually bacterial, may be fungal Clinical Features •…",
+  "source": "Toronto 2021.pdf",
+  "source_kind": "book",
+  "pos": 4032220,
+  "disputed": false
+ },
+ "fm_39cb216c5e314a02": {
+  "verdict": "supported",
+  "quote": "(Rosner, 5/e, pp 776779.) Use of the student t test to assess the difference between the mean systolic pressures of pregnant and nonpregnant wome…",
+  "source": "pretest preventive medicine.pdf",
+  "source_kind": "book",
+  "pos": 105900,
+  "disputed": false
+ },
+ "fm_39dfd663fe457779": {
+  "verdict": "supported",
+  "quote": "Do an endometrial biopsy (generally preferred) or a transvaginal ultrasound for any woman with postmenopausal bleeding (as well as a Pap smear).",
+  "source": "USMLE step 2 secrets Essay questions_.pdf",
+  "source_kind": "book",
+  "pos": 688960,
+  "disputed": true
+ },
+ "fm_3a64a82f29a2627c": {
+  "verdict": "supported",
+  "quote": "SYMPTOM POSSIBLE CAUSE Sudden onset of 'The worst headache of my life.\" Subarachnoid hemorrhage Neck stiffness with severe headache Bacterial meningitis, subarachnoid hemorrhage Su…",
+  "source": "First Aid Family Medicine 3rd edition.pdf",
+  "source_kind": "book",
+  "pos": 916720,
+  "disputed": false
+ },
+ "fm_3aa0cc867aec780c": {
+  "verdict": "partial",
+  "quote": "Formula intolerance causes regurgitation, as would inappropriate feeding.",
+  "source": "Canada Q bank MCQs.pdf",
+  "source_kind": "book",
+  "pos": 4014680,
+  "disputed": false
+ },
+ "fm_3da2365d34f49304": {
+  "verdict": "supported",
+  "quote": "Isosorbide mononitrate Next question The BNF recommends avoiding alpha-blockers for 4 hours after sildenafil Sild…",
+  "source": "Pass Medicine 2013_.pdf",
+  "source_kind": "book",
+  "pos": 2488920,
+  "disputed": false
+ },
+ "fm_3ed2daa842688938": {
+  "verdict": "supported",
+  "quote": "Rosh, MD, and Rosh Review.) A threatened abortion (a) is defined as any vaginal bleeding with a closed os and no passage of fetal tissue during the first 20 weeks of gestation.",
+  "source": "PreTest Emergency Medicine 5e.pdf",
+  "source_kind": "book",
+  "pos": 940800,
+  "disputed": false
+ },
+ "fm_3f3d4aa77760e5a7": {
+  "verdict": "partial",
+  "quote": "…Suicidal ideation or intent Consider hospital admission in severe cases or risk of suicide Chronic pain Common causes: Arthritis, headache, backache, cramps Difficulty falling or staying asleep Intermittent awakening by pain ± Low mood Var…",
+  "source": "BMJ Differential Diagnosis in Primary Care.pdf",
+  "source_kind": "book",
+  "pos": 453500,
+  "disputed": false
+ },
+ "fm_3f4d2fd4a65f8825": {
+  "verdict": "supported",
+  "quote": "Thiamine (100 mg) and folic acid (1 mg) are routinely administered to prevent CNS damage secondary to vitamin deficiency.",
+  "source": "Pretest Psychiatry 14th edition_.pdf",
+  "source_kind": "book",
+  "pos": 451780,
+  "disputed": false
+ },
+ "fm_3fc05e3fd613ee06": {
+  "verdict": "partial",
+  "quote": "…Lace-up ankle support, ice, compression, and clinical follow-up E) Crutches and no weight bearing for 2 weeks, followed by a slow return to weight bearing ANSWER: D The Ottawa foot and ankle rul…",
+  "source": "ABFM 2015-2016-2017-2018 Q A.pdf",
+  "source_kind": "abfm",
+  "pos": 844800,
+  "disputed": false
+ },
+ "fm_41c660d7f47cf1ab": {
+  "verdict": "supported",
+  "quote": "A history of the abrupt onset of a barking cough, inspiratory stridor, and hoarseness in a 2-year-old child is typical of croup, although it can present at any age between 6 months and 12 years.",
+  "source": "ABFM 2015-2016-2017-2018 Q A.pdf",
+  "source_kind": "abfm",
+  "pos": 406080,
+  "disputed": false
+ },
+ "fm_41c8f40a61c3a803": {
+  "verdict": "supported",
+  "quote": "…chronic granulomatous inflammation of a meibomian gland often preceded by an internal hordeolum Clinical Features • acute inflammatory signs are usually absent •…",
+  "source": "Toronto 2021.pdf",
+  "source_kind": "book",
+  "pos": 3999960,
+  "disputed": false
+ },
+ "fm_41e7c17839c47f53": {
+  "verdict": "supported",
+  "quote": "…Unstable angina Angina that is new-onset, worsening, or occurs at rest Diagnosis Clues (AFP 2013;87:177) Cardiovascular Coronary vasospasm Rest angina that abruptly resolves Aortic dissection “Ripping or tearing” pain radiating to back, >20 mmHg d…",
+  "source": "Pocket Primary Care 2018.pdf",
+  "source_kind": "book",
+  "pos": 145380,
+  "disputed": false
+ },
+ "fm_43b507dad0d496c2": {
+  "verdict": "supported",
+  "quote": "The limb appears shortened, adducted, internally rotated, and flexed.",
+  "source": "Emergency Medicine 3rd ed.pdf",
+  "source_kind": "book",
+  "pos": 677840,
+  "disputed": false
+ },
+ "fm_44eb5449bd140cf3": {
+  "verdict": "supported",
+  "quote": "…Obtaining informed consent prior to electroconvulsive therapy Non- maleficence T…",
+  "source": "Mastering Psychiatry textbook 2016.pdf",
+  "source_kind": "book",
+  "pos": 854500,
+  "disputed": false
+ },
+ "fm_479d82a3d5b20b6a": {
+  "verdict": "supported",
+  "quote": "…Von Willebrand's disease is the most common inherited bleeding disorder.",
+  "source": "Pass Medicine 2013_.pdf",
+  "source_kind": "book",
+  "pos": 1205600,
+  "disputed": false
+ },
+ "fm_48236779e4eef48e": {
+  "verdict": "partial",
+  "quote": "…Genitourinary malformation (e.g. imperforate hymen), testicular feminisation, Turner’s syndrome Primary amenorrhoea Vary depending on underlying cause ± Normal secondary sexual characteristics Chapter 7: Women’s Health 67 Bleeding or abdominal pain in p…",
+  "source": "BMJ Differential Diagnosis in Primary Care.pdf",
+  "source_kind": "book",
+  "pos": 198960,
+  "disputed": false
+ },
+ "fm_4a1f7e42b26c999f": {
+  "verdict": "supported",
+  "quote": "…Painful if thrombosed (especially external hemorrhoids), painless if internal hemorrhoids mebooksfree.com 98 chapter 4 SURGERY ■ ■Risk factors • Pregnancy, obesity, heavy lifting, portal hypertension, prolonged sitting, pelvic tumours, straining, advanced…",
+  "source": "Canadian Family Medicine Examination.pdf",
+  "source_kind": "book",
+  "pos": 260820,
+  "disputed": false
+ },
+ "fm_4afaa883c7ad1052": {
+  "verdict": "supported",
+  "quote": "afp\b Volume 109, Number 6 ◆ June 2024 ROSACEA Systemic antibiotic treatment is effective against papules and pustules, but the effect on erythema and telangiectasia is limited.",
+  "source": "Rosacea_ Common Questions and Answers.pdf",
+  "source_kind": "aafp",
+  "pos": 24500,
+  "disputed": false
+ },
+ "fm_4c546dc57ef810e0": {
+  "verdict": "disagrees",
+  "quote": "…Endoscopy: ∘∘For any patient over 50, alarm symptoms, family history of cancer, or not responding to t…",
+  "source": "Canadian Family Medicine Examination.pdf",
+  "source_kind": "book",
+  "pos": 314280,
+  "disputed": false,
+  "source_supports": "D"
+ },
+ "fm_4c717fa48d584624": {
+  "verdict": "supported",
+  "quote": "…medial meniscus tear exam: externally rotate foot, apply valgus stress, and extend knee ◆for meniscal tear: 1.3 positive likelihood ratio, 0.8 negative…",
+  "source": "Toronto 2021.pdf",
+  "source_kind": "book",
+  "pos": 4228260,
+  "disputed": false
+ },
+ "fm_4d135133d428e844": {
+  "verdict": "supported",
+  "quote": "…Common allergens: Dyes, acid/ alkalis, soap, detergent, persistent moisture Acute onset symptoms Worse with repeated exposure Itchy sore skin Acute exposure: Skin inflammation and erythema Weeping vesicles Rash often localised Chronic exposure: Dry scaly fissured s…",
+  "source": "BMJ Differential Diagnosis in Primary Care.pdf",
+  "source_kind": "book",
+  "pos": 342760,
+  "disputed": false
+ },
+ "fm_4d2cce2871664e2c": {
+  "verdict": "broken",
+  "note": "the source itself says the question is wrong"
+ },
+ "fm_4e76c1d29891ee6b": {
+  "verdict": "partial",
+  "quote": "…Stool testing is not recommended because the worms are not excreted directly in the stool.8 TREATMENT Albendazole or mebend…",
+  "source": "Common Intestinal Parasites.pdf",
+  "source_kind": "aafp",
+  "pos": 24320,
+  "disputed": false
+ },
+ "fm_4e9678e10f65431b": {
+  "verdict": "supported",
+  "quote": "Treat with doxycycline and gentamicin.",
+  "source": "USMLE master the board topics step 3.pdf",
+  "source_kind": "book",
+  "pos": 203120,
+  "disputed": false
+ },
+ "fm_4ec5ec0da61a5f97": {
+  "verdict": "partial",
+  "quote": "…High-risk patient recurrences, previous antibiotics, immunocompromised, pregnancy, all males, all children less than 2 years of age, diagnosis by Urine analysis (nitrates…",
+  "source": "Family Medicine the Essential MOH & SCFHS.pdf",
+  "source_kind": "book",
+  "pos": 744440,
+  "disputed": false
+ },
+ "fm_4f8ea72da944d81b": {
+  "verdict": "supported",
+  "quote": "Normal pressure hydrocephalus is characterised by progressive mental impairment and dementia, difficulty walking and impaired bladder control.",
+  "source": "Passmedicine MRCP Part I 2019.pdf",
+  "source_kind": "book",
+  "pos": 2213000,
+  "disputed": false
+ },
+ "fm_5128551f9bd5cb32": {
+  "verdict": "broken",
+  "note": "stem carries the answer text of another question"
+ },
+ "fm_524113e2b7381c00": {
+  "verdict": "supported",
+  "quote": "elevated thyroid-binding globulin (TBG) elevated TBG secondary to the estrogen component of the oral contraceptive pill, pregnancy,etc next step is to do free T4 On examination, she is found to have a 2-cm nodule in the left lobe of the thyroid gland What is the frst test that should be ordered to evaluate the patient’s physical examination abnormality? b.",
+  "source": "Swanson notes summary.pdf",
+  "source_kind": "book",
+  "pos": 30120,
+  "disputed": false
+ },
+ "fm_54b328b312cd3812": {
+  "verdict": "broken",
+  "note": "two options are the same"
+ },
+ "fm_54faae1a23271f0b": {
+  "verdict": "supported",
+  "quote": "…profuse upper GI bleeding (Mallory-Weiss syndrome) from mucosal laceration at the gastroesophageal junction.",
+  "source": "USMLE step 3 lecture notes_.pdf",
+  "source_kind": "book",
+  "pos": 540280,
+  "disputed": false
+ },
+ "fm_5738feedea1bc339": {
+  "verdict": "partial",
+  "quote": "e from a single duct is usually caused by an ectatic duct or an intraductal papil- loma or, rarely, by an intraductal cancer.",
+  "source": "CURRENT Medical Diagnosis & Treatment 2023.pdf",
+  "source_kind": "book",
+  "pos": 3916420,
+  "disputed": false
+ },
+ "fm_58cd147c9c500435": {
+  "verdict": "supported",
+  "quote": "First-line treatments for ED include lifestyle modification (weight loss, exercise, smoking cessation), psychotherapy as needed, and phosphodiesterase type 5 (PDE-5) inhibitors.",
+  "source": "MKSAP 17 MCQs.pdf",
+  "source_kind": "book",
+  "pos": 89640,
+  "disputed": false
+ },
+ "fm_58d0c91b29cb8e04": {
+  "verdict": "supported",
+  "quote": "…Yellow or green frothy discharge Offensive Vulval soreness/itch Superficial dyspareunia Dysuria No frequency Speculum examination: Inflamed vulval/vaginal mucosa Punctate cervical haemorrhages (“Strawberry” c…",
+  "source": "BMJ Differential Diagnosis in Primary Care.pdf",
+  "source_kind": "book",
+  "pos": 231720,
+  "disputed": false
+ },
+ "fm_595c8cfcb99c3c5d": {
+  "verdict": "partial",
+  "quote": "…Rapidly progressive monocular central vision loss ( acuity and colour vision) with recovery Late visual loss Painless unilateral acute field defect over hours to days with  colour vision Painless unilateral variable vision loss Symptoms Pa…",
+  "source": "Toronto 2021.pdf",
+  "source_kind": "book",
+  "pos": 3381400,
+  "disputed": false
+ },
+ "fm_5b277293e7b4a668": {
+  "verdict": "partial",
+  "quote": "Missed oral contraceptive pill The following advice is recommended: ‘If you forget a pill, take it as soon as you remember and carry on wit…",
+  "source": "BNF 2020-2021 for children.pdf",
+  "source_kind": "book",
+  "pos": 3092520,
+  "disputed": false
+ },
+ "fm_5c62fa754223ad4c": {
+  "verdict": "supported",
+  "quote": "PRESENTING SIGNS AND SYMPTOMS The most common symptom of hemorrhoids is painless bleeding with defecation (blood on stool or toilet paper).",
+  "source": "Emergency Medicine-Clinical Essentials 2nd edition.pdf",
+  "source_kind": "book",
+  "pos": 1709400,
+  "disputed": false
+ },
+ "fm_5e0c69624c3b3c76": {
+  "verdict": "supported",
+  "quote": "…Meniscal tear Commonly medial tears > lateral Often young adults History of twisting injury to knee Severe pain Prevents further activity Worse with knee extended Swelling of knee over hours Locking of knee joint Knee held in slight flexion Mild effusion Joint line tenderness…",
+  "source": "BMJ Differential Diagnosis in Primary Care.pdf",
+  "source_kind": "book",
+  "pos": 297360,
+  "disputed": false
+ },
+ "fm_5e9273bc8cb8ec8d": {
+  "verdict": "supported",
+  "quote": "Patients have hypotension (due to impaired cardiac filling), distended neck veins, muffled heart sounds, pulsus paradoxus (exaggerated fall in blood pressure on inspiration), and normal breath sounds.",
+  "source": "USMLE step 2 secrets Essay questions_.pdf",
+  "source_kind": "book",
+  "pos": 326560,
+  "disputed": false
+ },
+ "fm_5ec3229b46415071": {
+  "verdict": "supported",
+  "quote": "Transient hypocalcemia stimulates the secretion of parathyroid hormone and the mobilization of calcium and phosphorus from bone; enhanced parathyroid hormone activity leads to phosphaturia and diminished excretion of calcium.",
+  "source": "Pretest pedia 14th.pdf",
+  "source_kind": "book",
+  "pos": 915560,
+  "disputed": false
+ },
+ "fm_5f854c7bcd9b5e62": {
+  "verdict": "supported",
+  "quote": "Patients have hypotension (due to impaired cardiac filling), distended neck veins, muffled heart sounds, pulsus paradoxus (exaggerated fall in blood pressure on inspiration), and normal breath sounds.",
+  "source": "USMLE step 2 secrets Essay questions_.pdf",
+  "source_kind": "book",
+  "pos": 326560,
+  "disputed": false
+ },
+ "fm_5fd6e92c4f3c2454": {
+  "verdict": "supported",
+  "quote": "Patients with warm autoimmune hemolytic anemia (WAIHA) may present with rapid or more insidious symptoms of anemia or jaundice; mild splenomegaly is often present.",
+  "source": "MKSAP 17 MCQs.pdf",
+  "source_kind": "book",
+  "pos": 1646440,
+  "disputed": false
+ },
+ "fm_5ff2359f1bbbbb4b": {
+  "verdict": "supported",
+  "quote": "…Unstable angina Angina that is new-onset, worsening, or occurs at r…",
+  "source": "Pocket Primary Care 2018.pdf",
+  "source_kind": "book",
+  "pos": 145200,
+  "disputed": false
+ },
+ "fm_6089c8f870d1abf8": {
+  "verdict": "supported",
+  "quote": "…Button batteries, magnetics, sharp and long objects: lodged in the esophagus to the stomach, require urgent endoscopic removal.",
+  "source": "Family Medicine the Essential MOH & SCFHS.pdf",
+  "source_kind": "book",
+  "pos": 1142340,
+  "disputed": false
+ },
+ "fm_612321f9f5e5218c": {
+  "verdict": "supported",
+  "quote": "Acute otitis externa presents with pain (otalgia), redness, and swelling of the canal.",
+  "source": "Acute Otitis Externa_ Rapid Evidence Review.pdf",
+  "source_kind": "aafp",
+  "pos": 1580,
+  "disputed": false
+ },
+ "fm_6194280bc73090c0": {
+  "verdict": "partial",
+  "quote": "…guidelines for administration of influenza vaccine in individuals with egg allergy.",
+  "source": "ABFM 2015-2016-2017-2018 Q A.pdf",
+  "source_kind": "abfm",
+  "pos": 285080,
+  "disputed": false
+ },
+ "fm_66c4b1650d2d5ff4": {
+  "verdict": "supported",
+  "quote": "Detrusor instability causes uninhibited bladder contractions and leads to symptoms of urge incontinence (in- ability to hold urination until the appropriate facilities can be reached, once an urge is felt).",
+  "source": "USMLE CK2 Q & A with explanations.pdf",
+  "source_kind": "book",
+  "pos": 2579860,
+  "disputed": false
+ },
+ "fm_684f034095df32d7": {
+  "verdict": "supported",
+  "quote": "» Neurovascular component: erythema and telangi- ectasis and a tendency to flush easily.",
+  "source": "CURRENT Medical Diagnosis & Treatment 2023.pdf",
+  "source_kind": "book",
+  "pos": 838560,
+  "disputed": false
+ },
+ "fm_6859731f252affba": {
+  "verdict": "partial",
+  "quote": "There is often a history of trauma, herpes simplex virus (HSV), or contact lens wea…",
+  "source": "Color Atlas of Family Medicine.pdf",
+  "source_kind": "book",
+  "pos": 448420,
+  "disputed": false
+ },
+ "fm_6867a61e979daf41": {
+  "verdict": "disagrees",
+  "quote": "Influenza vaccine is recommended for all women who are or will be pregnant during influenza season, but pregnant women should receive the…",
+  "source": "ABFM 2015-2016-2017-2018 Q A.pdf",
+  "source_kind": "abfm",
+  "pos": 193720,
+  "disputed": false,
+  "source_supports": "D"
+ },
+ "fm_686b681ab57aed21": {
+  "verdict": "partial",
+  "quote": "…pancreatic autoantibodies (GAD, ICA, IA2, or insulin); ∼30% present with DKA Prediabetes On spectrum with DM2; affects 35% of US adults; equivalent to “impaired fasti…",
+  "source": "Pocket Primary Care 2018.pdf",
+  "source_kind": "book",
+  "pos": 367940,
+  "disputed": false
+ },
+ "fm_6a190fdd62c06124": {
+  "verdict": "supported",
+  "quote": "Spontaneous pneumothorax can also occur and typically affects tall, thin men or smokers (because of a ruptured bleb).",
+  "source": "brattons 2018 .pdf",
+  "source_kind": "book",
+  "pos": 1656340,
+  "disputed": false
+ },
+ "fm_6a240ab5b709480c": {
+  "verdict": "supported",
+  "quote": "…arise from uveal tract, 90% choroidal melanoma • hepatic metastases predominate Clinical Features • classic appearance of a pigmented dome-shaped mass extending from the ciliary body or the choroid • diagn…",
+  "source": "Toronto 2021.pdf",
+  "source_kind": "book",
+  "pos": 4071100,
+  "disputed": false
+ },
+ "fm_6a656683031328fb": {
+  "verdict": "partial",
+  "quote": "Use the statin treatment schema provided (Figure 12 & 13) and treat other lipoprotein fractions (Table 10).",
+  "source": "Saudi Diabetes Clinical Practice Guidelines 2021.pdf",
+  "source_kind": "guideline",
+  "pos": 95820,
+  "disputed": false
+ },
+ "fm_6a91db4d9dafeb32": {
+  "verdict": "partial",
+  "quote": "Urine dipstick testing may not detect low-molecular-weight proteins such as light chain fragments in multiple myeloma (i.e., Bence Jones proteins).",
+  "source": "Office-Based Urinalysis_ A Comprehensive Review.pdf",
+  "source_kind": "aafp",
+  "pos": 15020,
+  "disputed": false
+ },
+ "fm_6b01993323cbdd88": {
+  "verdict": "supported",
+  "quote": "The most likely diagnosis is > RA 1…",
+  "source": "bratton Medecine summary.pdf",
+  "source_kind": "book",
+  "pos": 43080,
+  "disputed": true
+ },
+ "fm_6b0bacda40f4adc6": {
+  "verdict": "supported",
+  "quote": "Most Common Bacterial Causative Agents of Acute Meningitis: Neonatal (birth up to 6wks): GBS, E. coli, Listeria, Other: Gram-negative bacilli 6 wks-3 months: Same pathogens as above and below > 3 months: S.",
+  "source": "Canada Q bank MCQs.pdf",
+  "source_kind": "book",
+  "pos": 4545440,
+  "disputed": false
+ },
+ "fm_6c7bfb8559a86caa": {
+  "verdict": "supported",
+  "quote": "Primary hyperparathyroidism results from excessive secretion of parathyroid hormone (PTH) with a lack of response feedback inh…",
+  "source": "brattons 2018 .pdf",
+  "source_kind": "book",
+  "pos": 1671080,
+  "disputed": false
+ },
+ "fm_6d257004f74f0c9d": {
+  "verdict": "partial",
+  "quote": "It is thought to be caused in part by a low-fiber, high-fat diet.",
+  "source": "USMLE step 2 secrets Essay questions_.pdf",
+  "source_kind": "book",
+  "pos": 259220,
+  "disputed": false
+ },
+ "fm_6dfdc0411da3ae3e": {
+  "verdict": "supported",
+  "quote": "…As the fever subsides, a rash (…",
+  "source": "Family Medicine the Essential MOH & SCFHS.pdf",
+  "source_kind": "book",
+  "pos": 1190800,
+  "disputed": true
+ },
+ "fm_6dffd5d7f0b128cf": {
+  "verdict": "supported",
+  "quote": "…topical corticosteroids are contraindicated in…",
+  "source": "Family Medicine Ambulatory care and prevention.pdf",
+  "source_kind": "book",
+  "pos": 1292120,
+  "disputed": false
+ },
+ "fm_6e3a54568993d20c": {
+  "verdict": "supported",
+  "quote": "In addition to short-acting bronchodilators and supplemental oxygen as needed, antibiotics and systemic glucocorticoids (such as prednisone) MKSAP17 MCQ 2139 .",
+  "source": "MKSAP 17 MCQs.pdf",
+  "source_kind": "book",
+  "pos": 3452100,
+  "disputed": false
+ },
+ "fm_6e89cc08677384a0": {
+  "verdict": "partial",
+  "quote": "…The urea breath test and stool antigen test ar…",
+  "source": "Peptic Ulcer Disease and H. pylori Infection_ Common Questions and Answers.pdf",
+  "source_kind": "aafp",
+  "pos": 10260,
+  "disputed": false
+ },
+ "fm_706b7ef3d45ff331": {
+  "verdict": "supported",
+  "quote": "Herpangina is characterized by an isolated oral mucosal involvement, while hand, foot and mouth disease presents with a combination of oral lesions and skin changes affecting palms and soles.",
+  "source": "Primary health care for children and adolescents WHO.pdf",
+  "source_kind": "book",
+  "pos": 416460,
+  "disputed": false
+ },
+ "fm_70a3cff3330a5112": {
+  "verdict": "broken",
+  "note": "figures in the stem give a relative risk of 1.67 and no option matches"
+ },
+ "fm_70d9d7e0f81f1a7f": {
+  "verdict": "partial",
+  "quote": "…severe or progressive neurologic deficits are present and the patient is a candidate for surgery.",
+  "source": "MKSAP board basics short version_.pdf",
+  "source_kind": "book",
+  "pos": 447820,
+  "disputed": false
+ },
+ "fm_70e7c4a22018ee0b": {
+  "verdict": "supported",
+  "quote": "…classic triad of symptoms (episodic vertigo, tinnitus, and hearing loss).",
+  "source": "Family Medicine the Essential MOH & SCFHS.pdf",
+  "source_kind": "book",
+  "pos": 2331260,
+  "disputed": false
+ },
+ "fm_71905c3d92c4d9f8": {
+  "verdict": "partial",
+  "quote": "cally caused by a ruptured aneurysm, arteriovenous malformation, or trauma to the circle of Willis.",
+  "source": "USMLE CK2 Q & A with explanations.pdf",
+  "source_kind": "book",
+  "pos": 1598540,
+  "disputed": false
+ },
+ "fm_755ea252dd530c67": {
+  "verdict": "supported",
+  "quote": "(Rosner, 5/e, pp 776779.) Use of the student t test to assess the difference between the mean systolic pressures of pregnant and nonpregnant wome…",
+  "source": "pretest preventive medicine.pdf",
+  "source_kind": "book",
+  "pos": 105900,
+  "disputed": false
+ },
+ "fm_7595c80c2091c5c6": {
+  "verdict": "supported",
+  "quote": "irths Case fatality rate (CFR) Definition: Percentage of cases of an illness or medical condition that result in death within a specified time period.",
+  "source": "USMLE step 3 lecture notes_.pdf",
+  "source_kind": "book",
+  "pos": 635600,
+  "disputed": false
+ },
+ "fm_78b9caf059d53efb": {
+  "verdict": "supported",
+  "quote": "HELPFUL TIP: Concussion is defined as a disturbance in brain function caused by trauma to the head.",
+  "source": "Graber and Wilbur’s 5 edition.pdf",
+  "source_kind": "book",
+  "pos": 2159040,
+  "disputed": true
+ },
+ "fm_7967b39b761a6065": {
+  "verdict": "supported",
+  "quote": "lid retraction) Graves’ disease (unilateral or bilateral, most common cause i…",
+  "source": "Toronto 2021.pdf",
+  "source_kind": "book",
+  "pos": 3989320,
+  "disputed": false
+ },
+ "fm_7a7f53376f2ea8d1": {
+  "verdict": "broken",
+  "note": "refers to a blood film that is not attached"
+ },
+ "fm_7ad5270bf9e82a08": {
+  "verdict": "supported",
+  "quote": "…Laboratory tests (urine ketones and spec…",
+  "source": "Urgent care cases 2022.pdf",
+  "source_kind": "guideline",
+  "pos": 48640,
+  "disputed": false
+ },
+ "fm_7b589ab911390592": {
+  "verdict": "partial",
+  "quote": "The following investigations are recommended in patients with suspected COPD: post-bronchodilator spirometry to demonstrate airflow obstruction: FEV1/FVC r…",
+  "source": "MRCP part I Pass medicine 2014.pdf",
+  "source_kind": "book",
+  "pos": 738760,
+  "disputed": false
+ },
+ "fm_7b6b16a2469fca9e": {
+  "verdict": "supported",
+  "quote": "…should be discharged with oral corticosteroids.11,34,44 A Systematic reviews and consensus guidelines ICS = inhaled corticosteroid;​ LABA = long-acting beta2 agonist;​ LAMA = long-acting muscarinic antagonist;​ RCT = randomized controlled trial;​ SABA = s…",
+  "source": "acute-asthma-exacerbations.pdf",
+  "source_kind": "aafp",
+  "pos": 13740,
+  "disputed": true
+ },
+ "fm_7b9550ca7e6313c1": {
+  "verdict": "disagrees",
+  "quote": "The presence of early morning erections differentiates organic…",
+  "source": "Mastering Psychiatry textbook 2016.pdf",
+  "source_kind": "book",
+  "pos": 592160,
+  "disputed": true,
+  "source_supports": "A"
+ },
+ "fm_7eed32c236a14e79": {
+  "verdict": "supported",
+  "quote": "lateral inguinal lymphadenopathy Chancroid (Haemophilus ducreyi) Ragged, purulent, painful ulcers with tender lymphadenopathy Lymphogranuloma venereum (Chlamydia trachomatis) Single 0.2- to 1.0-cm ulcer, sometimes painful, with tender unilateral lymphadenopathy, which may suppurate Fixed drug eruptions (NSAIDs, phenobarbital, antibiotics) Single or multiple blisters or erosions, 1-3",
+  "source": "MKSAP board basics short version_.pdf",
+  "source_kind": "book",
+  "pos": 660060,
+  "disputed": false
+ },
+ "fm_7f04be5fb4c13137": {
+  "verdict": "partial",
+  "quote": "…amoxicillin/clavulanate (Augmentin) for severe or complicated bacterial rhinosinusitis Common cold Low-grade fever, myalgias, headache, nasal congestion, rhinorrhea, sneezing, sore throa…",
+  "source": "Antibiotic Use in Acute Upper Respiratory Tract Infections.pdf",
+  "source_kind": "aafp",
+  "pos": 6840,
+  "disputed": false
+ },
+ "fm_7f25271b46f5b142": {
+  "verdict": "supported",
+  "quote": "symptoms related to Hyperprolactinemia, such as amenorrhea or oligomenorrhea, low libido, erectile dysfunction, infertility, gynecomastia, or fractures, and symptoms related to mass effect of a pituitary adenoma, such as headache or vision changes.",
+  "source": "Endocrinology review.pdf",
+  "source_kind": "lecture",
+  "pos": 22600,
+  "disputed": false
+ },
+ "fm_7feab7e06e169054": {
+  "verdict": "supported",
+  "quote": "…Chronic (low infectivity) + − − + Resolved − +/− − +/− Immunization − + − − ■ ■Infectivity/transmissibility is assessed using HBeAg or HBV DNA (PCR) ■ ■Carrier state/active infect…",
+  "source": "Canadian Family Medicine Examination.pdf",
+  "source_kind": "book",
+  "pos": 702340,
+  "disputed": false
+ },
+ "fm_804a4d5c18c80c7b": {
+  "verdict": "supported",
+  "quote": "The most common symptom is vaginal bleeding, often accompanied by an enlarged-for-dates uterus.",
+  "source": "Pretest Obstetrics & Gynecology 14th edition.pdf",
+  "source_kind": "book",
+  "pos": 187060,
+  "disputed": false
+ },
+ "fm_80b7f27eca52a7bc": {
+  "verdict": "partial",
+  "quote": "All others should continue the most effective seizure drug, at the low- est possible dose.",
+  "source": "First Aid Family Medicine 3rd edition.pdf",
+  "source_kind": "book",
+  "pos": 947460,
+  "disputed": false
+ },
+ "fm_8245858636cea1a5": {
+  "verdict": "partial",
+  "quote": "Perforated peptic ulcers often present with abdominal guarding, if not the character…",
+  "source": "Canada Q bank MCQs.pdf",
+  "source_kind": "book",
+  "pos": 1832400,
+  "disputed": false
+ },
+ "fm_84d530175984e053": {
+  "verdict": "partial",
+  "quote": "Pain (renal colic) is of variable intensity but is typically excruciating and intermittent, often occurs cyclically, and lasts 20 to 60 min.",
+  "source": "Canada Q bank MCQs.pdf",
+  "source_kind": "book",
+  "pos": 5357840,
+  "disputed": false
+ },
+ "fm_85f7861521a46023": {
+  "verdict": "partial",
+  "quote": "Most physicians agree that early laparoscopic cholecystectomy within 24 to 48 hours is indicated once the diagnosis of acu…",
+  "source": "Swanson s Family Medicine Review 2017.pdf",
+  "source_kind": "book",
+  "pos": 827380,
+  "disputed": false
+ },
+ "fm_863c2d68ccf1b980": {
+  "verdict": "partial",
+  "quote": "Rhinorrhoea Next question A vesicular rash around the ear would suggest a diagnosis of Ramsey Hunt syndrome.",
+  "source": "Pass Medicine 2013_.pdf",
+  "source_kind": "book",
+  "pos": 1797760,
+  "disputed": false
+ },
+ "fm_86cd3886599adb8c": {
+  "verdict": "partial",
+  "quote": "…Clear the nose with nasal saline to relieve nasal congestion — — Give ibuprofen (preferable) or paracetamol if the child has pain or high fever (≥ 39 °C) that causes distress (Counselling box 25, p.",
+  "source": "Primary health care for children and adolescents WHO.pdf",
+  "source_kind": "book",
+  "pos": 367580,
+  "disputed": false
+ },
+ "fm_86ff4cf64a8cd069": {
+  "verdict": "partial",
+  "quote": "…anti-endomysial antibodie…",
+  "source": "Family Medicine Ambulatory care and prevention.pdf",
+  "source_kind": "book",
+  "pos": 592640,
+  "disputed": false
+ },
+ "fm_87011889d2f61e10": {
+  "verdict": "supported",
+  "quote": "…Often bilateral (usually starts in one eye and spreads to the other within a few days) • Watery discharge • Itching, burning, foreign body sensation • Normal vision • Often wit…",
+  "source": "Primary health care for children and adolescents WHO.pdf",
+  "source_kind": "book",
+  "pos": 691100,
+  "disputed": false
+ },
+ "fm_87319fba200e776c": {
+  "verdict": "supported",
+  "quote": "…Trichomonas vaginalis Offensive, yellow/green, frothy discharge Vulvovaginitis Strawberry cervix Bacterial vaginosis Off…",
+  "source": "Pass Medicine 2013_.pdf",
+  "source_kind": "book",
+  "pos": 2201820,
+  "disputed": false
+ },
+ "fm_8739a71ffe0ec253": {
+  "verdict": "partial",
+  "quote": "No Choose appropriate therapy Enuresis alarm and/or urotherapy Motivated family Bedwetting is more frequent Desmopressin and/or urotherapy Family wants rapid, short-term relief (e.g., sleepovers) Child with nocturnal polyuria Not responding to enuresis alarm alone Imipramine Use if enuresis alarm and desmopressin are ineffective Oxybutyn",
+  "source": "Enuresis in Children_ Common Questions and Answers.pdf",
+  "source_kind": "aafp",
+  "pos": 22000,
+  "disputed": false
+ },
+ "fm_881d2364fadf3e18": {
+  "verdict": "supported",
+  "quote": "…balance-improving exercises to minimize falls; avoiding use of tobacco and excessive use of alcohol; and elimination of potential risk factors for falling.",
+  "source": "POSTMENOPAUSAL OSTEOPOROSIS 2020_.pdf",
+  "source_kind": "guideline",
+  "pos": 69540,
+  "disputed": false
+ },
+ "fm_883157bb7e432787": {
+  "verdict": "supported",
+  "quote": "…but it is not associated with perineal pain or pain on rectal examinatio…",
+  "source": "Pretest Surgery 14th edition 2019.pdf",
+  "source_kind": "book",
+  "pos": 522560,
+  "disputed": false
+ },
+ "fm_8874e551b1714eb3": {
+  "verdict": "supported",
+  "quote": "Peripheral blood smear is characterized by predominant lymphocytosis and smudge cells.",
+  "source": "Hematology review 2021.pdf",
+  "source_kind": "lecture",
+  "pos": 20100,
+  "disputed": false
+ },
+ "fm_8914e72eb464dca1": {
+  "verdict": "partial",
+  "quote": "A number of combined (estrogen-progestin) contraceptives are FDA-approved for use as emergency contraception.",
+  "source": "Pretest Obstetrics & Gynecology 14th edition.pdf",
+  "source_kind": "book",
+  "pos": 627780,
+  "disputed": false
+ },
+ "fm_8a53743ec8cfff35": {
+  "verdict": "supported",
+  "quote": "Newborns of mothers with onset of varicella 5 days before delivery 66) Symptoms of night ter…",
+  "source": "brattons pedia summary.pdf",
+  "source_kind": "book",
+  "pos": 11300,
+  "disputed": true
+ },
+ "fm_8c159b3b3a95ae20": {
+  "verdict": "supported",
+  "quote": "…who is conscious and able to swallow, should have 15–20 g of fast-acting carbohydrate.",
+  "source": "BNF 2021 for Adults.pdf",
+  "source_kind": "book",
+  "pos": 292660,
+  "disputed": false
+ },
+ "fm_8c8f140f886a7619": {
+  "verdict": "supported",
+  "quote": "In particular,the SGLT2 inhibitors such as empagliflozin and the GLP1 agonists such as liraglutide are associated with clinically significant weight loss.",
+  "source": "ABFM 2018 Q and A.pdf",
+  "source_kind": "abfm",
+  "pos": 133640,
+  "disputed": false
+ },
+ "fm_8ccb49f2833b405f": {
+  "verdict": "supported",
+  "quote": "Malignant otitis externa develops as a complication of otitis externa and is associated with infection by Pseudomonas aeruginosa.",
+  "source": "Skin Manifestations of Diabetes Mellitus.pdf",
+  "source_kind": "lecture",
+  "pos": 51500,
+  "disputed": true
+ },
+ "fm_8eb023303c39abe5": {
+  "verdict": "supported",
+  "quote": "…Neonate appears hungry and feeds often, but later become more let…",
+  "source": "Pediatric lectures 2018.pdf",
+  "source_kind": "lecture",
+  "pos": 9280,
+  "disputed": false
+ },
+ "fm_915b0f7b9c12ad65": {
+  "verdict": "supported",
+  "quote": "Physicians should continue to discuss the benefits of immunizations at subsequent visits, because som…",
+  "source": "ABFM 2015-2016-2017-2018 Q A.pdf",
+  "source_kind": "abfm",
+  "pos": 837760,
+  "disputed": false
+ },
+ "fm_9273ef9af863e50a": {
+  "verdict": "supported",
+  "quote": "Optic neuritis Causes x multiple sclerosis x diabetes x syphilis Features x unilateral decrease in visual acuity over hours or days x poor discrimination of colours, 'red desaturation' x pain worse on eye movement x rela…",
+  "source": "Pass Medicine 2013_.pdf",
+  "source_kind": "book",
+  "pos": 3444100,
+  "disputed": false
+ },
+ "fm_9400426bdf72b1aa": {
+  "verdict": "partial",
+  "quote": "Usatine, MD.) FIGURE 220-3 Acanthosis nigricans on the neck of an obese Hispanic woman with type 2 diabetes.",
+  "source": "Color Atlas of Family Medicine.pdf",
+  "source_kind": "book",
+  "pos": 3638800,
+  "disputed": false
+ },
+ "fm_9761ef889f7da9a3": {
+  "verdict": "supported",
+  "quote": "Recurrent shoulder dislocations are more common in younger patients and should be immobilized for 3 weeks in patients under 30…",
+  "source": "ABFM 2017 Q & A.pdf",
+  "source_kind": "abfm",
+  "pos": 301020,
+  "disputed": false
+ },
+ "fm_9814e5874310add0": {
+  "verdict": "partial",
+  "quote": "J Dermatol 2003;149:S65:1) Other tinea subtypes (BMJ 2012;344:e4380) Tinea barbae: Unilateral, tender boggy papules & plaques over bearded area Tinea manuum: Dry, scaly erythematous, burning patches on hand, often unilateral Tinea faciei: Asymmetric annular plaques often w/ trailing scale on face; Ddx seb derm Tinea capitis: Typically immunocompromised; “black dots” (broken-off hairs) in round pat…",
+  "source": "Pocket Primary Care 2018.pdf",
+  "source_kind": "book",
+  "pos": 316600,
+  "disputed": false
+ },
+ "fm_987cdede49afcafb": {
+  "verdict": "partial",
+  "quote": "Soft bones lead to bowing of the tibias.",
+  "source": "USMLE master the board topics step 3.pdf",
+  "source_kind": "book",
+  "pos": 340080,
+  "disputed": false
+ },
+ "fm_9933c2a2ddf4f7af": {
+  "verdict": "supported",
+  "quote": "Right inferior homonymous quadrantanopia Next question Visual field defects: x left homonymous hemianopia means visual field defect to the left, i.e. lesion of right optic tract x homonymous quadrantanopias: PITS (Parietal-Inferio…",
+  "source": "Pass Medicine 2013_.pdf",
+  "source_kind": "book",
+  "pos": 1695100,
+  "disputed": false
+ },
+ "fm_998150cdf972cf82": {
+  "verdict": "supported",
+  "quote": "Treatment is usually with carbamazepine or gabapentin; sometimes surgery is req…",
+  "source": "Canada Q bank MCQs.pdf",
+  "source_kind": "book",
+  "pos": 558060,
+  "disputed": false
+ },
+ "fm_999f94a77343c7ab": {
+  "verdict": "partial",
+  "quote": "An anti-streptolysin O titer is positive, his erythrocyte sedimentation rate is 124 mm/hr (N <10), and a chest radiograph is significant for cardiomegaly.",
+  "source": "ABFM 2021 Q & A.pdf",
+  "source_kind": "abfm",
+  "pos": 160600,
+  "disputed": false
+ },
+ "fm_9a1dae05ac4d6106": {
+  "verdict": "partial",
+  "quote": "Treatment should include optimization of the patient’s blood sugars, protective shoe wear, and debridement…",
+  "source": "Surgery 13th ed.pdf",
+  "source_kind": "book",
+  "pos": 190480,
+  "disputed": false
+ },
+ "fm_9acd4a43af574681": {
+  "verdict": "supported",
+  "quote": "…medical emergency: typical syndrome includes shallow respirations, miosis, bradycardia, hypothermia, decreased level of consciousness • management ■ABCs ■IV glucose ■naloxone hydrochloride (Narcan®)…",
+  "source": "Toronto 2021.pdf",
+  "source_kind": "book",
+  "pos": 5130200,
+  "disputed": false
+ },
+ "fm_9b84017cb7ee772d": {
+  "verdict": "supported",
+  "quote": "The earliest signs of compartment syndrome are pain out of proportion to exam and pain on passive flexion of the muscle in the a…",
+  "source": "PreTest Emergency Medicine 5e.pdf",
+  "source_kind": "book",
+  "pos": 702160,
+  "disputed": false
+ },
+ "fm_9d852faa5b292d00": {
+  "verdict": "supported",
+  "quote": "Most children will have a functional constipation without an underlying identifiable caus…",
+  "source": "Primary health care for children and adolescents WHO.pdf",
+  "source_kind": "book",
+  "pos": 499520,
+  "disputed": false
+ },
+ "fm_9dc8cd0c89610ef9": {
+  "verdict": "supported",
+  "quote": "…Amenorrhea or a history of an abnormal last menstrual period - in 75-90% of cases (about 6 weeks on average).",
+  "source": "Family Medicine the Essential MOH & SCFHS.pdf",
+  "source_kind": "book",
+  "pos": 1359600,
+  "disputed": false
+ },
+ "fm_9ebb7a641fe5dbe1": {
+  "verdict": "supported",
+  "quote": "Subchondral sclerosis Management Principles Non-pharmacological: Patient education, weight loss, regular lo…",
+  "source": "Learn FM Clinical Card Book 2020.pdf",
+  "source_kind": "book",
+  "pos": 119340,
+  "disputed": false
+ },
+ "fm_a05e7f13a6053ee3": {
+  "verdict": "supported",
+  "quote": "…0.9% NaCl 20mL/kg IV bolus as…",
+  "source": "Learn FM Clinical Card Book 2020.pdf",
+  "source_kind": "book",
+  "pos": 36420,
+  "disputed": false
+ },
+ "fm_a0fc40f15b6bf87b": {
+  "verdict": "supported",
+  "quote": "…Upper neck mass, anterior to sternocleidomastoid Branchial cleft cyst More commonly diagnosed in childhood;​ slow or rapidly growing after URI…",
+  "source": "Evaluation of Neck Masses in Adults.pdf",
+  "source_kind": "aafp",
+  "pos": 21320,
+  "disputed": false
+ },
+ "fm_a1b12c0bb6c30432": {
+  "verdict": "partial",
+  "quote": "− Single dose (multiple dose may lead to bacterial or fungal infections) − Indicated for croup of any severity • Nebulized epinephrine: − Immediate relief − Followed by admission or at least 3-hr observation and/or corticosteroids • Beta-agonist bronchodilators : − Not effective MCQ 5 month-old child is admitted in January, for cough, wheezing, ↓ feeding, and fever of",
+  "source": "Pediatric lectures 2018.pdf",
+  "source_kind": "lecture",
+  "pos": 98560,
+  "disputed": false
+ },
+ "fm_a2282955cf901edb": {
+  "verdict": "supported",
+  "quote": "The limb appears shortened, adducted, internally rotated, and flexed.",
+  "source": "Emergency Medicine 3rd ed.pdf",
+  "source_kind": "book",
+  "pos": 677840,
+  "disputed": false
+ },
+ "fm_a3816329140e1d50": {
+  "verdict": "disagrees",
+  "quote": "…deficiencies of iron, vitamin B12, folate, copper, selenium, and zinc.52 Notably, p…",
+  "source": "Metabolic Surgery for Adult Obesity_ Common Questions and Answers.pdf",
+  "source_kind": "aafp",
+  "pos": 24560,
+  "disputed": false,
+  "source_supports": "B"
+ },
+ "fm_a3ceba77a2bccbe8": {
+  "verdict": "supported",
+  "quote": "The answer is B: Burner syndrome (also known as transient brachial plexopathy) is seen mostly in football players and results f…",
+  "source": "brattons 2018 .pdf",
+  "source_kind": "book",
+  "pos": 263500,
+  "disputed": false
+ },
+ "fm_a449ae2cf15f7ad2": {
+  "verdict": "partial",
+  "quote": "…Key features of depression are: tearfulness, irritability, anxiety, poor sleep • It can easily be missed if specific enquiries are not made, especially with milder cases New mothers with depression are often embarrassed by their feelings and reluctant to admit to sadness at a time when…",
+  "source": "Urgent care cases 2022.pdf",
+  "source_kind": "guideline",
+  "pos": 56400,
+  "disputed": false
+ },
+ "fm_a4b2a5750d632f61": {
+  "verdict": "supported",
+  "quote": "…The answer is E: Diethylstilbestrol was w…",
+  "source": "brattons 2018 .pdf",
+  "source_kind": "book",
+  "pos": 1365640,
+  "disputed": true
+ },
+ "fm_a5914347dd46ab8f": {
+  "verdict": "partial",
+  "quote": "Urine dipstick testing may not detect low-molecular-weight proteins such as light chain fragments in multiple myeloma (i.e., Bence Jones proteins).",
+  "source": "Office-Based Urinalysis_ A Comprehensive Review.pdf",
+  "source_kind": "aafp",
+  "pos": 15020,
+  "disputed": false
+ },
+ "fm_a7bbcade49f5176c": {
+  "verdict": "supported",
+  "quote": "…ANSWER: C Autosomal dominant polycystic kidney disease (ADPCKD) is the most common genetic kidney disease and accounts for 4.7% of end-stage kidney disease cases in America.",
+  "source": "ABFM 2015-2016-2017-2018 Q A.pdf",
+  "source_kind": "abfm",
+  "pos": 434500,
+  "disputed": false
+ },
+ "fm_a86b02373a143257": {
+  "verdict": "supported",
+  "quote": "Exercise, weight loss, physical therapy, intra-articular corticosteroid injections, and the use of NSAIDs, along with braces or heel wedges, decrease pain and improve function.",
+  "source": "brattons 2018 .pdf",
+  "source_kind": "book",
+  "pos": 1734260,
+  "disputed": false
+ },
+ "fm_aa16a1719193ff5a": {
+  "verdict": "partial",
+  "quote": "…may be tested using the NAAT technique Screening in England the National Chlamydia Screening Programme is open to all men and women aged 15- 24 years the 2009 SIGN guidelines support this approach, suggesting screening all sexually active pat…",
+  "source": "MRCP part I Pass medicine 2014.pdf",
+  "source_kind": "book",
+  "pos": 2889700,
+  "disputed": false
+ },
+ "fm_aa60938520ac2291": {
+  "verdict": "supported",
+  "quote": "Active core rewarming is recommended in moderate to severe hypothermia; this will correct temperature rapidly but decrease the risk of sudden release of cold blood into circulation as peripheral vasoc…",
+  "source": "Swanson s Family Medicine Review 2017.pdf",
+  "source_kind": "book",
+  "pos": 3547620,
+  "disputed": false
+ },
+ "fm_ab145181862625c5": {
+  "verdict": "supported",
+  "quote": "…pain during middle of menstrual cycle (mittelschmerz), pain with interc…",
+  "source": "Adnexal Masses_ Diagnosis and Management.pdf",
+  "source_kind": "aafp",
+  "pos": 10200,
+  "disputed": false
+ },
+ "fm_ab8f52490227c2bd": {
+  "verdict": "supported",
+  "quote": "A transvaginal ultrasound is a reasonable first step in this evaluation.",
+  "source": "Swanson s Family Medicine Review 2017.pdf",
+  "source_kind": "book",
+  "pos": 1835900,
+  "disputed": false
+ },
+ "fm_ac23e16b526d2ce1": {
+  "verdict": "supported",
+  "quote": "…Evaluation of infertility should include semen analysis, history and physical examination focusing on menstru…",
+  "source": "Infertility_ Evaluation and Managemen.pdf",
+  "source_kind": "aafp",
+  "pos": 26460,
+  "disputed": false
+ },
+ "fm_ac7a35f5642b0285": {
+  "verdict": "supported",
+  "quote": "Prepatellar bursitis causes anterior knee pain, usuallyassociated with tenderness, swelling, and redness over th…",
+  "source": "ABFM 2017 Q & A.pdf",
+  "source_kind": "abfm",
+  "pos": 340740,
+  "disputed": false
+ },
+ "fm_acdb0fddc3ed3508": {
+  "verdict": "supported",
+  "quote": "He has Beck’s triad of hypotension, distended neck veins, and muffled heart sounds.",
+  "source": "PreTest Emergency Medicine 5e.pdf",
+  "source_kind": "book",
+  "pos": 370820,
+  "disputed": false
+ },
+ "fm_aecb84b713be490c": {
+  "verdict": "supported",
+  "quote": "…Serum creatine kinase (CK) (50-100x normal) • Genetic testing • Investigations to consider electromyogram (EMG) • Muscle biopsy 590 Management • Neu…",
+  "source": "Family Medicine the Essential MOH & SCFHS.pdf",
+  "source_kind": "book",
+  "pos": 1221240,
+  "disputed": false
+ },
+ "fm_afda1c5cb5ae148a": {
+  "verdict": "supported",
+  "quote": "The most accurate measurement is the crown-rump length (CRL), which can be done as soon as a fetal pole can be identified (around 5 weeks) up to around 13 weeks.",
+  "source": "USMLE step 2 secrets Essay questions_.pdf",
+  "source_kind": "book",
+  "pos": 584100,
+  "disputed": false
+ },
+ "fm_b00a3fa24152c7f2": {
+  "verdict": "supported",
+  "quote": "(For example, isotretinoin [Accutane] is a teratogen and contraindicated for anyone at risk for pregnancy; side effects include e…",
+  "source": "brattons 2018 .pdf",
+  "source_kind": "book",
+  "pos": 470660,
+  "disputed": false
+ },
+ "fm_b133c4dcceda631a": {
+  "verdict": "supported",
+  "quote": "…buphthalmos (large cornea, “ox eye”) and enlarged C:D T…",
+  "source": "Toronto 2021.pdf",
+  "source_kind": "book",
+  "pos": 4100060,
+  "disputed": false
+ },
+ "fm_b240d5892102affc": {
+  "verdict": "supported",
+  "quote": "The combination of a severe macrocytic anaemia and neurological signs suggests vitamin B12 deﬁciency.",
+  "source": "100 cases in acute medicine.pdf",
+  "source_kind": "book",
+  "pos": 201840,
+  "disputed": false
+ },
+ "fm_b2bcc4dea21059c1": {
+  "verdict": "supported",
+  "quote": "…Intention to treat analysis is done to avoid the effects of crossover and drop-out, which may affect the randomization to the treatment groups Question 20 of 402 Which one of the followin…",
+  "source": "MRCP part I Pass medicine 2014.pdf",
+  "source_kind": "book",
+  "pos": 1991840,
+  "disputed": false
+ },
+ "fm_b3213e55a0673b80": {
+  "verdict": "supported",
+  "quote": "-Patient will be complaining of sudden, painless monocular vision loss -Fundoscopy will show retinal edema with a pale appearance \"boxcar\" look or \"cherry red spot\" -Treatment is globe massag…",
+  "source": "Ophtha_ENT review Rosh 2021.pdf",
+  "source_kind": "lecture",
+  "pos": 14540,
+  "disputed": false
+ },
+ "fm_b464c137c610fa0a": {
+  "verdict": "supported",
+  "quote": "is caused by parvovirus B19.",
+  "source": "Derma Review 2021.pdf",
+  "source_kind": "lecture",
+  "pos": 77840,
+  "disputed": false
+ },
+ "fm_b57a3d3fbc694da6": {
+  "verdict": "supported",
+  "quote": "…Candidates for endarterectomy have 50% to 99% occlusion of the carotid artery ipsilateral to their recent acute ischemic stroke.",
+  "source": "Recurrent Ischemic Stroke_ Prevention Strategies .pdf",
+  "source_kind": "aafp",
+  "pos": 21380,
+  "disputed": false
+ },
+ "fm_b64f2f9b7970ced7": {
+  "verdict": "supported",
+  "quote": "Thenar atrophy is a late finding and highly specific for CTS.",
+  "source": "Carpal Tunnel Syndrome.pdf",
+  "source_kind": "aafp",
+  "pos": 3300,
+  "disputed": false
+ },
+ "fm_b7d8e8b85c27adaf": {
+  "verdict": "supported",
+  "quote": "…Avoidance of interpersonal contact due to fear of criticism or rejection.",
+  "source": "Family Medicine the Essential MOH & SCFHS.pdf",
+  "source_kind": "book",
+  "pos": 1760180,
+  "disputed": false
+ },
+ "fm_b83c6b061b563138": {
+  "verdict": "supported",
+  "quote": "…lactic acidosis type B: metformin Question 387 of 402 Next…",
+  "source": "Pass Medicine 2013_.pdf",
+  "source_kind": "book",
+  "pos": 3180640,
+  "disputed": false
+ },
+ "fm_b887dd4b7765a450": {
+  "verdict": "supported",
+  "quote": "Key Point Screening for lung cancer with annual low-dose chest CT is recommended for high-risk patients, defined as adults aged 55 to 80 MKSAP17 MCQ 49 .",
+  "source": "MKSAP 17 MCQs.pdf",
+  "source_kind": "book",
+  "pos": 81400,
+  "disputed": false
+ },
+ "fm_b8d2733cf8bc3f11": {
+  "verdict": "partial",
+  "quote": "Positive HBsAb means that the patient is immune (as a result of either recovery from infection or vaccination); HBsAb never appears if the patient has chronic hepatitis.",
+  "source": "USMLE step 2 secrets Essay questions_.pdf",
+  "source_kind": "book",
+  "pos": 272420,
+  "disputed": false
+ },
+ "fm_b980b2e71cef4b05": {
+  "verdict": "partial",
+  "quote": "…Lipoma soft, asymptomatic mass; Does not change in size Lymphom…",
+  "source": "Family Medicine the Essential MOH & SCFHS.pdf",
+  "source_kind": "book",
+  "pos": 2159780,
+  "disputed": false
+ },
+ "fm_bb1cb06b47f9351c": {
+  "verdict": "supported",
+  "quote": "Right inferior homonymous quadrantanopia Next question Visual field defects: x left homonymous hemianopia means visual field defect to the left, i.e. lesion of right optic tract x homonymous quadrantanopias: PITS (Parietal-Inferio…",
+  "source": "Pass Medicine 2013_.pdf",
+  "source_kind": "book",
+  "pos": 1695100,
+  "disputed": false
+ },
+ "fm_bc640f9eb12b39c3": {
+  "verdict": "supported",
+  "quote": "ythmia Premature atrial contractions: offer reassurance; consider beta blockers Premature ventricular contractions: consider atrioventricular nodal blockers No arrhythmias identified‡ Single or isolated episodes‡ Recurrent or sustained episodes Rate control or cardiology referral Sustained ventricular tachycardia",
+  "source": "Palpitations_ Evaluation, Management, and Wearable Smart Devices.pdf",
+  "source_kind": "aafp",
+  "pos": 24320,
+  "disputed": false
+ },
+ "fm_bdf80060628663d7": {
+  "verdict": "supported",
+  "quote": "Their feet should also be regularly inspected for early ulceration and their shoes carefully checked for foreign objects before being worn.",
+  "source": "2024 Atlas of Diabetes Mellitus.pdf",
+  "source_kind": "guideline",
+  "pos": 239800,
+  "disputed": true
+ },
+ "fm_be1ce95bcc030a7e": {
+  "verdict": "supported",
+  "quote": "< 1 month) x aching, morning stiffness in proximal limb muscles (not weakness) x also mild polyarthralgia, lethargy, depression, low-grade fever, anorexia, night sweats Investigations x ESR > 40 mm/hr x note CK and EMG normal x reduced CD8…",
+  "source": "Pass Medicine 2013_.pdf",
+  "source_kind": "book",
+  "pos": 1458340,
+  "disputed": false
+ },
+ "fm_befaeb1d214e1d10": {
+  "verdict": "supported",
+  "quote": "Treatment up until the time of biopsy should include high-dose glucocorticoids, namely, prednisone or methylprednis- olone.",
+  "source": "Pretest Emergency Medicine 4th edition.pdf",
+  "source_kind": "book",
+  "pos": 681680,
+  "disputed": false
+ },
+ "fm_c1cd3cbc2025ff14": {
+  "verdict": "supported",
+  "quote": "Reflexes are either reduced or absent in this disorder and sensory complaints, in the…",
+  "source": "Canada Q bank MCQs.pdf",
+  "source_kind": "book",
+  "pos": 4333080,
+  "disputed": false
+ },
+ "fm_c44b9e3ab7b03dde": {
+  "verdict": "supported",
+  "quote": "There is usually sequential bilateral disease with copi- ous watery discharge and a follicular conjunctivitis.",
+  "source": "CURRENT Medical Diagnosis & Treatment 2023.pdf",
+  "source_kind": "book",
+  "pos": 931320,
+  "disputed": false
+ },
+ "fm_c45c99b8a5cadf40": {
+  "verdict": "supported",
+  "quote": "…in order to reduce the risk of neural tube defects.",
+  "source": "ABFM 2019 Q & A.pdf",
+  "source_kind": "abfm",
+  "pos": 204600,
+  "disputed": true
+ },
+ "fm_c5cb2f3502c3c272": {
+  "verdict": "partial",
+  "quote": "or and cupping of optic disc (C:D ratio 0.2-0.3) Concentric enlargement (C:D ratio 0.5) Superior expansion Advanced/total cupping Small paracentral scotoma Arcuate defect Temporal central island Optic nerve head damage Visual ﬁeld changes ﻿ OP26 Ophthalmology Toronto Notes 2021 Primary O",
+  "source": "Toronto 2021.pdf",
+  "source_kind": "book",
+  "pos": 4051480,
+  "disputed": false
+ },
+ "fm_c5ccc41b273677cf": {
+  "verdict": "supported",
+  "quote": "A) Flight of ideas B) Mania C) Myasthenia gravis D) Sleep disturbances E) Substance abuse The answer is D: D…",
+  "source": "brattons 2018 .pdf",
+  "source_kind": "book",
+  "pos": 1509740,
+  "disputed": true
+ },
+ "fm_c6da80e0f0c475c9": {
+  "verdict": "supported",
+  "quote": "All pregnant women should be offered screening at 35 to 37 weeks’ gestation and treatment with intrapartum antibiotic prophylaxis (penicillin or clindamycin i…",
+  "source": "Family Medicine the Essential MOH & SCFHS.pdf",
+  "source_kind": "book",
+  "pos": 1331300,
+  "disputed": false
+ },
+ "fm_c8582ede1361ad6f": {
+  "verdict": "partial",
+  "quote": "…Galactorrhea; anovulatory cycles with amenorrhea or oligomenorrhea.",
+  "source": "First Aid Family Medicine 3rd edition.pdf",
+  "source_kind": "book",
+  "pos": 208140,
+  "disputed": false
+ },
+ "fm_ca180f756fb2fb85": {
+  "verdict": "supported",
+  "quote": "Large “cobblestone” papillae are noted on the upper tarsal conjunctiva.",
+  "source": "CURRENT Medical Diagnosis & Treatment 2023.pdf",
+  "source_kind": "book",
+  "pos": 942020,
+  "disputed": false
+ },
+ "fm_cb81e9ece5932d54": {
+  "verdict": "supported",
+  "quote": "Treatment is supportive, with IV fluids, analgesics, and fasting.",
+  "source": "Canada Q bank MCQs.pdf",
+  "source_kind": "book",
+  "pos": 327540,
+  "disputed": false
+ },
+ "fm_cc3af101e34c52a6": {
+  "verdict": "supported",
+  "quote": "Erythema Infectiosum fifth disease, is caused by parvovirus B19.",
+  "source": "Derma Review 2021.pdf",
+  "source_kind": "lecture",
+  "pos": 77660,
+  "disputed": false
+ },
+ "fm_d03949851b768b76": {
+  "verdict": "supported",
+  "quote": "Persons with rubeola (measles) develop a severe cough, coryza, photophobia, conjunctivitis, and a high fever that reaches its peak at the height of the generalized macular rash, which typically lasts for 5 days.",
+  "source": "PreTest Pediatrics 12edition.pdf",
+  "source_kind": "book",
+  "pos": 538680,
+  "disputed": false
+ },
+ "fm_d0ee069a05d7d4d4": {
+  "verdict": "supported",
+  "quote": "…Most commonly caused by Pseudomonas aeruginosa -Treatment is topical antimicrobials with or without steroids -Comments: Necrotizing otitis externa - a complication seen in diabetics/ immunocompromised AIDS and who in chemotherapy - Ear drops may…",
+  "source": "Ophtha_ENT review Rosh 2021.pdf",
+  "source_kind": "lecture",
+  "pos": 22540,
+  "disputed": true
+ },
+ "fm_d1749d9c9b491185": {
+  "verdict": "supported",
+  "quote": "Sheehan syndrome seems a likely possi…",
+  "source": "Pretest Obstetrics & Gynecology 14th edition.pdf",
+  "source_kind": "book",
+  "pos": 337700,
+  "disputed": false
+ },
+ "fm_d1cd95879ff4ddd7": {
+  "verdict": "broken",
+  "note": "refers to a blood film that is not attached"
+ },
+ "fm_d4b5d0232ecf7739": {
+  "verdict": "broken",
+  "note": "two options name the same disorder"
+ },
+ "fm_d4e1bc943fb25ba4": {
+  "verdict": "supported",
+  "quote": "…non-infectious ■ allergic, atopic, seasonal, giant papillary conjunctivitis (contact lens wearers) ■ toxic: irritants, dust, smoke, irradiation ■ secondary to another disorder: dacryocystitis, dacryoadenitis, cellulitis, and systemic inflammatory disease Clinical Features • red eye (conjunctival injection), chemosis • itching, foreign body sensation, teari",
+  "source": "Toronto 2021.pdf",
+  "source_kind": "book",
+  "pos": 4003800,
+  "disputed": false
+ },
+ "fm_d66a28f4e237c91b": {
+  "verdict": "supported",
+  "quote": "…Treatment: IV immunoglobulin (IVIG) and high-dose aspirin Agent: Neisseria meningitidis May cause meningitis Clinical symptoms may includ…",
+  "source": "USMLE step 3 lecture notes_.pdf",
+  "source_kind": "book",
+  "pos": 144100,
+  "disputed": false
+ },
+ "fm_d785d4096182bc62": {
+  "verdict": "partial",
+  "quote": "bone age is consistent with chronological age; c.",
+  "source": "Family Medicine Ambulatory care and prevention.pdf",
+  "source_kind": "book",
+  "pos": 599360,
+  "disputed": false
+ },
+ "fm_d7b915646e101b83": {
+  "verdict": "partial",
+  "quote": "It may be exacerbated by deep inspiration and decreased with quiet breathing.",
+  "source": "Canada Q bank MCQs.pdf",
+  "source_kind": "book",
+  "pos": 1619860,
+  "disputed": false
+ },
+ "fm_d8c8d0731c6688cf": {
+  "verdict": "supported",
+  "quote": "Indirect inguinal hernias are the most common type of hern…",
+  "source": "USMLE master the board topics step 3.pdf",
+  "source_kind": "book",
+  "pos": 685360,
+  "disputed": false
+ },
+ "fm_d9becaa43b52d1a3": {
+  "verdict": "supported",
+  "quote": "Exam reveals a firm, hard, or fixed nodular mass on the testis that does not transil- luminate.",
+  "source": "First Aid Family Medicine 3rd edition.pdf",
+  "source_kind": "book",
+  "pos": 1541700,
+  "disputed": false
+ },
+ "fm_da04cec8e44fda49": {
+  "verdict": "supported",
+  "quote": "Treatment ■ ■Aspiration or surgical drainage + antibiotics for 10 to 14 days • IV:…",
+  "source": "Canadian Family Medicine Examination.pdf",
+  "source_kind": "book",
+  "pos": 246880,
+  "disputed": false
+ },
+ "fm_db4f5ee29d5775d0": {
+  "verdict": "supported",
+  "quote": "…It is the most common form of child maltreatment, occurrin…",
+  "source": "Child Abuse_ Approach and Management.pdf",
+  "source_kind": "aafp",
+  "pos": 5060,
+  "disputed": false
+ },
+ "fm_dd412b211689a478": {
+  "verdict": "supported",
+  "quote": "…Early return to work/activity • Analgesia—Avoiding narcotics if at all possible…",
+  "source": "Canadian Family Medicine Examination.pdf",
+  "source_kind": "book",
+  "pos": 647640,
+  "disputed": false
+ },
+ "fm_ddd71f6220b1f5f4": {
+  "verdict": "partial",
+  "quote": "…L5 nerve root compression Sensory loss dorsum of foot Weakness in foot and big toe dorsiflexion Reflexes intact Positive sciatic nerve stretch test…",
+  "source": "MRCP part I Pass medicine 2014.pdf",
+  "source_kind": "book",
+  "pos": 2077460,
+  "disputed": false
+ },
+ "fm_de76f76aefb40d73": {
+  "verdict": "supported",
+  "quote": "…oral fluconazole (avoid in…",
+  "source": "First Aid Family Medicine 3rd edition.pdf",
+  "source_kind": "book",
+  "pos": 1462140,
+  "disputed": false
+ },
+ "fm_dfa43cb520dc67ed": {
+  "verdict": "supported",
+  "quote": "Resistant hypertension is common in patients with obstructive sleep apnea.",
+  "source": "ABFM 2015-2016-2017-2018 Q A.pdf",
+  "source_kind": "abfm",
+  "pos": 924720,
+  "disputed": false
+ },
+ "fm_e03e312664d2f55f": {
+  "verdict": "supported",
+  "quote": "…chocking or smothering sensations;…",
+  "source": "Canada Q bank MCQs.pdf",
+  "source_kind": "book",
+  "pos": 2734220,
+  "disputed": true
+ },
+ "fm_e17c79d3fe22a759": {
+  "verdict": "supported",
+  "quote": "X-rays eventually show a “bamboo spine.” It is associated with the HLA B-27 antigen; screen for uveitis and inflammatory bowe…",
+  "source": "USMLE master the board topics step 3.pdf",
+  "source_kind": "book",
+  "pos": 677840,
+  "disputed": false
+ },
+ "fm_e277264bf57e5972": {
+  "verdict": "supported",
+  "quote": "(2:1), babies where maternal rubella infection was present, and premature infants Wide pulse pressure, bounding arterial pulses, and characteristic sound of “machinery” (to-and-fro murmur) Indomethacin-induced closure helpful in premature infants.",
+  "source": "USMLE master the board topics step 3.pdf",
+  "source_kind": "book",
+  "pos": 754840,
+  "disputed": false
+ },
+ "fm_e342b527e45e0148": {
+  "verdict": "supported",
+  "quote": "…Aggravation of the condition due to lack of sleep, trauma, or cold exposure 163) HIV +ve pt.",
+  "source": "bratton Medecine summary.pdf",
+  "source_kind": "book",
+  "pos": 41800,
+  "disputed": true
+ },
+ "fm_e55f50b6e60704b7": {
+  "verdict": "supported",
+  "quote": "ANSWER: For management, select upper endoscopy to diagnose stomal stenosis or marginal ulcer.",
+  "source": "MKSAP board basics short version_.pdf",
+  "source_kind": "book",
+  "pos": 463400,
+  "disputed": false
+ },
+ "fm_e56242327c162a79": {
+  "verdict": "supported",
+  "quote": "This patient is most likely to have gestational thrombocytopenia.",
+  "source": "Pretest Obstetrics & Gynecology 14th edition.pdf",
+  "source_kind": "book",
+  "pos": 257580,
+  "disputed": false
+ },
+ "fm_e64669c143c3b0c5": {
+  "verdict": "supported",
+  "quote": "The ileocecal area is the most common…",
+  "source": "MKSAP board basics complete version.pdf",
+  "source_kind": "book",
+  "pos": 154900,
+  "disputed": false
+ },
+ "fm_e7992f614b11911b": {
+  "verdict": "supported",
+  "quote": "Empiric, guideline-directed intravenous antibiotic therapy should be starte…",
+  "source": "Aseptic bacterial meningitis.pdf",
+  "source_kind": "aafp",
+  "pos": 600,
+  "disputed": false
+ },
+ "fm_e89944bbbee0ee2c": {
+  "verdict": "partial",
+  "quote": "Insulin tolerance test This patient has symptoms typical of an insulinoma.",
+  "source": "MRCP part I Pass medicine 2014.pdf",
+  "source_kind": "book",
+  "pos": 1748380,
+  "disputed": false
+ },
+ "fm_e9252e1e1f2ddba6": {
+  "verdict": "supported",
+  "quote": "Y 2015) Denosumab is associated with a risk of osteonecrosis of the jaw (ONJ) and with a risk of hypocalcaemia.",
+  "source": "BNF 2021 for Adults.pdf",
+  "source_kind": "book",
+  "pos": 4613080,
+  "disputed": false
+ },
+ "fm_e992f51d25d93805": {
+  "verdict": "supported",
+  "quote": "Diminished or absent ankle reﬂex, calf weakness or atrophy, and sensory loss along the lateral aspect of the foot are caused by compression of the ﬁrst sacral nerve root (S1).",
+  "source": "Family Medicine Ambulatory care and prevention.pdf",
+  "source_kind": "book",
+  "pos": 1048300,
+  "disputed": false
+ },
+ "fm_e9e892a8bcac5cf2": {
+  "verdict": "partial",
+  "quote": "…high phosphate low calcium: due to…",
+  "source": "MRCP part I Pass medicine 2014.pdf",
+  "source_kind": "book",
+  "pos": 2389560,
+  "disputed": false
+ },
+ "fm_eabc7e6f616d5a36": {
+  "verdict": "supported",
+  "quote": "…axons of the retinal ganglion cells pass from the retina to form the optic nerve;​ there are hundreds of openings through…",
+  "source": "Glaucoma_ Diagnosis and Management.pdf",
+  "source_kind": "aafp",
+  "pos": 5800,
+  "disputed": false
+ },
+ "fm_eb4484f61d30d29c": {
+  "verdict": "partial",
+  "quote": "…Size ≥7 mm diameter Uneven pigmentation (…",
+  "source": "BMJ Differential Diagnosis in Primary Care.pdf",
+  "source_kind": "book",
+  "pos": 360060,
+  "disputed": false
+ },
+ "fm_eb5862b20de3c444": {
+  "verdict": "partial",
+  "quote": "Troublesome asthma symptoms most days; or waking due to asthma once a week or more, especially if any risk factors exist (Box 2-2B) Low dose ICS-LABA with as needed SABA (Evidence A), OR Medium dose ICS† with as-needed SABA (Evidence A), OR Very low dose ICS-formoterol maintenance and reliever…",
+  "source": "Asthma GINA guidelines 2021.pdf",
+  "source_kind": "guideline",
+  "pos": 172260,
+  "disputed": false
+ },
+ "fm_ecae01508fefc363": {
+  "verdict": "partial",
+  "quote": "…pink frothy sputum, hemoptysis, and pulmon…",
+  "source": "MKSAP board basics short version_.pdf",
+  "source_kind": "book",
+  "pos": 994460,
+  "disputed": false
+ },
+ "fm_ecd97ed29754efd1": {
+  "verdict": "supported",
+  "quote": "(Note: If given beta-lactam Abx, morbilliform rash will develop.) ■ ■Avoid strenuous physical activity for 4 weeks, and avoid contact sports.",
+  "source": "Canadian Family Medicine Examination.pdf",
+  "source_kind": "book",
+  "pos": 230260,
+  "disputed": false
+ },
+ "fm_ee0ef783fe86a6be": {
+  "verdict": "supported",
+  "quote": "…mirtazapine may decrease sexual side effects.",
+  "source": "brattons 2018 .pdf",
+  "source_kind": "book",
+  "pos": 1512000,
+  "disputed": false
+ },
+ "fm_effdc727a538d2d7": {
+  "verdict": "supported",
+  "quote": "The treatment of choice in this patient is ice, elevation, weight bearing as tolerated, active range of motion exercises, and an ankle support brace.",
+  "source": "Swanson s Family Medicine Review 2017.pdf",
+  "source_kind": "book",
+  "pos": 3670700,
+  "disputed": false
+ },
+ "fm_f0c1f1ef50bc37b5": {
+  "verdict": "partial",
+  "quote": "…80% present with asymptomatic, unilateral abdominal mass • may also present with HTN, gross hematuria, abdominal pain, vomiting • may have pulmonary metastases at time of diagnosis (respiratory symptoms) Associated Congenital Abnormalities • WAGR syndrome (Wilms’ tumour, Aniridia…",
+  "source": "Toronto 2021.pdf",
+  "source_kind": "book",
+  "pos": 4654280,
+  "disputed": false
+ },
+ "fm_f134eaaf04fb8a31": {
+  "verdict": "disagrees",
+  "quote": "…MRI of the sacrolliac joints.",
+  "source": "MKSAP board basics complete version.pdf",
+  "source_kind": "book",
+  "pos": 2241980,
+  "disputed": false,
+  "source_supports": "C"
+ },
+ "fm_f1997603a5734481": {
+  "verdict": "partial",
+  "quote": "A 900-gram premature infant born at 28 weeks gestation has a continuous machinery-like murmur at the second left intercostal space that radiates well to the anterior lung fiel…",
+  "source": "Pediatrics 13th ed.pdf",
+  "source_kind": "book",
+  "pos": 45580,
+  "disputed": false
+ },
+ "fm_f1bba95db928bb9a": {
+  "verdict": "supported",
+  "quote": "…As-needed low-dose ICS-formoterol…",
+  "source": "Primary health care for children and adolescents WHO.pdf",
+  "source_kind": "book",
+  "pos": 916540,
+  "disputed": false
+ },
+ "fm_f2718a229a5f289b": {
+  "verdict": "supported",
+  "quote": "There is inﬂammation and crusting of lid margins, usually…",
+  "source": "Family Medicine Ambulatory care and prevention.pdf",
+  "source_kind": "book",
+  "pos": 1283260,
+  "disputed": false
+ },
+ "fm_f2ac9c55d10a46ac": {
+  "verdict": "supported",
+  "quote": "…sudden onset sensation of room spinning in connection with positional changes of the head, lasting seconds to…",
+  "source": "Ophtha_ENT review Rosh 2021.pdf",
+  "source_kind": "lecture",
+  "pos": 27560,
+  "disputed": false
+ },
+ "fm_f30969efe86de991": {
+  "verdict": "supported",
+  "quote": "NSAID), family history, smoking Epigastric pain before meals Relieved by eating, or drinking milk Worse at night Weight gain Mild epigastric tenderness ± Haematemesis ± Melaena Acute severe generalised abdominal pain suggests a perforation Gastric…",
+  "source": "BMJ Differential Diagnosis in Primary Care.pdf",
+  "source_kind": "book",
+  "pos": 123200,
+  "disputed": false
+ },
+ "fm_f4a35a1e04d3073b": {
+  "verdict": "supported",
+  "quote": "» In later stages, can present with fatigue, jaundice, features of cirrhosis, xanthelasmas, xanthomas, steatorrhea.",
+  "source": "CURRENT Medical Diagnosis & Treatment 2023.pdf",
+  "source_kind": "book",
+  "pos": 3740660,
+  "disputed": false
+ },
+ "fm_f546c9b70c467222": {
+  "verdict": "supported",
+  "quote": "Patients should be treated with topical antivirals, such as acyclovir 3% ophthalmic ointment, and topical antibiotics to prevent secondary…",
+  "source": "PreTest Emergency Medicine 5e.pdf",
+  "source_kind": "book",
+  "pos": 1136100,
+  "disputed": false
+ },
+ "fm_f562ceebbe5d3a62": {
+  "verdict": "supported",
+  "quote": "…Inactive HBV carrier state (low HBV DNA…",
+  "source": "CURRENT Medical Diagnosis & Treatment 2023.pdf",
+  "source_kind": "book",
+  "pos": 3587160,
+  "disputed": false
+ },
+ "fm_f78dafbc25044218": {
+  "verdict": "supported",
+  "quote": "Erythema and inflammation of the vagina and cervix are often present and can include punctate hemorrhages (strawberry cervix).",
+  "source": "ABFM 2019 Q & A.pdf",
+  "source_kind": "abfm",
+  "pos": 49060,
+  "disputed": false
+ },
+ "fm_f80b0455e5fa2f42": {
+  "verdict": "partial",
+  "quote": "…pink frothy sputum, hemoptysis, and pulmonary crackles Prevention and Treatment HAI can be prevented by gradually ascending.",
+  "source": "MKSAP board basics short version_.pdf",
+  "source_kind": "book",
+  "pos": 994640,
+  "disputed": false
+ },
+ "fm_f9012d6eaeae4c2a": {
+  "verdict": "partial",
+  "quote": "e Emergency Department three days after returning from Thailand complaining of severe muscle ache, fever and headache.",
+  "source": "MRCP part I Pass medicine 2014.pdf",
+  "source_kind": "book",
+  "pos": 2970000,
+  "disputed": false
+ },
+ "fm_fa28136ff27aa6b9": {
+  "verdict": "supported",
+  "quote": "…Weakness of foot dorsiflexion and eversion Foot drop.…",
+  "source": "Upper & Lower Nerve sensory & Motor function.pdf",
+  "source_kind": "lecture",
+  "pos": 1160,
+  "disputed": false
+ },
+ "fm_fbc8faf90868720c": {
+  "verdict": "supported",
+  "quote": "The classic description is a child in a classroom who stares into space in the middle of a sentence and then 20 seconds later resumes the s…",
+  "source": "USMLE step 2 secrets Essay questions_.pdf",
+  "source_kind": "book",
+  "pos": 546260,
+  "disputed": false
+ },
+ "fm_fbdae05edfe5c175": {
+  "verdict": "supported",
+  "quote": "…Causes: Inflammation, malignancy, trauma, chronic torsion Painless scrotal swelling Persistent…",
+  "source": "BMJ Differential Diagnosis in Primary Care.pdf",
+  "source_kind": "book",
+  "pos": 259340,
+  "disputed": false
+ },
+ "fm_fe635f2bf2849489": {
+  "verdict": "supported",
+  "quote": "…Refer for urgent colonoscopy Chapter 5: Abdomen 57 Diagnosis Back…",
+  "source": "BMJ Differential Diagnosis in Primary Care.pdf",
+  "source_kind": "book",
+  "pos": 173420,
+  "disputed": false
+ },
+ "fm_0080c0235e3dbea9": {
+  "verdict": "no_reference"
+ },
+ "fm_00a729aa76c6a8ef": {
+  "verdict": "no_reference"
+ },
+ "fm_011b7c3bf559ce0c": {
+  "verdict": "no_reference"
+ },
+ "fm_02f2203134cc7bb5": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_0322de27f7a00362": {
+  "verdict": "no_reference"
+ },
+ "fm_056136833200320b": {
+  "verdict": "no_reference"
+ },
+ "fm_06c20aa322ed5886": {
+  "verdict": "no_reference"
+ },
+ "fm_0706d1ca05c33372": {
+  "verdict": "no_reference"
+ },
+ "fm_089d2dffd47469f2": {
+  "verdict": "no_reference"
+ },
+ "fm_0a22192afc18d4f1": {
+  "verdict": "no_reference"
+ },
+ "fm_0bbdd9dfcbde1477": {
+  "verdict": "no_reference"
+ },
+ "fm_0c9275e18f072b4c": {
+  "verdict": "no_reference"
+ },
+ "fm_0cc60580a243e45c": {
+  "verdict": "no_reference"
+ },
+ "fm_0d279ef9edd112a8": {
+  "verdict": "no_reference"
+ },
+ "fm_0e70d71a779c5d41": {
+  "verdict": "no_reference"
+ },
+ "fm_0eff3befa115183c": {
+  "verdict": "no_reference"
+ },
+ "fm_0f5ac7d0af6d0715": {
+  "verdict": "no_reference"
+ },
+ "fm_0fd172dd90d0d4a6": {
+  "verdict": "no_reference"
+ },
+ "fm_111a4608951023da": {
+  "verdict": "no_reference"
+ },
+ "fm_11d7dfa443a469cf": {
+  "verdict": "no_reference"
+ },
+ "fm_1328da78ce2e5d62": {
+  "verdict": "no_reference"
+ },
+ "fm_13ababca89e9f594": {
+  "verdict": "no_reference"
+ },
+ "fm_13c3c6187b51fe0b": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_1535cb463a721c12": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_1608e900c8869e28": {
+  "verdict": "no_reference"
+ },
+ "fm_174767b0b4cb0f89": {
+  "verdict": "no_reference"
+ },
+ "fm_177bd18f6dc988c7": {
+  "verdict": "no_reference"
+ },
+ "fm_1904953e07972385": {
+  "verdict": "no_reference"
+ },
+ "fm_1abbbddfea80f587": {
+  "verdict": "no_reference"
+ },
+ "fm_1c6afa22157d952c": {
+  "verdict": "no_reference"
+ },
+ "fm_1d167a6cc2e4a983": {
+  "verdict": "no_reference"
+ },
+ "fm_1d1e3987db29cd47": {
+  "verdict": "no_reference"
+ },
+ "fm_1d85e1766da2cfcf": {
+  "verdict": "no_reference"
+ },
+ "fm_221a03b99f6e4dff": {
+  "verdict": "no_reference"
+ },
+ "fm_2270980bae7f3e52": {
+  "verdict": "no_reference"
+ },
+ "fm_2285522d4e0a13d4": {
+  "verdict": "no_reference"
+ },
+ "fm_22f090f0fba411bc": {
+  "verdict": "no_reference"
+ },
+ "fm_2307426a2cf873b8": {
+  "verdict": "no_reference"
+ },
+ "fm_236a4913d37fb762": {
+  "verdict": "no_reference"
+ },
+ "fm_237b4d0022d375df": {
+  "verdict": "no_reference"
+ },
+ "fm_24e97f8d544249d2": {
+  "verdict": "no_reference"
+ },
+ "fm_274cab2711c9e4cb": {
+  "verdict": "no_reference"
+ },
+ "fm_284c117f8000d9c1": {
+  "verdict": "no_reference"
+ },
+ "fm_286b598cd5fc9084": {
+  "verdict": "no_reference"
+ },
+ "fm_28a06de0c86e9a4e": {
+  "verdict": "no_reference"
+ },
+ "fm_28f48f3b3c5652e1": {
+  "verdict": "no_reference"
+ },
+ "fm_294e44da94a9a1ad": {
+  "verdict": "no_reference"
+ },
+ "fm_295f3c17cecbe396": {
+  "verdict": "no_reference"
+ },
+ "fm_29ae24b05c6bbc8e": {
+  "verdict": "no_reference"
+ },
+ "fm_2a0f808c9b2c0c85": {
+  "verdict": "no_reference"
+ },
+ "fm_2a1bcc321be5d8f2": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_2be262a1546b5460": {
+  "verdict": "no_reference"
+ },
+ "fm_2de34c4c949fcadc": {
+  "verdict": "no_reference"
+ },
+ "fm_2f721d4625e99b62": {
+  "verdict": "no_reference"
+ },
+ "fm_30b625d69b830c32": {
+  "verdict": "no_reference"
+ },
+ "fm_334998ed76e42dba": {
+  "verdict": "no_reference"
+ },
+ "fm_377c877ea80998d9": {
+  "verdict": "no_reference"
+ },
+ "fm_37cacac47ffdee85": {
+  "verdict": "no_reference"
+ },
+ "fm_37e848fd7446fc96": {
+  "verdict": "no_reference"
+ },
+ "fm_382209c8c8395403": {
+  "verdict": "no_reference"
+ },
+ "fm_3988144a0f92d0ca": {
+  "verdict": "no_reference"
+ },
+ "fm_39af4338aaab9987": {
+  "verdict": "no_reference"
+ },
+ "fm_3af45fb84b792895": {
+  "verdict": "no_reference"
+ },
+ "fm_3c5c3ecc07534bf1": {
+  "verdict": "no_reference"
+ },
+ "fm_3ce5ef63c2b72296": {
+  "verdict": "no_reference"
+ },
+ "fm_3d0e5d9eaf1ad85f": {
+  "verdict": "no_reference"
+ },
+ "fm_3f9d4dedcd64e996": {
+  "verdict": "no_reference"
+ },
+ "fm_401d5912b234d26c": {
+  "verdict": "no_reference"
+ },
+ "fm_405f4a89b9a9bc93": {
+  "verdict": "no_reference"
+ },
+ "fm_439d59e1554cc7ac": {
+  "verdict": "no_reference"
+ },
+ "fm_44391e40ca984388": {
+  "verdict": "no_reference"
+ },
+ "fm_447ca1554139b764": {
+  "verdict": "no_reference"
+ },
+ "fm_44c9f8126fc287e9": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_45793a68c1a9e1b8": {
+  "verdict": "no_reference"
+ },
+ "fm_457ad3051c66ce26": {
+  "verdict": "no_reference"
+ },
+ "fm_4627e3e8cc309323": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_4635287a0fa21f78": {
+  "verdict": "no_reference"
+ },
+ "fm_47bd79eae5de39f5": {
+  "verdict": "no_reference"
+ },
+ "fm_47f1ffe37816621c": {
+  "verdict": "no_reference"
+ },
+ "fm_492147fda6d883e4": {
+  "verdict": "no_reference"
+ },
+ "fm_4aa6f90a2b55ee84": {
+  "verdict": "no_reference"
+ },
+ "fm_4aec1f565a4566d3": {
+  "verdict": "no_reference"
+ },
+ "fm_4ca8650872bdc7ad": {
+  "verdict": "no_reference"
+ },
+ "fm_4cb675b263bde0c8": {
+  "verdict": "no_reference"
+ },
+ "fm_4e7ebb73ff7aab09": {
+  "verdict": "no_reference"
+ },
+ "fm_4f5777f0afcd9897": {
+  "verdict": "no_reference"
+ },
+ "fm_50825d7217d01a3d": {
+  "verdict": "no_reference"
+ },
+ "fm_525926897dfa093c": {
+  "verdict": "no_reference"
+ },
+ "fm_52f63fcd0040283e": {
+  "verdict": "no_reference"
+ },
+ "fm_53a3b290abe06fd1": {
+  "verdict": "no_reference"
+ },
+ "fm_595e8c34c0f4d8ac": {
+  "verdict": "no_reference"
+ },
+ "fm_59f7bab13d0fd1fb": {
+  "verdict": "no_reference"
+ },
+ "fm_5aa7e36ebc85aaa2": {
+  "verdict": "no_reference"
+ },
+ "fm_5b6632c3f4369b85": {
+  "verdict": "no_reference"
+ },
+ "fm_5b9662384bace1fb": {
+  "verdict": "no_reference"
+ },
+ "fm_5baeabe80925e732": {
+  "verdict": "no_reference"
+ },
+ "fm_5bb79dedcc17928c": {
+  "verdict": "no_reference"
+ },
+ "fm_5c148af05aa58d1a": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_5c7e3a143156e376": {
+  "verdict": "no_reference"
+ },
+ "fm_5d987f31cc451fae": {
+  "verdict": "no_reference"
+ },
+ "fm_5da2b9f2e77ab477": {
+  "verdict": "no_reference"
+ },
+ "fm_5de792be44da9897": {
+  "verdict": "no_reference"
+ },
+ "fm_5ff2306dd8998fb5": {
+  "verdict": "no_reference"
+ },
+ "fm_6380091e5fae2da9": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_63c32c3b03a4d591": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_65014e332c8b2a24": {
+  "verdict": "no_reference"
+ },
+ "fm_65e533e1570fd784": {
+  "verdict": "no_reference"
+ },
+ "fm_66ffa1f9ed842aa3": {
+  "verdict": "no_reference"
+ },
+ "fm_6792247c357fa3fd": {
+  "verdict": "no_reference"
+ },
+ "fm_6858743cb248a659": {
+  "verdict": "no_reference"
+ },
+ "fm_690053c340a0dbc9": {
+  "verdict": "no_reference"
+ },
+ "fm_695e3a497f78c60d": {
+  "verdict": "no_reference"
+ },
+ "fm_6ae0437541741c21": {
+  "verdict": "no_reference"
+ },
+ "fm_6b83d776051aed3e": {
+  "verdict": "no_reference"
+ },
+ "fm_6c506f782c89490a": {
+  "verdict": "no_reference"
+ },
+ "fm_6cbbc1a1dc3bc87c": {
+  "verdict": "no_reference"
+ },
+ "fm_6e8ad21778a6fe23": {
+  "verdict": "no_reference"
+ },
+ "fm_6eb891e02c113b89": {
+  "verdict": "no_reference"
+ },
+ "fm_70cbf602411831c5": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_7186632f3f91d775": {
+  "verdict": "no_reference"
+ },
+ "fm_72f5c3f2f6234c34": {
+  "verdict": "no_reference"
+ },
+ "fm_7306005807869667": {
+  "verdict": "no_reference"
+ },
+ "fm_731b1ebba5bb09e8": {
+  "verdict": "no_reference"
+ },
+ "fm_74fb70230e62a997": {
+  "verdict": "no_reference"
+ },
+ "fm_75997bd6ecc9aaae": {
+  "verdict": "no_reference"
+ },
+ "fm_759b53ccf08d3156": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_764b9f522860336c": {
+  "verdict": "no_reference"
+ },
+ "fm_768d92a237806edf": {
+  "verdict": "no_reference"
+ },
+ "fm_7740c20b62a9b6c6": {
+  "verdict": "no_reference"
+ },
+ "fm_77d4dee7dd9359a0": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_78bd650ef022b339": {
+  "verdict": "no_reference"
+ },
+ "fm_790bd05382622fbb": {
+  "verdict": "no_reference"
+ },
+ "fm_79c87a55810b330b": {
+  "verdict": "no_reference"
+ },
+ "fm_7d647eb4f5012ad7": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_7e1253895d6afc28": {
+  "verdict": "no_reference"
+ },
+ "fm_7e4e93925353f349": {
+  "verdict": "no_reference"
+ },
+ "fm_7fc07b48392aace4": {
+  "verdict": "no_reference"
+ },
+ "fm_8098c6af439c3bc8": {
+  "verdict": "no_reference"
+ },
+ "fm_80b63bb2068cf1db": {
+  "verdict": "no_reference"
+ },
+ "fm_81df89a6c49ed895": {
+  "verdict": "no_reference"
+ },
+ "fm_823416ccfec549cf": {
+  "verdict": "no_reference"
+ },
+ "fm_8262f47e26a03fd7": {
+  "verdict": "no_reference"
+ },
+ "fm_829172025f52c4a7": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_82c64d440859247c": {
+  "verdict": "no_reference"
+ },
+ "fm_8397844cbeb96cd8": {
+  "verdict": "no_reference"
+ },
+ "fm_839d438756808991": {
+  "verdict": "no_reference"
+ },
+ "fm_85012ba918943f14": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_853bc5334938f8dc": {
+  "verdict": "no_reference"
+ },
+ "fm_85835fcb42e6db7c": {
+  "verdict": "no_reference"
+ },
+ "fm_8689079a4b82e946": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_86958c47efe03699": {
+  "verdict": "no_reference"
+ },
+ "fm_86b7184d8c12dbe0": {
+  "verdict": "no_reference"
+ },
+ "fm_86c5203327044a20": {
+  "verdict": "no_reference"
+ },
+ "fm_894234c0170413cc": {
+  "verdict": "no_reference"
+ },
+ "fm_89c4e55f2d9e7e51": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_89e431a4a162d551": {
+  "verdict": "no_reference"
+ },
+ "fm_8a1959ee89d2b812": {
+  "verdict": "no_reference"
+ },
+ "fm_8a40cab1e52a8276": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_8d4f51204d20f015": {
+  "verdict": "no_reference"
+ },
+ "fm_8d84b454ba09abf2": {
+  "verdict": "no_reference"
+ },
+ "fm_8dd56ac209c911bf": {
+  "verdict": "no_reference"
+ },
+ "fm_8ddbf1773d4c15d6": {
+  "verdict": "no_reference"
+ },
+ "fm_8fa0b7700a98f6e3": {
+  "verdict": "no_reference"
+ },
+ "fm_900c99d3f2a21d6c": {
+  "verdict": "no_reference"
+ },
+ "fm_92273a8d25fa15ce": {
+  "verdict": "no_reference"
+ },
+ "fm_927c9bc4f0a827a9": {
+  "verdict": "no_reference"
+ },
+ "fm_94602164f7279606": {
+  "verdict": "no_reference"
+ },
+ "fm_9732aaba89c77c1c": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_9838b7fe472d2dd6": {
+  "verdict": "no_reference"
+ },
+ "fm_98dd341a85d25975": {
+  "verdict": "no_reference"
+ },
+ "fm_9a0a16ab202706cd": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_9acc5e07786b97c6": {
+  "verdict": "no_reference"
+ },
+ "fm_9b848c11740e06a9": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_9c5f714884b0ba9c": {
+  "verdict": "no_reference"
+ },
+ "fm_9c6f75f39268b505": {
+  "verdict": "no_reference"
+ },
+ "fm_9d31d2ad329c268d": {
+  "verdict": "no_reference"
+ },
+ "fm_9f2dff9faf3c4a93": {
+  "verdict": "no_reference"
+ },
+ "fm_a0dc62cab38edfbb": {
+  "verdict": "no_reference"
+ },
+ "fm_a0f4b36f3dd4c735": {
+  "verdict": "no_reference"
+ },
+ "fm_a31b932391f196ff": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_a3c9bb3b0b2bfbe1": {
+  "verdict": "no_reference"
+ },
+ "fm_a401f5285503f2c0": {
+  "verdict": "no_reference"
+ },
+ "fm_a4b4db57fa189fbc": {
+  "verdict": "no_reference"
+ },
+ "fm_a80a3cfc5c62d163": {
+  "verdict": "no_reference"
+ },
+ "fm_a907711f2332cead": {
+  "verdict": "no_reference"
+ },
+ "fm_a9604a93f81f9462": {
+  "verdict": "no_reference"
+ },
+ "fm_aa2d1f2790accb95": {
+  "verdict": "no_reference"
+ },
+ "fm_ab13ab035dc25086": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_aba9e0a6156d8bd4": {
+  "verdict": "no_reference"
+ },
+ "fm_ac065eee651f39da": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_aee3ceebff4a6e05": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_aeec446e16b7cd29": {
+  "verdict": "no_reference"
+ },
+ "fm_b08377c8d6daf2fc": {
+  "verdict": "no_reference"
+ },
+ "fm_b0a5df29004f10d6": {
+  "verdict": "no_reference"
+ },
+ "fm_b0fd9a1b667ad75e": {
+  "verdict": "no_reference"
+ },
+ "fm_b4c5d22942fcd004": {
+  "verdict": "no_reference"
+ },
+ "fm_b4e14301ed18bb79": {
+  "verdict": "no_reference"
+ },
+ "fm_b53dbf3f22d62101": {
+  "verdict": "no_reference"
+ },
+ "fm_b5c72aef385ddf40": {
+  "verdict": "no_reference"
+ },
+ "fm_b60722d355edde81": {
+  "verdict": "no_reference"
+ },
+ "fm_b815bd6af7780fe8": {
+  "verdict": "no_reference"
+ },
+ "fm_b9a598e80679d53b": {
+  "verdict": "no_reference"
+ },
+ "fm_bbf6111a78140c07": {
+  "verdict": "no_reference"
+ },
+ "fm_bf3236217b6b8613": {
+  "verdict": "no_reference"
+ },
+ "fm_c17c8d9f193e6159": {
+  "verdict": "no_reference"
+ },
+ "fm_c185169d4622278d": {
+  "verdict": "no_reference"
+ },
+ "fm_c2089b007a6751cf": {
+  "verdict": "no_reference"
+ },
+ "fm_c245bfb1c92caf2b": {
+  "verdict": "no_reference"
+ },
+ "fm_c32dd3104a9bca13": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_c6dc118dbbbb30b8": {
+  "verdict": "no_reference"
+ },
+ "fm_c70e30cc02c28360": {
+  "verdict": "no_reference"
+ },
+ "fm_c76324f52a7d0b47": {
+  "verdict": "no_reference"
+ },
+ "fm_c7e6d655945f599f": {
+  "verdict": "no_reference"
+ },
+ "fm_c8ba77ba5d2a0774": {
+  "verdict": "no_reference"
+ },
+ "fm_c8f34087ad0a8adf": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_c94c1e345cfadc1a": {
+  "verdict": "no_reference"
+ },
+ "fm_c9d9db7b5bd0393f": {
+  "verdict": "no_reference"
+ },
+ "fm_cb88279a95a97eb7": {
+  "verdict": "no_reference"
+ },
+ "fm_cbb52e7c87cb0653": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_cc01ba1cc75a3e10": {
+  "verdict": "no_reference"
+ },
+ "fm_cdd8f8867341dae2": {
+  "verdict": "no_reference"
+ },
+ "fm_d3ebb841d8ebe1ad": {
+  "verdict": "no_reference"
+ },
+ "fm_d4195f1e3f19ca46": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_d4824ff73c240d6f": {
+  "verdict": "no_reference"
+ },
+ "fm_d677cda1be986c27": {
+  "verdict": "no_reference"
+ },
+ "fm_d78c47ed754cb922": {
+  "verdict": "no_reference"
+ },
+ "fm_d8aa36119f171be6": {
+  "verdict": "no_reference"
+ },
+ "fm_d8bfb967d7d5509d": {
+  "verdict": "no_reference"
+ },
+ "fm_d8c58c4a5cef885c": {
+  "verdict": "no_reference"
+ },
+ "fm_db8354ee0b6a136f": {
+  "verdict": "no_reference"
+ },
+ "fm_db85cf94d125b6ad": {
+  "verdict": "no_reference"
+ },
+ "fm_dcce364fae754ee6": {
+  "verdict": "no_reference"
+ },
+ "fm_dcd009f6a1555bba": {
+  "verdict": "no_reference"
+ },
+ "fm_dd4441c5798e3d4e": {
+  "verdict": "no_reference"
+ },
+ "fm_de669de58da99b15": {
+  "verdict": "no_reference"
+ },
+ "fm_e07556bbbfaba014": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_e133a2036f3551a0": {
+  "verdict": "no_reference"
+ },
+ "fm_e1b24f3865508661": {
+  "verdict": "no_reference"
+ },
+ "fm_e32d63b3436c5596": {
+  "verdict": "no_reference"
+ },
+ "fm_e3e7dd7e423680a3": {
+  "verdict": "no_reference"
+ },
+ "fm_e46f1044546da5e7": {
+  "verdict": "no_reference"
+ },
+ "fm_e5d7250f6e49b67e": {
+  "verdict": "no_reference"
+ },
+ "fm_e78f00cc05f102c3": {
+  "verdict": "no_reference"
+ },
+ "fm_e8fa5c54d8a5c979": {
+  "verdict": "no_reference"
+ },
+ "fm_e9d0c5d612872771": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_ea0388ff09848377": {
+  "verdict": "no_reference"
+ },
+ "fm_ea4170abd7b9e082": {
+  "verdict": "no_reference"
+ },
+ "fm_ea423e90d665ec13": {
+  "verdict": "no_reference"
+ },
+ "fm_eaadc799f43b2ed2": {
+  "verdict": "no_reference"
+ },
+ "fm_ecf35f354aea2a7d": {
+  "verdict": "no_reference"
+ },
+ "fm_ed2db07f3714c4c3": {
+  "verdict": "no_reference"
+ },
+ "fm_ee34ecead592c757": {
+  "verdict": "no_reference"
+ },
+ "fm_f1042cc0881c0ccd": {
+  "verdict": "no_reference"
+ },
+ "fm_f131939b38551cf4": {
+  "verdict": "no_reference"
+ },
+ "fm_f28e5d626282e252": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_f2bbe899baf68dc0": {
+  "verdict": "no_reference"
+ },
+ "fm_f481efa6e88019ea": {
+  "verdict": "no_reference"
+ },
+ "fm_f49c04c2dafa54d0": {
+  "verdict": "no_reference"
+ },
+ "fm_f4b3e111ebdaec41": {
+  "verdict": "no_reference"
+ },
+ "fm_f5007c88604208b9": {
+  "verdict": "no_reference"
+ },
+ "fm_f57780b2be51fd74": {
+  "verdict": "no_reference"
+ },
+ "fm_f72df532fa1265f0": {
+  "verdict": "no_reference"
+ },
+ "fm_f7b454e6a81a4969": {
+  "verdict": "no_reference"
+ },
+ "fm_f912d47d2414c667": {
+  "verdict": "no_reference"
+ },
+ "fm_fa43fe713097b1ad": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_faa10f5903f56647": {
+  "verdict": "no_reference"
+ },
+ "fm_fc0dad411fdb5805": {
+  "verdict": "no_reference"
+ },
+ "fm_fcac2638ed92514c": {
+  "verdict": "no_reference"
+ },
+ "fm_fd90443802012bed": {
+  "verdict": "no_reference"
+ },
+ "fm_fd9748b7cbcf8694": {
+  "verdict": "no_reference"
+ },
+ "fm_fdc4647d21c1420c": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_fe06715f20e9a237": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_ff155bfe33902f1b": {
+  "verdict": "dispute_unresolved"
+ },
+ "fm_ffc71a775efcd6fd": {
+  "verdict": "no_reference"
+ },
+ "fm_0091869756d45c15": {
+  "verdict": "no_reference"
+ },
+ "fm_018b15f6aa84918d": {
+  "verdict": "no_reference"
+ },
+ "fm_02026d88d8dd091d": {
+  "verdict": "no_reference"
+ },
+ "fm_021f2ff008c6eda6": {
+  "verdict": "no_reference"
+ },
+ "fm_04f3c5f9d372d946": {
+  "verdict": "no_reference"
+ },
+ "fm_0634391a083f48c5": {
+  "verdict": "no_reference"
+ },
+ "fm_064deb6c4a0c1f27": {
+  "verdict": "no_reference"
+ },
+ "fm_067b2bac5bb6506d": {
+  "verdict": "no_reference"
+ },
+ "fm_069ec5dcf2b8e80b": {
+  "verdict": "no_reference"
+ },
+ "fm_072bd6b9c146b73d": {
+  "verdict": "no_reference"
+ },
+ "fm_097dddd98df09c3b": {
+  "verdict": "no_reference"
+ },
+ "fm_09ec2d85810bc911": {
+  "verdict": "no_reference"
+ },
+ "fm_09f8d44fd30fb0d0": {
+  "verdict": "no_reference"
+ },
+ "fm_0c1289a9b9c9ae3b": {
+  "verdict": "no_reference"
+ },
+ "fm_0d59679ae444f124": {
+  "verdict": "no_reference"
+ },
+ "fm_0d64ab8f7fbb01d1": {
+  "verdict": "no_reference"
+ },
+ "fm_0e42710a85146510": {
+  "verdict": "no_reference"
+ },
+ "fm_0f261d109028dbf9": {
+  "verdict": "no_reference"
+ },
+ "fm_0fb6559f478732e5": {
+  "verdict": "no_reference"
+ },
+ "fm_101d530f7c1e36a0": {
+  "verdict": "no_reference"
+ },
+ "fm_11baeaf63a17419f": {
+  "verdict": "no_reference"
+ },
+ "fm_138ad1af17edd2ef": {
+  "verdict": "no_reference"
+ },
+ "fm_13a437f0c3dc3657": {
+  "verdict": "no_reference"
+ },
+ "fm_13c4e72c3c25307c": {
+  "verdict": "no_reference"
+ },
+ "fm_1ac2ad1b03230049": {
+  "verdict": "no_reference"
+ },
+ "fm_1ac7a4be23f747e1": {
+  "verdict": "no_reference"
+ },
+ "fm_1bfd8686d2351db0": {
+  "verdict": "no_reference"
+ },
+ "fm_1c51fbaf7baf7529": {
+  "verdict": "no_reference"
+ },
+ "fm_1cd74ec595889850": {
+  "verdict": "no_reference"
+ },
+ "fm_212ec27736c59094": {
+  "verdict": "no_reference"
+ },
+ "fm_2143c805c7f4aa81": {
+  "verdict": "no_reference"
+ },
+ "fm_2199b096a27ef399": {
+  "verdict": "no_reference"
+ },
+ "fm_22c8fa6596ff1188": {
+  "verdict": "no_reference"
+ },
+ "fm_23d3207d66d3c337": {
+  "verdict": "no_reference"
+ },
+ "fm_2537c6e7625c7340": {
+  "verdict": "no_reference"
+ },
+ "fm_255c8aa920c47e7c": {
+  "verdict": "no_reference"
+ },
+ "fm_2565382ff9268fcf": {
+  "verdict": "no_reference"
+ },
+ "fm_25a1c3bc875e0a5f": {
+  "verdict": "no_reference"
+ },
+ "fm_25ea2debd398da6e": {
+  "verdict": "no_reference"
+ },
+ "fm_26c1662c1988182f": {
+  "verdict": "no_reference"
+ },
+ "fm_27a523b2da5ec7ab": {
+  "verdict": "no_reference"
+ },
+ "fm_27cb7345c4beca89": {
+  "verdict": "no_reference"
+ },
+ "fm_27f2a47726d71d17": {
+  "verdict": "no_reference"
+ },
+ "fm_283a632690e50f17": {
+  "verdict": "no_reference"
+ },
+ "fm_2a6e8f06d11119bc": {
+  "verdict": "no_reference"
+ },
+ "fm_2ab07f04ae885cdd": {
+  "verdict": "no_reference"
+ },
+ "fm_2ab3498ebef49802": {
+  "verdict": "no_reference"
+ },
+ "fm_2ce64a0e970c9ef8": {
+  "verdict": "no_reference"
+ },
+ "fm_2d0d5b98948c377e": {
+  "verdict": "no_reference"
+ },
+ "fm_2de3b0cfe4e6bd1e": {
+  "verdict": "no_reference"
+ },
+ "fm_2e595a4ae81104fb": {
+  "verdict": "no_reference"
+ },
+ "fm_2f2d466b95cd7870": {
+  "verdict": "no_reference"
+ },
+ "fm_304cee92ef5f473e": {
+  "verdict": "no_reference"
+ },
+ "fm_31ff3bfcc8fec560": {
+  "verdict": "no_reference"
+ },
+ "fm_322182b15b401d09": {
+  "verdict": "no_reference"
+ },
+ "fm_32b9b57608ab21ab": {
+  "verdict": "no_reference"
+ },
+ "fm_337caec2d104a2cf": {
+  "verdict": "no_reference"
+ },
+ "fm_33bfd7641f94d7d7": {
+  "verdict": "no_reference"
+ },
+ "fm_3491f83be38e7fa8": {
+  "verdict": "no_reference"
+ },
+ "fm_354a19ef51dc84d8": {
+  "verdict": "no_reference"
+ },
+ "fm_35c513268115abc4": {
+  "verdict": "no_reference"
+ },
+ "fm_35def9752c965fb6": {
+  "verdict": "no_reference"
+ },
+ "fm_36128c5d7c8b0c5b": {
+  "verdict": "no_reference"
+ },
+ "fm_36eab20f3713ca27": {
+  "verdict": "no_reference"
+ },
+ "fm_371ed581db7eb198": {
+  "verdict": "no_reference"
+ },
+ "fm_37768d4181f34347": {
+  "verdict": "no_reference"
+ },
+ "fm_378688bafae3161c": {
+  "verdict": "no_reference"
+ },
+ "fm_37a3db3f573c3ad3": {
+  "verdict": "no_reference"
+ },
+ "fm_37b4509b97c787a1": {
+  "verdict": "no_reference"
+ },
+ "fm_395e463b1f974c53": {
+  "verdict": "no_reference"
+ },
+ "fm_3add48880b01a2a3": {
+  "verdict": "no_reference"
+ },
+ "fm_3b3a4c34ed0abefe": {
+  "verdict": "no_reference"
+ },
+ "fm_3c76ba6e10d4d6c9": {
+  "verdict": "no_reference"
+ },
+ "fm_3df9550d7282d352": {
+  "verdict": "no_reference"
+ },
+ "fm_3eb37375d53b1364": {
+  "verdict": "no_reference"
+ },
+ "fm_40f657803067e21e": {
+  "verdict": "no_reference"
+ },
+ "fm_427433693ef8cc58": {
+  "verdict": "no_reference"
+ },
+ "fm_43577c8d170fc143": {
+  "verdict": "no_reference"
+ },
+ "fm_4620dd6e9aa1fed4": {
+  "verdict": "no_reference"
+ },
+ "fm_462187b848757fe5": {
+  "verdict": "no_reference"
+ },
+ "fm_4733d39e5e20491f": {
+  "verdict": "no_reference"
+ },
+ "fm_4753d120dd7acb86": {
+  "verdict": "no_reference"
+ },
+ "fm_476b1a3aee5f9ae4": {
+  "verdict": "no_reference"
+ },
+ "fm_4860cbd119d1f0f2": {
+  "verdict": "no_reference"
+ },
+ "fm_48fc4e6930abf414": {
+  "verdict": "no_reference"
+ },
+ "fm_4dfdb178ef3caf74": {
+  "verdict": "no_reference"
+ },
+ "fm_4e73f473d0ef3129": {
+  "verdict": "no_reference"
+ },
+ "fm_4ed5ed2dee98e64e": {
+  "verdict": "no_reference"
+ },
+ "fm_4f0ff46b157fdfa5": {
+  "verdict": "no_reference"
+ },
+ "fm_4f706595331266e3": {
+  "verdict": "no_reference"
+ },
+ "fm_52067d0552fe3757": {
+  "verdict": "no_reference"
+ },
+ "fm_52274bb00ba7282b": {
+  "verdict": "no_reference"
+ },
+ "fm_5378950f52adaeb3": {
+  "verdict": "no_reference"
+ },
+ "fm_53a8db1af7645232": {
+  "verdict": "no_reference"
+ },
+ "fm_54870b2e1b898a3b": {
+  "verdict": "no_reference"
+ },
+ "fm_54d5008a650437bd": {
+  "verdict": "no_reference"
+ },
+ "fm_5667024e2257d3fc": {
+  "verdict": "no_reference"
+ },
+ "fm_5779664f9f27915c": {
+  "verdict": "no_reference"
+ },
+ "fm_58a2b4708cb32ac7": {
+  "verdict": "no_reference"
+ },
+ "fm_58bb6a1d525bda7d": {
+  "verdict": "no_reference"
+ },
+ "fm_59ef6d7d3113591f": {
+  "verdict": "no_reference"
+ },
+ "fm_5c02dd1146b5376a": {
+  "verdict": "no_reference"
+ },
+ "fm_5c63a90785dc1283": {
+  "verdict": "no_reference"
+ },
+ "fm_5c9b0ea17f005f6c": {
+  "verdict": "no_reference"
+ },
+ "fm_5d911f304b917566": {
+  "verdict": "no_reference"
+ },
+ "fm_5d9d6945cf256004": {
+  "verdict": "no_reference"
+ },
+ "fm_5dabb8c3e7f911e5": {
+  "verdict": "no_reference"
+ },
+ "fm_5e9e896b3898f310": {
+  "verdict": "no_reference"
+ },
+ "fm_5ebf32f39229df71": {
+  "verdict": "no_reference"
+ },
+ "fm_60f72d22aaf1f119": {
+  "verdict": "no_reference"
+ },
+ "fm_617e197567a40b72": {
+  "verdict": "no_reference"
+ },
+ "fm_61fdea1e95b5d220": {
+  "verdict": "no_reference"
+ },
+ "fm_620569263abd0198": {
+  "verdict": "no_reference"
+ },
+ "fm_627dc11a96ad6814": {
+  "verdict": "no_reference"
+ },
+ "fm_64c4e43b55184070": {
+  "verdict": "no_reference"
+ },
+ "fm_64fbb118235b3451": {
+  "verdict": "no_reference"
+ },
+ "fm_6517835f24643e5b": {
+  "verdict": "no_reference"
+ },
+ "fm_65ddf11ae6274d52": {
+  "verdict": "no_reference"
+ },
+ "fm_666ee96e5c3b566f": {
+  "verdict": "no_reference"
+ },
+ "fm_66c548b6491d19f7": {
+  "verdict": "no_reference"
+ },
+ "fm_67259e84c0fa062b": {
+  "verdict": "no_reference"
+ },
+ "fm_6808bd60beebf53c": {
+  "verdict": "no_reference"
+ },
+ "fm_6bfbed15cf7a0f3e": {
+  "verdict": "no_reference"
+ },
+ "fm_6c8a5822762a3877": {
+  "verdict": "no_reference"
+ },
+ "fm_6cbbb68c272270ad": {
+  "verdict": "no_reference"
+ },
+ "fm_6d0d20d0da427d14": {
+  "verdict": "no_reference"
+ },
+ "fm_6d2a15b1a3ca70e2": {
+  "verdict": "no_reference"
+ },
+ "fm_6d7823c955cbc276": {
+  "verdict": "no_reference"
+ },
+ "fm_6dca907ee9d1a220": {
+  "verdict": "no_reference"
+ },
+ "fm_6e6eda0d7b6f8606": {
+  "verdict": "no_reference"
+ },
+ "fm_6e8b19252e261c46": {
+  "verdict": "no_reference"
+ },
+ "fm_6fcba0bebad1d7a1": {
+  "verdict": "no_reference"
+ },
+ "fm_70244709caa30d52": {
+  "verdict": "no_reference"
+ },
+ "fm_7071242a95669e58": {
+  "verdict": "no_reference"
+ },
+ "fm_7120548112a275cd": {
+  "verdict": "no_reference"
+ },
+ "fm_718231f39968128e": {
+  "verdict": "no_reference"
+ },
+ "fm_723b43a880e2f8dc": {
+  "verdict": "no_reference"
+ },
+ "fm_723cbd166dfbd121": {
+  "verdict": "no_reference"
+ },
+ "fm_72921bf940656f92": {
+  "verdict": "no_reference"
+ },
+ "fm_72d84d06bdfdb956": {
+  "verdict": "no_reference"
+ },
+ "fm_733c4d88693739cd": {
+  "verdict": "no_reference"
+ },
+ "fm_738df16ce2d87562": {
+  "verdict": "no_reference"
+ },
+ "fm_74f023bf5f2699dc": {
+  "verdict": "no_reference"
+ },
+ "fm_773d5a2df15b09ae": {
+  "verdict": "no_reference"
+ },
+ "fm_77bcdf1b2307a5e5": {
+  "verdict": "no_reference"
+ },
+ "fm_78570be661843851": {
+  "verdict": "no_reference"
+ },
+ "fm_7a8821491f1ed607": {
+  "verdict": "no_reference"
+ },
+ "fm_7b1947d256dba6ab": {
+  "verdict": "no_reference"
+ },
+ "fm_7b50589f75376194": {
+  "verdict": "no_reference"
+ },
+ "fm_7c6c8db22dad93c3": {
+  "verdict": "no_reference"
+ },
+ "fm_7cb30c7ed3594a9c": {
+  "verdict": "no_reference"
+ },
+ "fm_7d2cc41ea2a43628": {
+  "verdict": "no_reference"
+ },
+ "fm_7eee381ea630b742": {
+  "verdict": "no_reference"
+ },
+ "fm_7efd609a8374a231": {
+  "verdict": "no_reference"
+ },
+ "fm_7f6bc7ca4a36d29b": {
+  "verdict": "no_reference"
+ },
+ "fm_7fcb071975a239a8": {
+  "verdict": "no_reference"
+ },
+ "fm_80460b27eb05bf8c": {
+  "verdict": "no_reference"
+ },
+ "fm_80dfac1c75517eb9": {
+  "verdict": "no_reference"
+ },
+ "fm_82aea9765fafb165": {
+  "verdict": "no_reference"
+ },
+ "fm_84dc3b4bc5e482a8": {
+  "verdict": "no_reference"
+ },
+ "fm_858d02b87ca0d14d": {
+  "verdict": "no_reference"
+ },
+ "fm_85ece5e45375b8e6": {
+  "verdict": "no_reference"
+ },
+ "fm_87378b3d922715d6": {
+  "verdict": "no_reference"
+ },
+ "fm_87416f2e6e0be44d": {
+  "verdict": "no_reference"
+ },
+ "fm_878729c911c58bc8": {
+  "verdict": "no_reference"
+ },
+ "fm_88d6606a2b4c0729": {
+  "verdict": "no_reference"
+ },
+ "fm_8ab143286649d874": {
+  "verdict": "no_reference"
+ },
+ "fm_8ace343aaade2737": {
+  "verdict": "no_reference"
+ },
+ "fm_8b8c06402311b702": {
+  "verdict": "no_reference"
+ },
+ "fm_8c1e107e94e789cf": {
+  "verdict": "no_reference"
+ },
+ "fm_8e612165db85c720": {
+  "verdict": "no_reference"
+ },
+ "fm_8e93b21dadefcbec": {
+  "verdict": "no_reference"
+ },
+ "fm_8f5431e24273d4bd": {
+  "verdict": "no_reference"
+ },
+ "fm_8f8b1960e2c3ade0": {
+  "verdict": "no_reference"
+ },
+ "fm_8fa454ae635d889a": {
+  "verdict": "no_reference"
+ },
+ "fm_9021d3cb03c1a654": {
+  "verdict": "no_reference"
+ },
+ "fm_915312a5eaa6aee3": {
+  "verdict": "no_reference"
+ },
+ "fm_91fa80fcf70634fe": {
+  "verdict": "no_reference"
+ },
+ "fm_93c3f67997d96178": {
+  "verdict": "no_reference"
+ },
+ "fm_944e2a3e11d9415f": {
+  "verdict": "no_reference"
+ },
+ "fm_94c4cf6c5379c0c1": {
+  "verdict": "no_reference"
+ },
+ "fm_954d41a733a609cc": {
+  "verdict": "no_reference"
+ },
+ "fm_9608d48b2bf7986f": {
+  "verdict": "no_reference"
+ },
+ "fm_979a917296e5fd2c": {
+  "verdict": "no_reference"
+ },
+ "fm_98648efafaf8c86e": {
+  "verdict": "no_reference"
+ },
+ "fm_9a3dc50cd7f04979": {
+  "verdict": "no_reference"
+ },
+ "fm_9b79d2aa2d704765": {
+  "verdict": "no_reference"
+ },
+ "fm_9bebfed4b1acd904": {
+  "verdict": "no_reference"
+ },
+ "fm_9c51b0711a8006bc": {
+  "verdict": "no_reference"
+ },
+ "fm_9d48cad7485e5298": {
+  "verdict": "no_reference"
+ },
+ "fm_9d6ed9f7f9a0b157": {
+  "verdict": "no_reference"
+ },
+ "fm_9e2a2f0a0f443b39": {
+  "verdict": "no_reference"
+ },
+ "fm_9efee1d3af7df282": {
+  "verdict": "no_reference"
+ },
+ "fm_a2ccd64ea9161007": {
+  "verdict": "no_reference"
+ },
+ "fm_a2df02cfde5ed46f": {
+  "verdict": "no_reference"
+ },
+ "fm_a4e6f155914608bc": {
+  "verdict": "no_reference"
+ },
+ "fm_a65e557adc9055e0": {
+  "verdict": "no_reference"
+ },
+ "fm_a670cff69e23a7c7": {
+  "verdict": "no_reference"
+ },
+ "fm_a6f0a2157d07c176": {
+  "verdict": "no_reference"
+ },
+ "fm_a6fee5391425106c": {
+  "verdict": "no_reference"
+ },
+ "fm_a8c95366ca8f6784": {
+  "verdict": "no_reference"
+ },
+ "fm_a9c3ae9f82cf2858": {
+  "verdict": "no_reference"
+ },
+ "fm_aa482d1b93ff71e9": {
+  "verdict": "no_reference"
+ },
+ "fm_ab54e7d67ca7a252": {
+  "verdict": "no_reference"
+ },
+ "fm_ab5b2f6e5efb1399": {
+  "verdict": "no_reference"
+ },
+ "fm_abd89e87a6451d8d": {
+  "verdict": "no_reference"
+ },
+ "fm_ac4058bc70ea35b2": {
+  "verdict": "no_reference"
+ },
+ "fm_ad258f1ca91366aa": {
+  "verdict": "no_reference"
+ },
+ "fm_ad9cf6b69cec2d78": {
+  "verdict": "no_reference"
+ },
+ "fm_afdfaf77cddbd99b": {
+  "verdict": "no_reference"
+ },
+ "fm_b0ebc552d5981308": {
+  "verdict": "no_reference"
+ },
+ "fm_b12ec593b03957bf": {
+  "verdict": "no_reference"
+ },
+ "fm_b1a5ada98ccaa624": {
+  "verdict": "no_reference"
+ },
+ "fm_b2dc3469610981fb": {
+  "verdict": "no_reference"
+ },
+ "fm_b34260a639de43dc": {
+  "verdict": "no_reference"
+ },
+ "fm_b377635a6bb2db77": {
+  "verdict": "no_reference"
+ },
+ "fm_b51ba6962ace8b6a": {
+  "verdict": "no_reference"
+ },
+ "fm_b5a6f411cc292e74": {
+  "verdict": "no_reference"
+ },
+ "fm_b6771081cba77168": {
+  "verdict": "no_reference"
+ },
+ "fm_b67c940d998b4781": {
+  "verdict": "no_reference"
+ },
+ "fm_b74eb6d1faf10800": {
+  "verdict": "no_reference"
+ },
+ "fm_b7bf4326f5ee2d1f": {
+  "verdict": "no_reference"
+ },
+ "fm_b96b309e9d81b993": {
+  "verdict": "no_reference"
+ },
+ "fm_bb0720f8a13d1b7d": {
+  "verdict": "no_reference"
+ },
+ "fm_bb2fbdaeca9c96f4": {
+  "verdict": "no_reference"
+ },
+ "fm_bb4c380d9d4d649b": {
+  "verdict": "no_reference"
+ },
+ "fm_bd58f2d9cbe129c3": {
+  "verdict": "no_reference"
+ },
+ "fm_bd5ef5400c087136": {
+  "verdict": "no_reference"
+ },
+ "fm_c0229b88809971da": {
+  "verdict": "no_reference"
+ },
+ "fm_c2f15a398b6e3916": {
+  "verdict": "no_reference"
+ },
+ "fm_c686bb0ab32c25a0": {
+  "verdict": "no_reference"
+ },
+ "fm_c718a94f82930927": {
+  "verdict": "no_reference"
+ },
+ "fm_c7b1ed83a0400bfd": {
+  "verdict": "no_reference"
+ },
+ "fm_c8c52a4a11c701d1": {
+  "verdict": "no_reference"
+ },
+ "fm_c9611da2311ca4c8": {
+  "verdict": "no_reference"
+ },
+ "fm_c9f2d4e56ec65ade": {
+  "verdict": "no_reference"
+ },
+ "fm_cb6d8ebe8004c40d": {
+  "verdict": "no_reference"
+ },
+ "fm_cd17691bde158b3d": {
+  "verdict": "no_reference"
+ },
+ "fm_cd24ad68e295dba7": {
+  "verdict": "no_reference"
+ },
+ "fm_ce75b1bdec773657": {
+  "verdict": "no_reference"
+ },
+ "fm_cf3887100b0c9315": {
+  "verdict": "no_reference"
+ },
+ "fm_cf40a5824c02d8d0": {
+  "verdict": "no_reference"
+ },
+ "fm_cfaf6a676994ee60": {
+  "verdict": "no_reference"
+ },
+ "fm_d1ddb72c313de6b9": {
+  "verdict": "no_reference"
+ },
+ "fm_d2aa4d81ff2107d7": {
+  "verdict": "no_reference"
+ },
+ "fm_d38d9f701bdc6567": {
+  "verdict": "no_reference"
+ },
+ "fm_d3a3ac7b25670a30": {
+  "verdict": "no_reference"
+ },
+ "fm_d425855c60de982f": {
+  "verdict": "no_reference"
+ },
+ "fm_d496787779658535": {
+  "verdict": "no_reference"
+ },
+ "fm_d580f1fe51007a35": {
+  "verdict": "no_reference"
+ },
+ "fm_d64c8f6c8e55094e": {
+  "verdict": "no_reference"
+ },
+ "fm_d685237df2d3232a": {
+  "verdict": "no_reference"
+ },
+ "fm_d7341cca1be2f23f": {
+  "verdict": "no_reference"
+ },
+ "fm_d76fbd98a394b8a5": {
+  "verdict": "no_reference"
+ },
+ "fm_d923ed81bcddec69": {
+  "verdict": "no_reference"
+ },
+ "fm_d9f22953f96ce3a1": {
+  "verdict": "no_reference"
+ },
+ "fm_dadf5fc05a7f1641": {
+  "verdict": "no_reference"
+ },
+ "fm_db3e699cb8468cff": {
+  "verdict": "no_reference"
+ },
+ "fm_dba961640b916102": {
+  "verdict": "no_reference"
+ },
+ "fm_dc9d4775a26450a6": {
+  "verdict": "no_reference"
+ },
+ "fm_dd451efa88ffdfb0": {
+  "verdict": "no_reference"
+ },
+ "fm_de093f9a23e40194": {
+  "verdict": "no_reference"
+ },
+ "fm_de721e79f215206d": {
+  "verdict": "no_reference"
+ },
+ "fm_de8317c18cc314dc": {
+  "verdict": "no_reference"
+ },
+ "fm_dfbb30e446d8c7f1": {
+  "verdict": "no_reference"
+ },
+ "fm_e0a8840bb261fc61": {
+  "verdict": "no_reference"
+ },
+ "fm_e22619934a4f8a55": {
+  "verdict": "no_reference"
+ },
+ "fm_e2fdef544e80ab1f": {
+  "verdict": "no_reference"
+ },
+ "fm_e32ab23f642f5db5": {
+  "verdict": "no_reference"
+ },
+ "fm_e3413d99e87170e1": {
+  "verdict": "no_reference"
+ },
+ "fm_e3c8607bb252b4c1": {
+  "verdict": "no_reference"
+ },
+ "fm_e54dc020f847e03a": {
+  "verdict": "no_reference"
+ },
+ "fm_e64e9a2bab9c3693": {
+  "verdict": "no_reference"
+ },
+ "fm_e7782db74ebdf6a4": {
+  "verdict": "no_reference"
+ },
+ "fm_e7c8223ed04b2c83": {
+  "verdict": "no_reference"
+ },
+ "fm_ea1ee7a2dcf15794": {
+  "verdict": "no_reference"
+ },
+ "fm_ea52dd3cac5b6a89": {
+  "verdict": "no_reference"
+ },
+ "fm_ea74ea344fb3fcaa": {
+  "verdict": "no_reference"
+ },
+ "fm_eb348ca6ea08dd0c": {
+  "verdict": "no_reference"
+ },
+ "fm_eb98172bde43526c": {
+  "verdict": "no_reference"
+ },
+ "fm_ebcd6c2ddc527cbb": {
+  "verdict": "no_reference"
+ },
+ "fm_ec14349d6a28a4f4": {
+  "verdict": "no_reference"
+ },
+ "fm_ecfea70fa40204dc": {
+  "verdict": "no_reference"
+ },
+ "fm_edd107fe9e893676": {
+  "verdict": "no_reference"
+ },
+ "fm_ef0be5a85cb1ba60": {
+  "verdict": "no_reference"
+ },
+ "fm_f001e710d540c0b2": {
+  "verdict": "no_reference"
+ },
+ "fm_f0fa3b30630e93f8": {
+  "verdict": "no_reference"
+ },
+ "fm_f1c2bafdaa2bac58": {
+  "verdict": "no_reference"
+ },
+ "fm_f256171cbba42e43": {
+  "verdict": "no_reference"
+ },
+ "fm_f2abcc6dcc9f606b": {
+  "verdict": "no_reference"
+ },
+ "fm_f3a0d924a129f647": {
+  "verdict": "no_reference"
+ },
+ "fm_f5984239361d2c3b": {
+  "verdict": "no_reference"
+ },
+ "fm_f5a7243b41a98051": {
+  "verdict": "no_reference"
+ },
+ "fm_f67b2ab7eba668dd": {
+  "verdict": "no_reference"
+ },
+ "fm_f6bd297294bbf4a9": {
+  "verdict": "no_reference"
+ },
+ "fm_f86a2e5f9eba22bf": {
+  "verdict": "no_reference"
+ },
+ "fm_f92f095b3d752e3c": {
+  "verdict": "no_reference"
+ },
+ "fm_fa7358615516f2b6": {
+  "verdict": "no_reference"
+ },
+ "fm_fc25dfe4fc26f9d2": {
+  "verdict": "no_reference"
+ },
+ "fm_fc7e77e63541c62b": {
+  "verdict": "no_reference"
+ },
+ "fm_fcf95ed4918b28bd": {
+  "verdict": "no_reference"
+ },
+ "fm_febc685d1ff5079a": {
+  "verdict": "no_reference"
+ }
+}

@@ -1,0 +1,872 @@
+[
+ {
+  "id": "fm_02f2203134cc7bb5",
+  "reason": "answer_disputed_no_reference",
+  "question": "Which of the following screening tests has been shown to reduce breast cancer-related mortality in average-risk women?",
+  "options": [
+   "A. Breast self-examination",
+   "B. Mammogram",
+   "C. Mammogram with clinical breast examination",
+   "D. MRI",
+   "E. Screening for BRCA mutation"
+  ],
+  "key": "B",
+  "source_file": "_manual_import\\Books\\Books \\brattons 2018 .pdf"
+ },
+ {
+  "id": "fm_13c3c6187b51fe0b",
+  "reason": "answer_disputed_no_reference",
+  "question": "Which of the following statements regarding enoxaparin (Lovenox) is true?",
+  "options": [
+   "A. It is not a cost-effective medication when used in an outpatient setting.",
+   "B. The incidence of thrombocytopenia is the same as with heparin.",
+   "C. It must be given intravenously.",
+   "D. It does not require laboratory monitoring.",
+   "E. It is safe to use in patients with renal failure."
+  ],
+  "key": "D",
+  "source_file": "_manual_import\\Books\\Books \\brattons 2018 .pdf"
+ },
+ {
+  "id": "fm_1535cb463a721c12",
+  "reason": "answer_disputed_no_reference",
+  "question": "A 20-year-old woman is brought to the emergency room by her family because they have been unable to get her to eat or drink anything for the past 2 days. The patient, although awake, is completely unresponsive both vocally and nonverbally. She actively resists any attempt to be moved. Her family reports that during the previous 7 months she became increasingly withdrawn, socially isolated, and bizarre; often speaking to people no one else could see. Which of the following is the most likely diagnosis?",
+  "options": [
+   "A. Schizoaffective disorder",
+   "B. Delusional disorder",
+   "C. Schizophreniform disorder",
+   "D. Brief psychotic disorder",
+   "E. Schizophrenia"
+  ],
+  "key": "E",
+  "source_file": "_manual_import\\Books\\Books \\pretest books \\Pretest Psychiatry 14th edition_.pdf"
+ },
+ {
+  "id": "fm_2a1bcc321be5d8f2",
+  "reason": "answer_disputed_no_reference",
+  "question": "Patient known case of BA, on SABA inhaled and nebulized PRN only, and still symptomatic during activities. What to add next?",
+  "options": [
+   "A. Oral Montelukast",
+   "B. Oral steroids",
+   "C. LABA",
+   "D. Azithromycin"
+  ],
+  "key": "A",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Prat 2 - 2022.pdf"
+ },
+ {
+  "id": "fm_44c9f8126fc287e9",
+  "reason": "answer_disputed_no_reference",
+  "question": "A 19-year-old male has an 8-mm induration 2 days after a tuberculin skin test. His father was recently diagnosed with tuberculosis. There are no other historical or physical examination ﬁndings to suggest active tuberculosis infection and a chest radiograph is normal. Which one of the following would be most appropriate at this point?",
+  "options": [
+   "A. Monitoring with annual tuberculin skin testing",
+   "B. Observation and repeat tuberculin skin testing in 3 weeks",
+   "C. Rifampin daily for 4 months",
+   "D. Isoniazid daily for 9 months"
+  ],
+  "key": "C",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\part 1 exam FM - 2019..pdf"
+ },
+ {
+  "id": "fm_4627e3e8cc309323",
+  "reason": "answer_disputed_no_reference",
+  "question": "Which of the following statements regarding preoperative evaluations is correct?",
+  "options": [
+   "A. A baseline renal function study should be assessed for all surgical candidates.",
+   "B. A patient with a previous coronary bypass graph 2 years earlier should undergo cardiac stress testing before clearance, regardless of the presence of cardiac symptoms.",
+   "C. A urine pregnancy testing should be considered for women of childbearing age.",
+   "D. Coagulation studies should be included in the assessment of all surgical candidates.",
+   "E. Patients who have had angioplasty within 6 months are not required to have further cardiology assessment."
+  ],
+  "key": "C",
+  "source_file": "_manual_import\\Books\\Books \\brattons 2018 .pdf"
+ },
+ {
+  "id": "fm_5c148af05aa58d1a",
+  "reason": "answer_disputed_no_reference",
+  "question": "Middle age man, came C/O flank pain that radiates to his testicles, had same episode last week that resolved spontaneously, now the pain is not resolving. Abdominal exam: no tenderness, during exam patient vomits and he can't stay still Urinalysis showed: +1 blood What is the most appropriate step in the management?",
+  "options": [
+   "A. NSAID",
+   "B. Testicular ultrasonography",
+   "C. abdominal CT",
+   "D. referral to surgery"
+  ],
+  "key": "A",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Part 1 - 2022 (edited).pdf"
+ },
+ {
+  "id": "fm_6380091e5fae2da9",
+  "reason": "answer_disputed_no_reference",
+  "question": "Which one of the following is not a risk factor for stroke?",
+  "options": [
+   "A. Alcohol consumption",
+   "B. Diabetes mellitus",
+   "C. Dyslipidemia",
+   "D. HTN",
+   "E. Sickle cell disease"
+  ],
+  "key": "A",
+  "source_file": "_manual_import\\Books\\Books \\brattons 2018 .pdf"
+ },
+ {
+  "id": "fm_63c32c3b03a4d591",
+  "reason": "answer_disputed_no_reference",
+  "question": "A 55-year-old man presents to the ED 6 hours after ingesting two bottles of his baby aspirin. He complains of nausea, vomiting, dizziness, and tinnitus. His temperature is 100.3°F, BP is 140/80 mm Hg, HR is 105 beats per minute, RR is 31 breaths per minute, and oxygen saturation is 99% on room air. Arterial blood gas on room air reveals a pH of 7.52, PCO2 10 mm Hg, and PO2 129 mm Hg. The blood salicylate level returns at 45 mg/dL. Which of the following is the most appropriate next step in management?",
+  "options": [
+   "A. Administer activated charcoal, begin IV hydration, and administer sodium bicarbonate.",
+   "B. Administer activated charcoal, begin IV hydration, and intubate the patient for respiratory failure.",
+   "C. Administer activated charcoal, begin IV hydration, and administer NAC.",
+   "D. Arrange for immediate hemodialysis.",
+   "E. Gastric lavage, IV hydration, and repeat levels before beginning therapy."
+  ],
+  "key": "E",
+  "source_file": "_manual_import\\MCQs by topics\\MCQs by topics\\MCQ Collections academic year 2020\\Mid-year\\Preoperative assessment, smoking ,alcohol and drug abuse\\1)By Bagasi-Preoperative assessment, smoking ,alcohol and drug abuse.pdf"
+ },
+ {
+  "id": "fm_70cbf602411831c5",
+  "reason": "answer_disputed_no_reference",
+  "question": "Family physician invited to give a talk about HTN. A pharmaceutical company wants to meet the doctor and inform him about their new antihypertensive drug. There is no evidence against this drug. What should he do?",
+  "options": [
+   "A. Decline to speak",
+   "B. Give the lecture but don't speak about the drug",
+   "C. Disclose about the support to the participants",
+   "D. Accept, there is nothing mentioned in medical ethics."
+  ],
+  "key": "B",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\part 1 exam FM - 2018.pdf"
+ },
+ {
+  "id": "fm_759b53ccf08d3156",
+  "reason": "answer_disputed_no_reference",
+  "question": "In a routine examination, a 33-year-old woman asks you about breast self-examination (BSE) as a breast cancer screening method. Which of the following best represents the current American Academy of Family Physicians (AAFP) recommendations regarding BSE in average-risk females?",
+  "options": [
+   "A. There is strong evidence that BSE is an appropriate screening modality.",
+   "B. There is limited evidence that BSE is an appropriate screening modality.",
+   "C. Available evidence shows that BSE reduces the need for additional testing or biopsy.",
+   "D. There is insufficient evidence to recommend for or against BSE.",
+   "E. Clinicians should not teach their female patients how to perform effective BSE."
+  ],
+  "key": "E",
+  "source_file": "_manual_import\\Books\\Books \\pretest books \\Pretest Family Medicine 4th edition.pdf"
+ },
+ {
+  "id": "fm_77d4dee7dd9359a0",
+  "reason": "answer_disputed_no_reference",
+  "question": "Primigravida week 29, Painless bright red vaginal bleeding , vetal heart beat was 150 , next step:",
+  "options": [
+   "A. digital exam to ascess dialtation",
+   "B. Obstetric US",
+   "C. discharge home and bed rest",
+   "D. transvaginal US"
+  ],
+  "key": "B",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\part 1 exam FM - 2020.pdf"
+ },
+ {
+  "id": "fm_7d647eb4f5012ad7",
+  "reason": "answer_disputed_no_reference",
+  "question": "Which of the following statements about premature ventricular complexes (PVCs) is correct?",
+  "options": [
+   "A. They are narrow QRS complexes seen on an ECG that are not preceded by P waves.",
+   "B. In most cases, they worsen with exercise.",
+   "C. Treatment with antiarrhythmics improves survival.",
+   "D. The first-line medication to treat symptomatic PVCs is a β-blocker.",
+   "E. ETOH use is not associated with PVCs."
+  ],
+  "key": "D",
+  "source_file": "_manual_import\\Books\\Books \\brattons 2018 .pdf"
+ },
+ {
+  "id": "fm_829172025f52c4a7",
+  "reason": "answer_disputed_no_reference",
+  "question": "Unconscious patient post trauma with cervical C2 dislocation. Examination showed stable VS with SPO2 90%. What to do next?",
+  "options": [
+   "A. Intubation",
+   "B. Tracheostomy",
+   "C. Increase O2 ﬂow",
+   "D. Positive airway pressure"
+  ],
+  "key": "A",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Prat 2 - 2022.pdf"
+ },
+ {
+  "id": "fm_85012ba918943f14",
+  "reason": "answer_disputed_no_reference",
+  "question": "nurse accidentally got pricked with a needle of an HIV patient, which of the following is considered to have the highest risk for transmission?",
+  "options": [
+   "A. Depth of the injury",
+   "B. Nurse not wearing gloves",
+   "C. Presence of blood at the tip of the needle",
+   "D. Disease activity"
+  ],
+  "key": "A",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Part 1 - 2022 (edited).pdf"
+ },
+ {
+  "id": "fm_8689079a4b82e946",
+  "reason": "answer_disputed_no_reference",
+  "question": "Which of the following statements regarding inhalant abuse is true?",
+  "options": [
+   "A. Approximately 5% of children in middle school and high school have experimented with inhaled substances.",
+   "B. Drug testing of urine can help aid in the diagnosis of inhalant abuse.",
+   "C. Inhalant abuse can become addictive.",
+   "D. Reversal of inhalant effects can be achieved with the administration of naloxone (Narcan).",
+   "E. There are no associated fetal abnormalities with inhalant abuse during pregnancy."
+  ],
+  "key": "C",
+  "source_file": "_manual_import\\Books\\Books \\brattons 2018 .pdf"
+ },
+ {
+  "id": "fm_89c4e55f2d9e7e51",
+  "reason": "answer_disputed_no_reference",
+  "question": "You are caring for a healthy woman whose cousin was just diagnosed with unilateral breast cancer at age 33. Your patient has no other relatives with known histories of breast or ovarian cancer. Which of the following is true regarding the current recommendations for genetic screening for breast cancer mutations?",
+  "options": [
+   "A. The patient should not be offered genetic testing.",
+   "B. The patient should be tested only if she is of Ashkenazi Jewish descent.",
+   "C. The patient should be screened with a breastcancer–specific risk prediction tool to determine if she should be referred for genetic testing.",
+   "D. The patient should be tested if her cousin with breast cancer is male.",
+   "E. The patient should be offered testing regardless of her ethnicity. The Well Child"
+  ],
+  "key": "C",
+  "source_file": "_manual_import\\Books\\Books \\pretest books \\Pretest Family Medicine 4th edition.pdf"
+ },
+ {
+  "id": "fm_8a40cab1e52a8276",
+  "reason": "answer_disputed_no_reference",
+  "question": "You are caring for a person who presents with severe symptoms. He started with fatigue, myalgias, arthralgias, headache, and low-grade fever several weeks ago. He also noted a “rash” on his upper back near the right scapula that looked “like a bull’s eye.” That rash has since resolved. Currently, he complains of musculoskeletal pain and attacks of joint pain and swelling for the past week, and today he reports pleuritic chest pain. On examination, he has lymphadenopathy, tenderness in his joints, and right axillary adenopathy. You also notice a friction rub. What is the best treatment for this condition?",
+  "options": [
+   "A. Doxycycline for 10 to 14 days",
+   "B. Amoxicillin for 10 to 14 days",
+   "C. Tetracycline for 2 to 3 days after the patient becomes afebrile",
+   "D. Streptomycin intramuscularly for 1 week",
+   "E. Ceftriaxone intravenously for 2 to 3 weeks"
+  ],
+  "key": "E",
+  "source_file": "_manual_import\\Books\\Books \\pretest books \\Pretest Family Medicine 4th edition.pdf"
+ },
+ {
+  "id": "fm_9732aaba89c77c1c",
+  "reason": "answer_disputed_no_reference",
+  "question": "A 35-year-old previously healthy male develops cough with purulent sputum over several days. On presentation to the emergency room, he is lethargic. Temperature is 39 C, pulse 110, and blood pressure 100/70. He has rales and dullness to percussion at the left base. There is no rash. Flexion of the patient’s neck when supine results in spontaneous flexion of hip and knee. Neurologic examination is otherwise normal. There is no papilledema. A lumbar puncture is performed in the emergency room. The cerebrospinal fluid (CSF) shows 8000 leukocytes/µL, 90% of which are polys. Glucose is 30 mg/dL with a peripheral glucose of 80 mg/dL. CSF protein is elevated to 200 mg/dL. A CSF Gram stain shows gram-positive diplococci. Which of the following is the correct treatment option?",
+  "options": [
+   "A. Begin acyclovir for herpes simplex encephalitis.",
+   "B. Obtain emergency MRI scan before beginning treatment.",
+   "C. Begin ceftriaxone and vancomycin for pneumococcal meningitis.",
+   "D. Begin ceftriaxone, vancomycin, and ampicillin to cover both pneumococci and Listeria.",
+   "E. Begin high-dose penicillin for meningococcal meningitis."
+  ],
+  "key": "B",
+  "source_file": "_manual_import\\Family Medicine_3\\مصادر لاختبار البارت\\ pre test-medicine related to family.pdf"
+ },
+ {
+  "id": "fm_9a0a16ab202706cd",
+  "reason": "answer_disputed_no_reference",
+  "question": "A 34-year-old woman comes to the physician with the chief complaint of abdominal pain. She states that she has been reading on the internet and is convinced that she has ovarian cancer. She says that she is particularly concerned because the other physicians she has seen for this pain have all told her that she does not have cancer, and she has been having the pain for over 8 months. She reports that she has undergone pelvic examinations, ultrasounds, and other diagnostic work-ups, all of which have been negative. She tells the physician that she is initially reassured by the negative tests, but then the pain returns and she becomes convinced that she has cancer again. She notes that she has taken so much time off from work in the past 8 months that she has been reprimanded by her boss. Which of the following is the most likely diagnosis?",
+  "options": [
+   "A. Somatic symptom disorder with predominant pain",
+   "B. Malingering",
+   "C. Factitious disorder",
+   "D. Illness anxiety disorder",
+   "E. Functional neurological symptom disorder (conversion disorder)"
+  ],
+  "key": "A",
+  "source_file": "_manual_import\\Books\\Books \\pretest books \\Pretest Psychiatry 14th edition_.pdf"
+ },
+ {
+  "id": "fm_9b848c11740e06a9",
+  "reason": "answer_disputed_no_reference",
+  "question": "Which of the following statements is true regarding insomnia in the elderly?",
+  "options": [
+   "A. Men are more commonly affected.",
+   "B. The condition is associated with inadequate tryptophan ingestion.",
+   "C. Exercise before bedtime can help relieve symptoms of insomnia.",
+   "D. Low-dose trazodone (Desyrel) may be helpful for treating insomnia.",
+   "E. Small doses of alcohol given at bedtime can be used to treat insomnia."
+  ],
+  "key": "D",
+  "source_file": "_manual_import\\Books\\Books \\books summary collections\\Psychiatry Bratton MCQs.pdf"
+ },
+ {
+  "id": "fm_a31b932391f196ff",
+  "reason": "answer_disputed_no_reference",
+  "question": "At birth, an infant is noted to have an abnormal neurologic examination. Over the next few weeks he develops severe progressive central nervous system (CNS) degeneration, an enlarged liver and spleen, macroglossia, coarse facial features, and a cherry-red spot in the eye. Which of the following laboratory findings most likely explains this child’s problem?",
+  "options": [
+   "A. Reduced serum hexosaminidase A activity",
+   "B. Deficient activity of acid β-galactosidase",
+   "C. Defective gene on the X chromosome",
+   "D. Complete lack of acid β-galactosidase activity",
+   "E. Deficient activity of galactosyl-3-sulfate-ceramide sulfatase (cerebroside sulfatase)"
+  ],
+  "key": "B",
+  "source_file": "_manual_import\\Books\\Books \\pretest books \\PreTest Pediatrics 12edition.pdf"
+ },
+ {
+  "id": "fm_ab13ab035dc25086",
+  "reason": "answer_disputed_no_reference",
+  "question": "A 20 year old female complains of dysuria and urgency. She was treated before 2 weeks by Bactrim, culture and urinalysis not done that time. Temperature 37.8 What to do next?",
+  "options": [
+   "A. Bactrim for 3 days",
+   "B. Amoxicillin 3 days",
+   "C. Nitrofurantoin 5 days",
+   "D. She doesn’t need follow up and management"
+  ],
+  "key": "C",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Prat 2 - 2022.pdf"
+ },
+ {
+  "id": "fm_ac065eee651f39da",
+  "reason": "answer_disputed_no_reference",
+  "question": "A 22-year-old woman is seeing her physician with complaints of breast pain. It is associated with her menstrual cycle and is described as a bilateral “heaviness” that radiates to the axillae and arms. Examination reveals groups of small breast nodules in the upper outer quadrants of each breast. They are freely mobile and slightly tender. Which of the following statements is most accurate?",
+  "options": [
+   "A. The patient has bilateral fibroadenomas, and reassurance is all that is necessary.",
+   "B. The patient has bilateral fibroadenomas, and a mammogram is necessary for further evaluation.",
+   "C. The patient has bilateral fibrocystic changes, and reassurance is all that is necessary.",
+   "D. The patient has bilateral fibrocystic changes, and a mammogram is necessary for further evaluation.",
+   "E. The patient has bilateral mastitis and antibiotic therapy is needed."
+  ],
+  "key": "C",
+  "source_file": "_manual_import\\Books\\Books \\pretest books \\Pretest Family Medicine 4th edition.pdf"
+ },
+ {
+  "id": "fm_aee3ceebff4a6e05",
+  "reason": "answer_disputed_no_reference",
+  "question": "28 year old G3 p0 at 34 wks of gestation came for antenatal care , she has Hx of 5 years with recurrent herpes infection, during the pregnancy she developed two times and now has a concern that she will have another attack . What is the most appropriate action for her ?",
+  "options": [
+   "A. observation  and give acyclovir if she is symptomatic",
+   "B. suppressive therapy with antiviral  started at 36 wks",
+   "C. weekly culture started from 34 wks",
+   "D. takes appointment for elective C/S at 39 wks"
+  ],
+  "key": "B",
+  "source_file": "_manual_import\\MCQs\\MCQs \\Part 1 exams\\first part 2015 ‫‬august.pdf"
+ },
+ {
+  "id": "fm_c32dd3104a9bca13",
+  "reason": "answer_disputed_no_reference",
+  "question": "Pregnant women in her 3rd trimester present to the clinic. Her husband reports that she had a sudden episode of tonic jerky movements that lasted for a couple of minutes and then resolved on its own. She has been complaining of persistent headaches and fatigue for the past week. Her blood pressure is 160/90 mmHg, , her urine dipstick shows protein ++++. Which of the following is the most likely diagnosis?",
+  "options": [
+   "A. Preeclampsia",
+   "B. Eclampsia",
+   "C. Epilepsy",
+   "D. Gestational hypertension"
+  ],
+  "key": "B",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Part 2 - 2023 (1st day) (edited).pdf"
+ },
+ {
+  "id": "fm_c8f34087ad0a8adf",
+  "reason": "answer_disputed_no_reference",
+  "question": "You are discussing cancer screening with a female patient. She has no family history of breast cancer, and routine risk analysis indicates that she is not at increased risk for the disease. According to the USPSTF, at what age should she start getting routine mammograms?",
+  "options": [
+   "A. 30 years",
+   "B. 35 years",
+   "C. 40 years",
+   "D. 45 years",
+   "E. 50 years"
+  ],
+  "key": "E",
+  "source_file": "_manual_import\\Books\\Books \\pretest books \\Pretest Family Medicine 4th edition.pdf"
+ },
+ {
+  "id": "fm_cbb52e7c87cb0653",
+  "reason": "answer_disputed_no_reference",
+  "question": "mother bring her 2 month old infant he is premature infant who was born at 27th week of gestation and she is concerning her son when he grows up in comparison with the normal babies. What advise should be conducted to the mother regarding gaining weight",
+  "options": [
+   "A. exclusive breast feeding",
+   "B. multivitamins",
+   "C. weaning at age of 4 months",
+   "D. adding artiﬁcial formula"
+  ],
+  "key": "D",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\part 1 exam FM - 2019..pdf"
+ },
+ {
+  "id": "fm_d4195f1e3f19ca46",
+  "reason": "answer_disputed_no_reference",
+  "question": "Smoking is associated with a wide range of diseases, including many types of cancer, chronic obstructive pulmonary disease, coronary heart disease, stroke, peripheral vascular disease, and peptic ulcer disease. In addition, smoking is associated with an increased risk of various women’s health concerns, including all of the following conditions except which one?",
+  "options": [
+   "A. Ectopic pregnancy",
+   "B. Infertility",
+   "C. Multiple gestations",
+   "D. Premature menopause",
+   "E. Spontaneous abortion"
+  ],
+  "key": "C",
+  "source_file": "_manual_import\\Books\\Books \\brattons 2018 .pdf"
+ },
+ {
+  "id": "fm_e07556bbbfaba014",
+  "reason": "answer_disputed_no_reference",
+  "question": "Case of osteoporosis , They already give her vit d and calcium, She was having BMD - 0.5 , femoral fracture risk (Frax) 3% , no family history of osteoprosis and no previous history of fracture , what to do?",
+  "options": [
+   "A. prescribe alendronate",
+   "B. Do BMD every 2 years untill age of 70",
+   "C. Dexa now then every 2 years",
+   "D. dexa After 4 years"
+  ],
+  "key": "C",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\part 1 exam FM - 2020.pdf"
+ },
+ {
+  "id": "fm_e9d0c5d612872771",
+  "reason": "answer_disputed_no_reference",
+  "question": "You are examining a newborn infant in the well-baby nursery. The infant was the product of a benign pregnancy and vaginal delivery; he appears to be in no distress. Interestingly, your measurement of fronto- occipital head circumference is about 2 cm larger than the initial measure- ment done several hours before. Your examination otherwise is significant for tachycardia and a “squishy” feel to the entire scalp. You can elicit a fluid wave over the scalp. Management of this condition should include which of the following?",
+  "options": [
+   "A. Transfer to the newborn ICU",
+   "B. Observation and parental reassurance",
+   "C. CT scan of the skull with bone windows",
+   "D. Surgical drainage",
+   "E. Elevation of the head of the crib"
+  ],
+  "key": "B",
+  "source_file": "_manual_import\\Books\\Books \\pretest books \\PreTest Pediatrics 12edition.pdf"
+ },
+ {
+  "id": "fm_f28e5d626282e252",
+  "reason": "answer_disputed_no_reference",
+  "question": "A 15-year-old girl is admitted to the hospital with a 6-kg weight loss, bloody diarrhea, and fever that have occurred intermittently over the previous 6 months. She reports cramping abdominal pain with bowel movements. She also reports secondary amenorrhea during this time. Stool cultures in her physician’s office have shown only normal intestinal flora. A urine pregnancy test was negative, while an erythrocyte sedimentation rate (ESR) was elevated. Her examination is significant for the lack of oral mucosal ulcerations and a normal perianal examination. Anti-Saccharomyces cerevisiae antibodies (ASCA) are negative, while anti-neutrophil cytoplasm antibodies (p-ANCA) are positive. You confirm your presumptive diagnosis with a rectal biopsy. In counseling her about her disease, which of the following statements would be true?",
+  "options": [
+   "A. Inheritance is autosomal dominant.",
+   "B. Her risk of colon cancer is minimally elevated over the general population.",
+   "C. Intestinal strictures are common.",
+   "D. The most serious complication of her disease is toxic megacolon.",
+   "E. The intestinal involvement is separated by areas of normal bowel."
+  ],
+  "key": "A",
+  "source_file": "_manual_import\\Books\\Books \\pretest books \\PreTest Pediatrics 12edition.pdf"
+ },
+ {
+  "id": "fm_fa43fe713097b1ad",
+  "reason": "answer_disputed_no_reference",
+  "question": "A recently retired 67-year-old woman presents to you to establish care. She was a smoker for a long time but quit 5 years ago. She is generally healthy, but her prior physician told her that she has “emphysema”. She was prescribed an “inhaler” to use as needed and only uses it rarely. She asks about necessary immunizations. Her social history indicates that she lives with her daughter and often cares for her infant granddaughter. Her chart indicates that she had a pneumococcal polysaccharide vaccine at age 63 and a Td shot at age 63. Which of the following vaccines should she receive?",
+  "options": [
+   "A. Pneumococcal conjugate vaccine followed by pneumococcal polysaccharide vaccine 8 weeks later",
+   "B. Pneumococcal polysaccharide vaccine followed by pneumococcal conjugate vaccine 8 weeks later",
+   "C. Pneumococcal conjugate vaccine followed by pneumococcal polysaccharide vaccine at least 5 years after the previous dose",
+   "D. Pneumococcal conjugate vaccine followed by pneumococcal polysaccharide vaccine in 5 years",
+   "E. Intranasal influenza"
+  ],
+  "key": "C",
+  "source_file": "_manual_import\\Books\\Books \\pretest books \\Pretest Family Medicine 4th edition.pdf"
+ },
+ {
+  "id": "fm_fdc4647d21c1420c",
+  "reason": "answer_disputed_no_reference",
+  "question": "A 5-month-old child presented with 3 days history of vomiting and diarrhea with poor oral intake. On examination patient looks moderately dehydrated with dry mucous membranes. What is your management?",
+  "options": [
+   "A. Domperidone",
+   "B. Oral rehydration solution",
+   "C. Bolus of isotonic fluid",
+   "D. 5% dextrose in normal saline"
+  ],
+  "key": "C",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\part 1 exam FM - 2018.pdf"
+ },
+ {
+  "id": "fm_fe06715f20e9a237",
+  "reason": "answer_disputed_no_reference",
+  "question": "OCD is characterized by recurrent obsessions and compulsive behaviors such as repeated hand washing and checking routines. Which of the following statements regarding the disorder is true?",
+  "options": [
+   "A. CBT is rarely helpful in treatment.",
+   "B. Patients diagnosed with OCD rarely know they are affected.",
+   "C. SSRIs are often first-line therapy.",
+   "D. Structural changes are not found in the brain.",
+   "E. Successful treatment leads to symptom resolution."
+  ],
+  "key": "C",
+  "source_file": "_manual_import\\Books\\Books \\brattons 2018 .pdf"
+ },
+ {
+  "id": "fm_ff155bfe33902f1b",
+  "reason": "answer_disputed_no_reference",
+  "question": "An 80-year-old man is brought in by his wife. She notes that her husband has had a noticeable change in his personality, with increasing impulsivity and exhibiting inappropriate behaviors at times. Although he has difficulty naming objects, his memory, ability to calculate, and his visuospatial skills appear to be intact. The most likely diagnosis is which one of the following?",
+  "options": [
+   "A. Alzheimer disease (AD)",
+   "B. Lewy body dementia",
+   "C. Parkinson disease (PD)",
+   "D. Pick disease",
+   "E. Wilson disease"
+  ],
+  "key": "B",
+  "source_file": "_manual_import\\Books\\Books \\brattons 2018 .pdf"
+ },
+ {
+  "id": "fm_02814ffb2efdee0a",
+  "reason": "question_itself_is_broken",
+  "question": "Female patient with migraine for over 1 year. Once per month. Relieved initially with Paracetamol + NSAD . Now the headache is longer in duration and making her not able to go to work. What might help her manage this work issue?",
+  "options": [
+   "A. Continue same",
+   "B. Start prophylaxis",
+   "C. Start sumatriptan before the symptoms begin A-packed RBC B-Iv iron C-erythropoiesis stimulating agent",
+   "D. vitamin b12 supplements"
+  ],
+  "key": "D",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البروموشن\\Promotion 2022 - 2nd day.pdf",
+  "note": "options of two questions merged"
+ },
+ {
+  "id": "fm_0afa40ef10d890dc",
+  "reason": "question_itself_is_broken",
+  "question": "If you had the opportunity to do only one diagnostic test, which of the following would you choose?",
+  "options": [
+   "A. computed tomography scan of the head and spinal cord",
+   "B. magnetic resonance imaging (MRI) scan of the brain and spinal cord",
+   "C. serum vitamin B12 levels",
+   "D. Beck depression scale",
+   "E. Venereal Disease Research Laboratory test for syphilis"
+  ],
+  "key": "B",
+  "source_file": "_manual_import\\MCQs by topics\\MCQs by topics\\MCQ Collections academic year 2019\\24- Peripheral neuropathy + MS (Dr. Saad)\\Peripheral neuropathy and MS.docx",
+  "note": "refers to a case it does not carry"
+ },
+ {
+  "id": "fm_4d2cce2871664e2c",
+  "reason": "question_itself_is_broken",
+  "question": "pt CO hearing loss in the right ear, Rinne test positive in the left ear and negative in right ear, weber's lateralizes to the left ear. What type of HL does she have? ھذا اﻟﺳؤال ﻏﻠط ﻣن اﻟﮭﯾﺋﺔ، اﻟﻲ ﺣط اﻟﺳؤال ﻣﺎﯾﻌرف (positive = normal in Rinne test)",
+  "options": [
+   "A. Left conductive",
+   "B. Right sensorineural",
+   "C. Left SNHL",
+   "D. Right Conductive"
+  ],
+  "key": "B",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Part 2 - 2023 (2nd day).pdf",
+  "note": "the source itself says the question is wrong"
+ },
+ {
+  "id": "fm_5128551f9bd5cb32",
+  "reason": "question_itself_is_broken",
+  "question": "boy with History of URTi subside then rash appear involve hand , groin, buttock and foot, vitally stable , the patient look well The answer is : D) NPO, NGT & IVF 1st → then surgery Ask about management:",
+  "options": [
+   "A. antipyretic and hydration",
+   "B. oral Abx",
+   "C. lotion permethrin",
+   "D. local corticosteroid"
+  ],
+  "key": "A",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البروموشن\\Promotion 2022 - 2nd day.pdf",
+  "note": "stem carries the answer text of another question"
+ },
+ {
+  "id": "fm_54b328b312cd3812",
+  "reason": "question_itself_is_broken",
+  "question": "Child with drooling and inspiratory strider best next step?",
+  "options": [
+   "A. Lateral neck x ray",
+   "B. Throat culture",
+   "C. Racemic epinephrine",
+   "D. Lateral neck x-ray"
+  ],
+  "key": "D",
+  "source_file": "_manual_import\\MCQs\\MCQs \\Promotions Exams\\Promotion 16 Aug 2022.pdf",
+  "note": "two options are the same"
+ },
+ {
+  "id": "fm_70a3cff3330a5112",
+  "reason": "question_itself_is_broken",
+  "question": "A clinical trial was conducted to evaluate the benefits of an intensive exercise program in reducing subsequent mortality among persons who survive after an initial myocardial infarction. Patients were randomized to receive either usual care (controls) or the exercise program. Among 100 controls, 30 died within the 3 year follow-up period, compared with 50 deaths among the 100 patients on the exercise program. What will the relative risk of death be for the exercise group compared to the controls?",
+  "options": [
+   "A. 0.20",
+   "B. 0.30",
+   "C. 0.50",
+   "D. 0.60"
+  ],
+  "key": "D",
+  "source_file": "_manual_import\\MCQs\\MCQs \\Part 1 exams\\Part 1 collections 2009-2017.pdf",
+  "note": "figures in the stem give a relative risk of 1.67 and no option matches"
+ },
+ {
+  "id": "fm_7a7f53376f2ea8d1",
+  "reason": "question_itself_is_broken",
+  "question": "blood film for 17 years old male with low grade fever and chest pain, most likely diagnosis:",
+  "options": [
+   "A. Pneumonia",
+   "B. Pulmonary embolism",
+   "C. Bronchopneumonia",
+   "D. Acute chest syndrome*"
+  ],
+  "key": "D",
+  "source_file": "_manual_import\\MCQs\\MCQs \\Part 2 exams\\part 2 final 2016 paper 1 & 2\\paper II 2016.pdf",
+  "note": "refers to a blood film that is not attached"
+ },
+ {
+  "id": "fm_d1cd95879ff4ddd7",
+  "reason": "question_itself_is_broken",
+  "question": "blood ﬁlm for 17 years old male with low grade fever and chest pain, most likely diagnosis:",
+  "options": [
+   "A. Pneumonia",
+   "B. Pulmonary embolism",
+   "C. Bronchopneumonia",
+   "D. Acute chest syndrome*"
+  ],
+  "key": "D",
+  "source_file": "_manual_import\\MCQs\\MCQs \\Part 2 exams\\part 2 final 2016 paper 1 & 2\\part2 2016 paper 2.pdf",
+  "note": "refers to a blood film that is not attached"
+ },
+ {
+  "id": "fm_d4b5d0232ecf7739",
+  "reason": "question_itself_is_broken",
+  "question": "Female with more than 3 years of low mood & loss of interest, MOST of the days, along most of the day, increasing with menses, fatigue, hypersomnia, decreased eating, what is the diagnosis?",
+  "options": [
+   "A. Premenstrual Dysphoric syndrome",
+   "B. Persistent Depressive Disorder (PDD)",
+   "C. Dysthymia ( the same as persistent depressive disorder only different name and I found no replaced in name like hypochondriasis which has been replaced by Illness anxiety disorder , however ; to make the diagnosis : depressed mood must be present plus at least 2 or 3 more symptoms such as : low energy , change in sleep ,feeling guilty  difficulty concentration , loss of interest , change in appetite, psychomotor agitation , suicidal thought  )",
+   "D. Anorexia nervosa"
+  ],
+  "key": "C",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Part 1 exam FM - 2021.pdf",
+  "note": "two options name the same disorder"
+ },
+ {
+  "id": "fm_04f5aaccf57fba68",
+  "reason": "reference_disagrees_with_key",
+  "question": "A 4 year old male patient was brought for a baby visit new to your practice.. You find out that he has never been vaccinated, you ask the mother and she is convinced that he is fine and doesn't need any vaccine, so you explain to her the importance of vaccination but she still refuses. what will you do?",
+  "options": [
+   "A. Document that you explain to her & she refuse",
+   "B. Ask to speak to the father",
+   "C. Give vaccination according to medical vaccination society",
+   "D. Make her sign refusal from"
+  ],
+  "key": "A",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البروموشن\\Promotion 2023 - afternoon.pdf",
+  "quote": "sal to vaccinate form be signed by patients or parents who refuse a recommended vaccine.",
+  "source": "ABFM 2015-2016-2017-2018 Q A.pdf",
+  "source_supports": "D"
+ },
+ {
+  "id": "fm_4c546dc57ef810e0",
+  "reason": "reference_disagrees_with_key",
+  "question": "53 year old patient , Diabetic/o dyspepsia mildly respond to anti acids (H2 BLOCKER )with epigastric tenderness No weight loss, no hx of bleeding per rectum What’s the most appropriate management ?",
+  "options": [
+   "A. H. Pylori testing ( best option at this time and easiest with cost- effectiveness )",
+   "B. gasteresphgaledudenscopy",
+   "C. barium",
+   "D. endoscopy ( if age is 60 and above and if red flags are present such as weight loss , GI bleeding , etc )"
+  ],
+  "key": "A",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Part 1 exam FM - 2021.pdf",
+  "quote": "…Endoscopy: ∘∘For any patient over 50, alarm symptoms, family history of cancer, or not responding to t…",
+  "source": "Canadian Family Medicine Examination.pdf",
+  "source_supports": "D"
+ },
+ {
+  "id": "fm_6867a61e979daf41",
+  "reason": "reference_disagrees_with_key",
+  "question": "Pregnant came to clinic During influenza season and ask about vaccination:-",
+  "options": [
+   "A. Intranasal influenza",
+   "B. Tdap in 27-36 week",
+   "C. MMR",
+   "D. im influenza"
+  ],
+  "key": "B",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\part 1 exam FM - 2020.pdf",
+  "quote": "Influenza vaccine is recommended for all women who are or will be pregnant during influenza season, but pregnant women should receive the…",
+  "source": "ABFM 2015-2016-2017-2018 Q A.pdf",
+  "source_supports": "D"
+ },
+ {
+  "id": "fm_7b9550ca7e6313c1",
+  "reason": "reference_disagrees_with_key",
+  "question": "46 male w/ HTN using lisinopril and GERD on ranitidine c/o erectile dysfunction for 6 months before that he was normal, morning erection still normal no other complains or PMHx,, What’s the most likely cause?",
+  "options": [
+   "A. Psychlogic",
+   "B. side effect of medication",
+   "C. decrease testosterone a- impotence b- testicular atrophy c- torsion",
+   "D. hydrocele"
+  ],
+  "key": "B",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البروموشن\\Promotion 2022 - 2nd day.pdf",
+  "quote": "The presence of early morning erections differentiates organic…",
+  "source": "Mastering Psychiatry textbook 2016.pdf",
+  "source_supports": "A"
+ },
+ {
+  "id": "fm_a3816329140e1d50",
+  "reason": "reference_disagrees_with_key",
+  "question": "Female post gastric sleeve for 2 years, taking high dose vitamin B complex and zinc, complaining of bilateral lower limbs spastic, waddling gate, bilateral decrease sensation and numbness, Positive Babinski and hyperreflexia. What is the cause?",
+  "options": [
+   "A. Lead toxicity",
+   "B. Copper deficiency",
+   "C. Vitamin B6 toxicity",
+   "D. Paraneoplastic polyneuropathy"
+  ],
+  "key": "C",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Prat 2 - 2022.pdf",
+  "quote": "…deficiencies of iron, vitamin B12, folate, copper, selenium, and zinc.52 Notably, p…",
+  "source": "Metabolic Surgery for Adult Obesity_ Common Questions and Answers.pdf",
+  "source_supports": "B"
+ },
+ {
+  "id": "fm_f134eaaf04fb8a31",
+  "reason": "reference_disagrees_with_key",
+  "question": "Young male with low back pain that increase with rest and improve with activity. What is the highest diagnostic test?",
+  "options": [
+   "A. RF & CRP",
+   "B. CBC & lumbosacral x-ray",
+   "C. Lumbosacral MRI",
+   "D. HLA-27 & ESR"
+  ],
+  "key": "D",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Part 2 - 2024.pdf",
+  "quote": "…MRI of the sacrolliac joints.",
+  "source": "MKSAP board basics complete version.pdf",
+  "source_supports": "C"
+ },
+ {
+  "id": "fm_04adf5d444acdb1a",
+  "reason": "same_question_two_keys",
+  "question": "Which of the laboratory findings in the table below are characteristic of von Willebrand’s disease? PT refers to prothrombin time and aPTT refers to activated partial thromboplastin time.",
+  "options": [
+   "A. A",
+   "B. B",
+   "C. C",
+   "D. D",
+   "E. E"
+  ],
+  "key": "E",
+  "source_file": "_manual_import\\MCQs by topics\\MCQs by topics\\MCQ Collections academic year 2019\\28- Bleeding disorders(Dr.Sultan)\\Bleeding disorder MCQ by SULTAN march 2019.pdf",
+  "other_id": "fm_df37b7a6b35e23f7"
+ },
+ {
+  "id": "fm_0c635397685a96b4",
+  "reason": "same_question_two_keys",
+  "question": "Female post gastric sleeve 2 years ago, taking high dose vitamin B complex and zinc, complaining of bilateral lower limbs spastic, waddling gate, bilateral decrease sensation and numbness, Positive Babinski and hyperreflexia. What is the cause?",
+  "options": [
+   "A. Lead toxicity",
+   "B. Copper Deficiency",
+   "C. VitaminB6toxicity",
+   "D. Paraneoplastic polyneuropathy"
+  ],
+  "key": "B",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Part 2 - 2023 (2nd day).pdf",
+  "other_id": "fm_a3816329140e1d50"
+ },
+ {
+  "id": "fm_5d911f304b917566",
+  "reason": "same_question_two_keys",
+  "question": "Patient was having burn in his house and trying to save his child. After he come out and managed you found burn in his face, arm and trunk (30% burn), he can speak but wispier. Examination showed BP 90/60 Pulse 50 O2 90% RR 20 What to do next?",
+  "options": [
+   "A. Intubation",
+   "B. Give opioid",
+   "C. Insert IV cannula",
+   "D. Cover burn with silver Sulfadiazine"
+  ],
+  "key": "C",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Prat 2 - 2022.pdf",
+  "other_id": "fm_de8317c18cc314dc"
+ },
+ {
+  "id": "fm_66ea1df4ff4ea266",
+  "reason": "same_question_two_keys",
+  "question": "Patient post Gastric bypass surgery 6 weeks, came with vomiting and dysphagia first with solid then liquid. What is the best next step?",
+  "options": [
+   "A. Barium study",
+   "B. Endoscopy",
+   "C. H. pylori testing",
+   "D. PPI and Hydration"
+  ],
+  "key": "D",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Prat 2 - 2022.pdf",
+  "other_id": "fm_e55f50b6e60704b7"
+ },
+ {
+  "id": "fm_6b5be04b7b635e19",
+  "reason": "same_question_two_keys",
+  "question": "3 year old child with cervical lymphadenopathy and cracked lips, swollen, and erythematous palms and soles, painless conjunctivitis, and other symptoms. What is your management?",
+  "options": [
+   "A. High dose aspirin",
+   "B. IVIG",
+   "C. Steroid",
+   "D. Antibiotics"
+  ],
+  "key": "A",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Part 1 - 2022 (edited).pdf",
+  "other_id": "fm_d66a28f4e237c91b"
+ },
+ {
+  "id": "fm_aa2d1f2790accb95",
+  "reason": "same_question_two_keys",
+  "question": "Female patient came with swelling in the groin, no change in the shape during palpation, no cough impulse, painless, between inguinal ligament and symphysis pubis. What is the most likely diagnosis?",
+  "options": [
+   "A. Saphenous vein",
+   "B. Inguinal hernia",
+   "C. Femoral hernia",
+   "D. Lipoma"
+  ],
+  "key": "C",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Prat 2 - 2022.pdf",
+  "other_id": "fm_b980b2e71cef4b05"
+ },
+ {
+  "id": "fm_b980b2e71cef4b05",
+  "reason": "same_question_two_keys",
+  "question": "female pt came with swelling in the groin , no change in the shape during palpation , no cough impulse , painless , between inguinal lig and symphysis pubis , what most likely diagnosis?",
+  "options": [
+   "A. saphenous vein",
+   "B. inguinal hernia",
+   "C. femoral hernia",
+   "D. lipoma"
+  ],
+  "key": "D",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Part 2 - 2018.pdf",
+  "other_id": "fm_aa2d1f2790accb95"
+ },
+ {
+  "id": "fm_d66a28f4e237c91b",
+  "reason": "same_question_two_keys",
+  "question": "A 3 year old child with cervical lymphadenopathy and cracked lips, swollen, and erythematous palms and soles, painless conjunctivitis, and other symptoms. What is your management?",
+  "options": [
+   "A. IVIG",
+   "B. High dose aspirin",
+   "C. Steroid",
+   "D. Antibiotics"
+  ],
+  "key": "A",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\part 1 exam FM - 2018.pdf",
+  "other_id": "fm_6b5be04b7b635e19"
+ },
+ {
+  "id": "fm_de8317c18cc314dc",
+  "reason": "same_question_two_keys",
+  "question": "Patient was having burn in his house and trying to save his child. After he came out and be managed, you found burn in his face, arm and trunk (30% burn), he can speak but wispier. Examination showed BP 90/60, Pulse 50 O2 90%, RR 20. What to do next?",
+  "options": [
+   "A. Intubation",
+   "B. Give opioid",
+   "C. Insert IV cannula",
+   "D. Cover burn with silver nitrate"
+  ],
+  "key": "A",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Part 2 - 2024.pdf",
+  "other_id": "fm_5d911f304b917566"
+ },
+ {
+  "id": "fm_df37b7a6b35e23f7",
+  "reason": "same_question_two_keys",
+  "question": "Which of the laboratory findings in the table below are characteristic of hemophilia B? PT refers to prothrombin time and aPTT refers to activated partial thromboplastin time.",
+  "options": [
+   "A. A",
+   "B. B",
+   "C. C",
+   "D. D",
+   "E. E"
+  ],
+  "key": "B",
+  "source_file": "_manual_import\\MCQs by topics\\MCQs by topics\\MCQ Collections academic year 2019\\28- Bleeding disorders(Dr.Sultan)\\Bleeding disorder MCQ by SULTAN march 2019.pdf",
+  "other_id": "fm_04adf5d444acdb1a"
+ },
+ {
+  "id": "fm_e55f50b6e60704b7",
+  "reason": "same_question_two_keys",
+  "question": "Patient s/p gastric bypass surgery 6 weeks, came today with vomiting and dysphagia first with solid then liquid. What is the best next step?",
+  "options": [
+   "A. Barium study",
+   "B. Endoscopy",
+   "C. H. pylori testing",
+   "D. PPI and Hydration"
+  ],
+  "key": "B",
+  "source_file": "_manual_import\\Family Medicine_3\\تجميعات اختبار البارت\\Part 2 - 2024.pdf",
+  "other_id": "fm_66ea1df4ff4ea266"
+ }
+]
