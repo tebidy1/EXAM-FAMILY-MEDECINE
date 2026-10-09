@@ -35,3 +35,7 @@ tools/.deploy-upload.json
 
 # ---- plan-execution scratch ----
 .superpowers/
+
+# ---- raw course material for this edition: 16 GB of zips, PDFs and slides ----
+# the bank is built from it by tools/build_bank.py; only data/ is runtime
+FAMILY-ALL/
