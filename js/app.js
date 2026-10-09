@@ -137,6 +137,7 @@ function saveStore() {
 function adoptStoreFor(uid) {
   if (store.uid && store.uid !== uid) store = freshStore();
   if (store.uid !== uid) { store.uid = uid; saveStore(); }
+  applyTrack();
 }
 
 function recordAttempt(qid, correct) {
@@ -280,6 +281,9 @@ function normalizeQuestion(raw, sectionId) {
       raw.page ? `source p.${raw.page}` : null,
     ].filter(Boolean).join(' · ') || null,
     hasImage: !!raw.has_image,
+    exams: Array.isArray(raw.exams) ? raw.exams : [],
+    origin: raw.origin === 'exam' ? 'exam' : 'study',
+    appearances: raw.appearances || 1,
     selfScored: answer === null,
   };
 }
@@ -379,6 +383,79 @@ async function loadBlueprint() {
     const bpRes = await fetch('data/blueprint.json');
     if (bpRes.ok) BLUEPRINT = await bpRes.json();
   } catch (e) { /* simulation stays hidden if blueprint missing */ }
+  if (BLUEPRINT) { BLUEPRINT.base = { exam: BLUEPRINT.exam, simulations: BLUEPRINT.simulations }; applyTrack(); }
+}
+
+/* ---------------- training level ----------------
+   One bank for every year of residency: the official blueprint is the same
+   for all three written exams. The level only names the exam ahead, which
+   decides the simulations, the pass mark and what a study session opens with. */
+const tracks = () => BLUEPRINT?.tracks || [];
+const currentTrack = () => tracks().find((t) => t.id === store.track) || null;
+
+function applyTrack() {
+  if (!BLUEPRINT?.base) return;
+  const t = currentTrack();
+  BLUEPRINT.simulations = t ? t.simulations : BLUEPRINT.base.simulations;
+  BLUEPRINT.exam = t
+    ? { ...BLUEPRINT.base.exam, code: t.code, name: t.examName, questions: t.questions, minutes: t.minutes }
+    : BLUEPRINT.base.exam;
+}
+
+function setTrack(id) {
+  store.track = id; saveStore(); applyTrack(); closeSheet(); route();
+}
+
+const simLabel = (s) => s.name || `${examCode()} Simulation ${s.id}`;
+
+// questions residents brought back from the exam come before review-book questions; inside each,
+// what came up in the resident's own exam first, then what examiners repeat, then the rest
+const fromExam = (q) => q.origin === 'exam';
+function trackOrder(qs) {
+  const exam = currentTrack()?.exam;
+  const tier = (q) => (fromExam(q) ? 0 : 3) + (exam && q.exams.includes(exam) ? 0 : q.appearances >= 2 ? 1 : 2);
+  return qs.map((q, i) => [tier(q), i, q]).sort((a, b) => a[0] - b[0] || a[1] - b[1]).map((x) => x[2]);
+}
+
+function trackButtons() {
+  return tracks().map((t) => `
+    <button class="row track-row${t.id === store.track ? ' is-on' : ''}" onclick="setTrack('${esc(t.id)}')">
+      <span class="row-icon track-badge">${esc(t.label)}</span>
+      <span class="row-body">
+        <span class="row-title">${esc(t.examName)}</span>
+        <span class="row-sub" dir="auto">${esc(t.format)} · النجاح ${t.pass}%</span>
+      </span>
+      ${icon('chev', 'chev')}
+    </button>`).join('');
+}
+
+function openTrackPicker() {
+  openSheet(`
+    <div class="sheet-title">سنتك التدريبية</div>
+    <p class="sheet-sub" dir="auto">البنك واحد لكل السنوات، وتقدّمك محفوظ عند التغيير. السنة تحدد الاختبار الذي نحاكيه، ونسبة النجاح، وما تبدأ به جلساتك.</p>
+    <div class="list">${trackButtons()}</div>`);
+}
+
+function trackHomeHtml() {
+  if (!tracks().length) return '';
+  const t = currentTrack();
+  if (!t) {
+    return `
+      <div class="section-heading"><h2>Your training year</h2><span>اختر سنتك لنضبط الاختبار القادم</span></div>
+      <div class="list">${trackButtons()}</div>`;
+  }
+  const mine = ALL_QUESTIONS.filter((q) => q.exams.includes(t.exam)).length;
+  return `
+    <div class="list">
+      <button class="row" onclick="openTrackPicker()">
+        <span class="row-icon track-badge">${esc(t.label)}</span>
+        <span class="row-body">
+          <span class="row-title">${esc(t.examName)} · pass ${t.pass}%</span>
+          <span class="row-sub" dir="auto">${esc(t.format)} · ${mine} سؤالاً ظهرت في هذا الاختبار تأتي أولاً</span>
+        </span>
+        <span class="row-sub">تغيير</span>
+      </button>
+    </div>`;
 }
 
 // recalls never block boot: they are a reading section, not the bank
@@ -393,6 +470,14 @@ async function loadRecalls() {
 }
 
 function sectionQuestions(id) { return DB[id] || []; }
+// «exam questions only» narrows study sessions; a pool it would empty is left whole
+function studyPool(qs) {
+  if (!store.examOnly) return qs;
+  const only = qs.filter(fromExam);
+  return only.length ? only : qs;
+}
+function setExamOnly(on) { store.examOnly = !!on; saveStore(); route(); }
+const originTag = (q) => `<span class="q-origin ${fromExam(q) ? 'exam' : 'study'}">${fromExam(q) ? 'من الاختبار' : 'للمذاكرة'}</span>`;
 const isAnswerable = (q) => q.answer !== null;
 
 /* ---------------- exam ladder: milestone tests + fixed simulations ---------------- */
@@ -564,6 +649,7 @@ function buildFixedSimulation(s) {
     for (const sid of d.sections) pool.push(...(DB[sid] || []));
     pool = pool.filter((x) => isAnswerable(x) && !used.has(x.id));
     pool = seededShuffle(pool, hashStr(s.seed + '::' + d.name));
+    pool = [...pool.filter(fromExam), ...pool.filter((x) => !fromExam(x))];
     pool.slice(0, q).forEach((x) => { used.add(x.id); picked.push({ ...x, mockDomain: d.name, fromCovered: false }); });
   }
   if (picked.length < s.size) {
@@ -607,7 +693,7 @@ function startSimulation(id) {
   const total = s.minutes * 60;
   session = {
     sectionId: 'sim', mode: 'mock', mockKind: 'simulation', simId: s.id,
-    title: `${BLUEPRINT.exam.code} Simulation ${s.id}`,
+    title: simLabel(s),
     questions: qs, idx: 0,
     picked: qs.map(() => null), submitted: qs.map(() => false), selfGrades: qs.map(() => null),
     flagged: new Set(),
@@ -634,7 +720,7 @@ function renderBriefing() {
   if (!st.unlocked) { renderExams(); return; }
   const canResume = store.active && store.active.mode === 'mock' &&
     (kind === 'milestone' ? store.active.milestoneId === spec.id : store.active.simId === spec.id);
-  const title = kind === 'milestone' ? `Milestone Test ${spec.id}` : `${BLUEPRINT.exam.code} Simulation ${spec.id}`;
+  const title = kind === 'milestone' ? `Milestone Test ${spec.id}` : simLabel(spec);
   const sub = kind === 'milestone'
     ? `${spec.size} سؤالاً · 75% من مادة غطّيتها + 25% جديد · ${spec.minutes} دقيقة`
     : `${spec.size} questions · ${spec.minutes} min — نفس الورقة لكل المستخدمين، مبنية للمقارنة الصادقة`;
@@ -782,7 +868,7 @@ function buildSession(sectionId, mode) {
     qs = cramPool();
     title = 'Cram Review — weakest questions';
   } else if (sectionId === 'all') {
-    qs = shuffle(ALL_QUESTIONS);
+    qs = trackOrder(shuffle(studyPool(ALL_QUESTIONS)));
     title = 'Mixed — All Sections';
   } else if (sectionId === 'wrong') {
     qs = shuffle(wrongPool());
@@ -804,7 +890,7 @@ function buildSession(sectionId, mode) {
     qs = store.starred.map((qid) => DB.byId[qid]).filter((q) => q && q.sectionId === sid);
     title = `${sec ? sec.name : sid} — Bookmarks`;
   } else {
-    qs = shuffle(sectionQuestions(sectionId));
+    qs = trackOrder(shuffle(studyPool(sectionQuestions(sectionId))));
     const sec = DB.sections.find((s) => s.id === sectionId);
     title = sec ? `${sec.name} — ${sec.nameAr}` : sectionId;
   }
@@ -1675,6 +1761,7 @@ function renderHome() {
         <div class="ch ch-mas"><span>Mastered</span><b>${st.mastered}</b></div>
       </div>
     </section>
+    ${trackHomeHtml()}
     ${Install.cardHtml()}
     <div class="section-heading"><h2>Up next</h2><span>قائمة اليوم بالترتيب</span></div>
     ${nextCard}
@@ -1698,7 +1785,7 @@ function recallsHomeCard() {
       <span class="row-icon">${icon('bookmark')}</span>
       <span class="row-body">
         <span class="row-title">ريكولات — للقراءة فقط</span>
-        <span class="row-sub">${RECALLS.length} سؤالاً كما ورد، مع تبرير علمي موثق لكل واحد</span>
+        <span class="row-sub">${RECALLS.length} سؤالاً كما ورد. ما لم نجد له مرجعاً معلَّم «غير محسوم»</span>
       </span>
       ${icon('chev', 'chev')}
     </a>`;
@@ -1725,7 +1812,7 @@ function renderRecalls() {
   const q = recallFilter.q.trim().toLowerCase();
   const rows = RECALLS.filter((r) =>
     (recallFilter.state === 'all' || r.state === recallFilter.state) &&
-    (!q || [r.raw_text, r.raw_options, r.raw_answer, r.topic, r.answer, r.justification]
+    (!q || [r.raw_text, r.raw_options, r.options && r.options.join(' '), r.raw_answer, r.topic, r.answer, r.justification]
       .some((f) => f && String(f).toLowerCase().includes(q))));
   const chip = (id, label) => `
     <button class="recall-chip ${recallFilter.state === id ? 'on' : ''}"
@@ -1735,7 +1822,7 @@ function renderRecalls() {
   const content = `
     <div class="page-head">
       <h1>Exam recalls</h1>
-      <p dir="rtl">أسئلة رويتها دفعات سابقة، معروضة كما وردت حرفياً — والطبقة العلمية تحتها موثقة بمصادر عليا. اضغط أي زر تحقق لتفتح البحث بنتائجه جاهزة.</p>
+      <p dir="rtl">أسئلة روتها دفعات سابقة، معروضة كما وردت. «غير محسوم» يعني أن مكتبة المراجع لم تسند الجواب المروي، فلا يدخل السؤال جلسات التدريب ولا يُحسب في تقدّمك.</p>
     </div>
     <div class="recall-chips">
       ${chip('all', 'الكل')}${chip('confirmed', 'مؤكَّد')}${chip('probable', 'مُرجَّح')}${chip('unresolved', 'غير محسوم')}
@@ -1749,20 +1836,21 @@ function renderRecalls() {
 function recallCard(r) {
   const st = RECALL_STATE[r.state] || RECALL_STATE.unresolved;
   const student = r.raw_answer && !/غير مذكور/.test(r.raw_answer) ? r.raw_answer : null;
-  const opts = splitOpts(r.raw_options);
+  const opts = r.options || splitOpts(r.raw_options);
+  const open = r.state === 'unresolved';
   const sourceLinks = (r.sources || []).map((s) =>
     `<a class="recall-src" href="${esc(s.url)}" target="_blank" rel="noopener">${icon('bookmark')} ${esc(s.label)}</a>`).join('');
   const verdictHtml = r.state === 'unresolved'
-    ? `<p class="recall-why" dir="auto">No scientifically verified answer could be established for this item — check it yourself via the search buttons.</p>`
+    ? `<p class="recall-why" dir="rtl">لم نجد في المراجع ما يسند الجواب المروي. اقرأه على أنه رواية لا جواباً معتمداً.</p>`
     : `
       ${r.answer ? `<div class="recall-ans" dir="auto"><span>الجواب المُرجَّح</span><b>${esc(r.answer)}</b></div>` : ''}
       <p class="recall-why" dir="auto">${esc(r.justification)}</p>
       ${sourceLinks ? `<div class="recall-srcs">${sourceLinks}</div>` : ''}`;
   const archive = `
-    <button class="recall-arch-t" onclick="this.nextElementSibling.toggleAttribute('hidden');this.classList.toggle('open')">
+    <button class="recall-arch-t${open ? ' open' : ''}" onclick="this.nextElementSibling.toggleAttribute('hidden');this.classList.toggle('open')">
       كما ورد في الريكالات <span class="recall-arch-hint">النص الحرفي لم تُمسّ</span>
     </button>
-    <div class="recall-arch" hidden dir="auto">
+    <div class="recall-arch" ${open ? '' : 'hidden'} dir="auto">
       <p class="hand">${esc(r.raw_text)}</p>
       ${opts.length ? `<ul class="hand">${opts.map((o) => `<li>${esc(o)}</li>`).join('')}</ul>` : ''}
       ${student ? `<p class="hand recall-student">الجواب كما ورد: ${esc(student)}</p>` : ''}
@@ -1770,7 +1858,7 @@ function recallCard(r) {
         <span>${r.type === 'handwritten' ? 'خط يد' : 'مطبوع'}</span>
         <span>المصدر: ${esc(r.source_file)}</span>
         ${r.page ? `<span>صفحة ${esc(r.page)}</span>` : ''}
-        <span>ثقة الاستخراج ${r.extraction_confidence}/10</span>
+        ${r.extraction_confidence ? `<span>ثقة الاستخراج ${r.extraction_confidence}/10</span>` : ''}
       </div>
     </div>`;
   return `
@@ -1782,7 +1870,7 @@ function recallCard(r) {
       ${verdictHtml}
       <div class="recall-searchbtns">
         <a class="btn btn-sm recall-go" href="${esc(r.google_url)}" target="_blank" rel="noopener">تحقق في Google</a>
-        <a class="btn btn-sm recall-go alt" href="${esc(r.pubmed_url)}" target="_blank" rel="noopener">PubMed</a>
+        ${r.pubmed_url ? `<a class="btn btn-sm recall-go alt" href="${esc(r.pubmed_url)}" target="_blank" rel="noopener">PubMed</a>` : ''}
       </div>
       ${archive}
     </article>`;
@@ -1866,6 +1954,7 @@ function renderSectionPage(secId) {
     ? `<a class="row" href="${href}"><span class="row-icon">${icon(ic)}</span><span class="row-body"><span class="row-title">${title}</span><span class="row-sub">${sub}</span></span>${icon('chev', 'chev')}</a>`
     : `<div class="row disabled"><span class="row-icon muted">${icon(ic)}</span><span class="row-body"><span class="row-title">${title}</span><span class="row-sub">${sub}</span></span></div>`;
 
+  const examN = sectionQuestions(sec.id).filter(fromExam).length;
   const content = `
     <div class="sec-hero">
       ${ring(st.mastery, 'lg')}
@@ -1877,6 +1966,13 @@ function renderSectionPage(secId) {
     </div>
     <a class="btn btn-primary btn-lg btn-block" href="#/quiz/${sec.id}/study">${cov.seen > 0 ? 'Continue studying' : 'Start studying'}</a>
     <p class="cta-note">Each answer shows its explanation at once</p>
+    <label class="exam-only" dir="rtl">
+      <input type="checkbox" ${store.examOnly ? 'checked' : ''} onchange="setExamOnly(this.checked)">
+      <span class="exam-only-body">
+        <b>أسئلة الاختبار فقط</b>
+        <small>${examN} من ${cov.total} في هذا القسم رواها مقيمون من الاختبار. الباقي من كتب المراجعة ويأتي بعدها.</small>
+      </span>
+    </label>
     <div class="section-heading"><h2>Coverage checkpoints</h2><span>اختبر ما غطّيته</span></div>
     <div class="list">${checkpoints}</div>
     <div class="section-heading"><h2>Drills</h2><span>تدريب موجّه</span></div>
@@ -1916,7 +2012,7 @@ function renderExams() {
     return `
       <div class="row ${st.unlocked ? '' : 'disabled'}">
         <span class="row-icon ${st.unlocked ? 'solid' : 'muted'}">${st.unlocked ? s.id : icon('lock')}</span>
-        <span class="row-body"><span class="row-title">${esc(BLUEPRINT.exam.code)} Simulation ${s.id}</span>${body}</span>
+        <span class="row-body"><span class="row-title">${esc(simLabel(s))}</span>${body}</span>
         ${st.unlocked ? `<a class="btn btn-primary btn-sm" href="#/quiz/sim-${s.id}/mock">${st.best != null ? 'Retake' : 'Start'}</a>` : ''}
       </div>`;
   }).join('');
@@ -2134,6 +2230,7 @@ function renderQuiz() {
       ${trialPill()}
       ${paceBar}
       <div class="q-card">
+        ${isMock || isExam ? '' : originTag(q)}
         ${q.vignette ? `<div class="q-vignette">${esc(q.vignette)}</div>` : ''}
         <div class="q-text">${esc(q.question)}</div>
         <div class="options">${options}</div>
@@ -2292,11 +2389,13 @@ function correct0(sess) {
 /* ---------------- results ---------------- */
 function renderResults({ correct, total, auto }) {
   const pct = total ? Math.round((correct / total) * 100) : 0;
-  const color = pct >= 70 ? 'var(--correct)' : pct >= 50 ? 'var(--flag)' : 'var(--wrong)';
   const isMock = session.mode === 'mock';
+  // a simulation is judged against the pass mark of the resident's own exam
+  const passAt = (isMock && session.mockKind === 'simulation' && currentTrack()?.pass) || 70;
+  const color = pct >= passAt ? 'var(--correct)' : pct >= 50 ? 'var(--flag)' : 'var(--wrong)';
   const msg = isMock
-    ? (pct >= 70
-        ? 'Strong simulation — you are tracking above the typical pass band. Keep your streaks alive.'
+    ? (pct >= passAt
+        ? `Above the ${passAt}% pass mark. Keep your streaks alive.`
         : pct >= 50
           ? 'Pass-zone performance. The domain table below shows exactly where to invest next.'
           : 'Below the pass band — but every wrong answer is now queued in your review pile. Fix them; the next simulation unlocks after 100 more answered questions.')
