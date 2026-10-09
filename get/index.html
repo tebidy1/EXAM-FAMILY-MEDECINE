@@ -333,9 +333,11 @@ section.last { text-align: center; padding-bottom: 30px; }
        <p class="under">Opens in ${isIOS ? 'Safari' : 'your browser'} — this built-in browser cannot install apps.</p>`
     : mine
       ? `<a class="cta" href="${START}">${GO}Start free — no card</a>
-         <p class="under">Takes under a minute, then we put it on your home screen. <a href="#${mine}">Rather install it first?</a></p>`
+         <p class="under">Takes under a minute, then we put it on your home screen. <a href="#${mine}">Rather install it first?</a></p>
+         <p class="under">Already have an account? <a href="../?start=login">Sign in</a></p>`
       : `<a class="cta" href="${START}">${GO}Start free — no card</a>
-         <p class="under">Installing on a phone? <a href="#iphone">iPhone</a> · <a href="#android">Android</a></p>`;
+         <p class="under">Installing on a phone? <a href="#iphone">iPhone</a> · <a href="#android">Android</a></p>
+         <p class="under">Already have an account? <a href="../?start=login">Sign in</a></p>`;
   $('heroCta').innerHTML = getApp();
   $('lastCta').innerHTML = getApp();
   $('dock').innerHTML = inApp
@@ -458,7 +460,7 @@ section.last { text-align: center; padding-bottom: 30px; }
     if (!g) return;
     track('guide', { which: key });
     $('guideTitle').textContent = g.title;
-    $('guideBody').innerHTML = g.html + `<p class="under" style="margin-top:18px">Prefer not to install? <a href="../">Use it in the browser</a></p><a class="switch" href="#${g.other[0]}">${g.other[1]}</a>`;
+    $('guideBody').innerHTML = g.html + `<p class="under" style="margin-top:18px">Prefer not to install? <a href="${START}">Use it in the browser</a></p><a class="switch" href="#${g.other[0]}">${g.other[1]}</a>`;
     scrollTo(0, 0);
     $('guideTitle').focus({ preventScroll: true });
   }

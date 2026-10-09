@@ -3060,6 +3060,13 @@ function logout() {
         renderAuth(start === 'signup' && localStorage.getItem(KNOWN_KEY) ? 'login' : start);
         return;
       }
+      // a stranger at the bare address has not read what this is yet: the landing page
+      // goes first. A browser that knows an account, or the installed app, skips it.
+      const installed = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+      if (!localStorage.getItem(KNOWN_KEY) && !installed && navigator.onLine !== false) {
+        location.replace('get/' + (location.search || ''));
+        return;
+      }
       // a first-time visitor meets the idea before the form; a returning one goes straight to sign-in
       if (Guide.state.intro || localStorage.getItem(KNOWN_KEY)) renderAuth();
       else { await loadBlueprint(); renderIntro(() => renderAuth('signup'), () => renderAuth('login')); }
